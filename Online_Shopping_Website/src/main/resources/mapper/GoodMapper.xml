@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.online_shopping_website.mapper.GoodMapper">
+
+    <resultMap id="GoodMap" type="com.example.online_shopping_website.entity.Good">
+        <result column="introduction" property="introduction"></result>
+        <result column="goodsname" property="goodsname"></result>
+        <result column="goodsPrice" property="goodsPrice"></result>
+        <result column="goodsStock" property="goodsStock"></result>
+        <result column="goodsCategory" property="goodsCategory"></result>
+        <result column="status" property="status"></result>
+        <result column="registerStatus" property="registerStatus"></result>
+        <result column="modifyStatus" property="modifyStatus"></result>
+        <result column="goodsId" property="goodsId"></result>
+        <result column="shopname" property="shopname"></result>
+    </resultMap>
+    <insert id="insertGoodByUser" >
+        INSERT INTO goods(introduction,goodsname,goodsPrice,goodsStock,goodsCategory,status,registerStatus,modifyStatus,shopname)
+        VALUES
+            (#{introduction}, #{goodsname}, #{goodsPrice}, #{goodsStock}, #{goodsCategory}, #{status}, #{registerStatus}, #{modifyStatus}, #{shopname});
+    </insert>
+    <select id="SearchByGoodname" resultMap="GoodMap">
+        SELECT * FROM goods where goodsname = #{goodsname}
+    </select>
+    <update id="UpdateGoodsStock">
+        UPDATE goods SET goodsStock = #{goodsStock} WHERE goodsId = #{goodsId}
+    </update>
+    <update id="UpdateGoodsPrice">
+        UPDATE goods SET goodsPrice = #{goodsPrice} WHERE goodsId = #{goodsId}
+    </update>
+    <update id="UpdateGoodsname">
+        UPDATE goods SET goodsname = #{goodsname} WHERE goodsId = #{goodsId}
+    </update>
+    <update id="UpdateIntroduction">
+        UPDATE goods SET introduction = #{introduction} WHERE goodsId = #{goodsId}
+    </update>
+    <update id="UpdateGoodsCategory">
+        UPDATE goods SET goodsCategory = #{goodsCategory} WHERE goodsId = #{goodsId}
+    </update>
+    <update id="UpdateStatus">
+        UPDATE goods SET status = #{status} WHERE goodsId = #{goodsId}
+    </update>
+    <update id="UpdateRegisterStatus">
+        UPDATE goods SET registerStatus = #{registerStatus} WHERE goodsId = #{goodsId}
+    </update>
+    <update id="UpdateModifyStatus">
+        UPDATE goods SET modifyStatus = #{modifyStatus} WHERE goodsId = #{goodsId}
+    </update>
+    <insert id="picInsert" >
+        INSERT INTO goodspics
+        (goodsId,pic)
+        VALUES
+            (#{goodsId}, #{pic});
+    </insert>
+    <select id="SearchByStatus" resultMap="GoodMap">
+        SELECT * FROM goods where status = #{status} and shopname = #{shopname}
+    </select>
+
+    <select id="SearchByStatusStatusOnly" resultMap="GoodMap">
+        SELECT * FROM goods where status = #{status}
+    </select>
+
+
+    <select id="SearchByRegisterStatus" resultMap="GoodMap">
+        SELECT * FROM goods where registerStatus = #{registerStatus} and shopname = #{shopname}
+    </select>
+    <select id="SearchByRegisterStatusRegisterStatusOnly" resultMap="GoodMap">
+        SELECT * FROM goods where registerStatus = #{registerStatus}
+    </select>
+    <select id="SearchByModifyStatus" resultMap="GoodMap">
+        SELECT * FROM goods where modifyStatus = #{modifyStatus} and shopname = #{shopname}
+    </select>
+    <select id="SearchByModifyStatusModifyStatusOnly" resultMap="GoodMap">
+        SELECT * FROM goods where modifyStatus = #{modifyStatus}
+    </select>
+    <select id="SearchByGoodsId" resultMap="GoodMap">
+        SELECT * FROM goods where goodsId = #{goodsId}
+    </select>
+    <delete id="setDelete">
+        DELETE from goods WHERE status = #{goodsId}
+    </delete>
+    <delete id="DeleteGoods">
+        DELETE from goods WHERE goodsId = #{goodsId}
+    </delete>
+
+    <insert id="AddToFavorite">
+        INSERT INTO favorite
+            (username, goodsId)
+        VALUES
+            (#{username}, #{goodsId});
+        UPDATE goods SET favorites = favorites + 1 WHERE goosId = #{goosId};
+    </insert>
+
+    <insert id="Unfavorite">
+        DELETE FROM favorite WHERE username = #{username} AND goodsId = #{goodsId};
+        UPDATE goods SET favorites = favorites - 1 WHERE goosId = #{goosId};
+    </insert>
+
+    <select id="isFavorite" resultType="java.lang.Boolean">
+        SELECT EXISTS(SELECT * from favorite WHERE username = {username} AND goodsId = #{goodsId});
+    </select>
+
+    <select id="StatusSearch" resultMap="GoodMap">
+        SELECT * FROM goods where status = #{status};
+    </select>
+    <select id="RegisterStatusSearch" resultMap="GoodMap">
+        SELECT * FROM goods where registerStatus = #{registerStatus};
+    </select>
+
+
+    <select id="GetShopnamByGoodsId" resultType="java.lang.String">
+        SELECT shopname FROM goods WHERE goodsId = #{goodsId}
+    </select>
+
+    <select id="GetGoodStatusByGoodsId" resultType="int">
+        SELECT status FROM goods WHERE goodsId = #{goodsId}
+    </select>
+
+    <select id="getGoodsByGoodsId" resultMap="GoodMap">
+        SELECT * from goods WHERE goodsId = #{goodsId};
+    </select>
+    <select id="setSearch" resultMap="GoodMap">
+        SELECT * FROM goods WHERE modifyStatus = #{modifyStatus} and shopname = #{shopname};
+    </select>
+
+    <select id="GetGoodsStockByGoodsId" resultType="int">
+        SELECT IFNULL(goodsStock, 0) FROM goods WHERE goodsId = #{goodsId}
+    </select>
+</mapper>

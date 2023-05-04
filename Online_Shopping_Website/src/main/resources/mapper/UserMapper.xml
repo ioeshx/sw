@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.online_shopping_website.mapper.UserMapper">
+
+    <resultMap id="UserMap" type="com.example.online_shopping_website.entity.User">
+        <result column="uid" property="uid"/>
+        <result column="usertype" property="usertype"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="shopid" property="shopid"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="idnum" property="idnum"/>
+        <result column="is_delete" property="is_delete"/>
+        <result column="salt" property="salt"/>
+        <result column="avatar" property="avatar"/>
+    </resultMap>
+
+    <resultMap id="GoodMap" type="com.example.online_shopping_website.entity.Good">
+        <result column="introduction" property="introduction"></result>
+        <result column="goodsname" property="goodsname"></result>
+        <result column="goodsPrice" property="goodsPrice"></result>
+        <result column="goodsStock" property="goodsStock"></result>
+        <result column="goodsCategory" property="goodsCategory"></result>
+        <result column="status" property="status"></result>
+        <result column="registerStatus" property="registerStatus"></result>
+        <result column="modifyStatus" property="modifyStatus"></result>
+        <result column="goodsId" property="goodsId"></result>
+        <result column="shopname" property="shopname"></result>
+    </resultMap>
+
+
+
+    <insert id="Insert" >
+        INSERT INTO users(username, password)
+        VALUES (#{username}, #{password});
+    </insert>
+
+    <select id="SearchByUsername" resultMap="UserMap">
+        SELECT * FROM users WHERE username = #{username}
+    </select>
+
+    <select id="SearchByPhone" resultMap="UserMap">
+        SELECT * FROM users WHERE  phone = #{phone}
+    </select>
+
+    <select id="SearchByEmail" resultMap="UserMap">
+        SELECT * FROM users WHERE  email = #{email}
+    </select>
+
+    <select id="SearchByIdnum" resultMap="UserMap">
+        SELECT * FROM users WHERE  idnum = #{idnum}
+    </select>
+
+    <insert id="Register" >
+        INSERT INTO users
+            (usertype,username, password, shopid, phone, email, idnum, is_delete, salt)
+        VALUES
+            (#{usertype}, #{username} ,#{password}, #{shopid}, #{phone}, #{email}, #{idnum}, #{is_delete}, #{salt});
+    </insert>
+
+    <update id="AvatarUpdate">
+        UPDATE users SET avatar = #{avatar} WHERE username = #{username}
+    </update>
+
+    <update id="UpdateNewusernameByOldusername">
+        UPDATE users SET username = #{Newusername} WHERE username = #{oldusername}
+    </update>
+
+    <update id="UpdateNewpasswordByOldusername">
+        UPDATE users SET password = #{Newpassword} WHERE username = #{oldusername}
+    </update>
+
+    <update id="UpdateNewphoneByOldusername">
+        UPDATE users SET phone = #{Newphone} WHERE username = #{oldusername}
+    </update>
+
+    <update id="UpdateNewemailByOldusername">
+        UPDATE users SET email = #{Newemail} WHERE username = #{oldusername}
+    </update>
+
+    <select id="GetUserTypeByUsername" resultType="int" >
+        SELECT usertype FROM users WHERE username = #{username}
+    </select>
+
+    <select id="GetPrivateAccountByUsername" resultType="java.math.BigDecimal">
+        SELECT privateAccount FROM users WHERE username = #{username}
+    </select>
+
+    <select id="GetShopAccountByUsername" resultType="java.math.BigDecimal">
+        SELECT shopAccount FROM users WHERE username = #{username}
+    </select>
+
+    <select id="GetProfitAccountByUsername" resultType="java.math.BigDecimal">
+        SELECT profitAccount FROM users WHERE username = #{username}
+    </select>
+
+    <select id="GetIntermediaryAccountByUsername" resultType="java.math.BigDecimal">
+        SELECT intermediaryAccount FROM users WHERE username = #{username}
+    </select>
+
+    <update id="RechargePrivateAccountByUsername">
+        UPDATE users SET privateAccount = privateAccount + #{credit} WHERE username = #{username}
+    </update>
+
+    <update id="RechargeShopAccountByUsername">
+        UPDATE users SET shopAccount = shopAccount + #{credit} WHERE username = #{username}
+    </update>
+
+    <update id="RechargeProfitAccountByUsername">
+        UPDATE users SET profitAccount = profitAccount + #{credit} WHERE username = #{username}
+    </update>
+
+    <update id="RechargeIntermediaryAccountByUsername">
+        UPDATE users SET intermediaryAccount = intermediaryAccount + #{credit} WHERE username = #{username}
+    </update>
+
+
+    <select id="GetProfitAccount" resultType="java.math.BigDecimal">
+        SELECT profitAccount FROM users WHERE usertype = 0;
+    </select>
+
+    <select id="GetIntermediaryAccount" resultType="java.math.BigDecimal">
+        SELECT intermediaryAccount  FROM users WHERE usertype = 0;
+    </select>
+    <update id="AvatarDelete">
+        UPDATE users SET avatar = null WHERE username = #{username}
+    </update>
+
+    <select id="GetUidByShopname" resultType="int">
+        SELECT uid FROM shops WHERE shopname = #{shopname};
+    </select>
+
+    <update id="DeleteShopAccountANDTransferBalanceToPrivateAccount">
+        UPDATE users SET privateAccount = privateAccount + shopAccount WHERE uid =#{uid};
+        UPDATE users SET ShopAccount = 0 WHERE uid =#{uid};
+    </update>
+    
+    <select id="GetShopAccountByUid" resultType="java.math.BigDecimal">
+        SELECT shopAccount FROM users WHERE uid = #{uid};
+    </select>
+
+    <update id="DeleteShopAccountByUid">
+        UPDATE users SET ShopAccount = 0 WHERE uid = #{uid};
+    </update>
+    
+    <update id="TransferShopAccountBalanceToPrivateAccount">
+        UPDATE users SET privateAccount = privateAccount + #{ShopAccountBalance} WHERE uid = #{uid}
+    </update>
+
+</mapper>
+
+
+        <!--
+            自定义映射规则（MySQL和Java中的属性映射）
+            id:为映射本身分配唯一的id值
+            resultype/resultmap:指定MySQL中的查询结果与哪个类进行映射
+            <result>:实现映射，columns为MySQL中的属性，property为类中属性
+            主建不可以省略 到时候加上
+        -->
+

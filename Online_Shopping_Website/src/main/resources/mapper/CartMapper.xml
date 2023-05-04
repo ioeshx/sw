@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.online_shopping_website.mapper.CartMapper">
+
+    <select id="getGoodsNumberInCart" resultType="java.lang.Integer">
+        SELECT IFNULL(num,0) FROM cart WHERE username = #{username} AND goodsId = #{goodsId}
+    </select>
+
+    <insert id="InsertNewGoodsIntoCart">
+        INSERT INTO cart
+            (username, goodsId, num)
+        VALUES
+            (#{username}, #{goodsId}, #{num})
+    </insert>
+
+    <update id="UpdateGoodsNumInCart">
+        UPDATE cart SET num = #{num} WHERE username = #{username} AND goodsId = #{goodsId}
+    </update>
+
+    <delete id="DeleteZeroGoodsInCart">
+        DELETE FROM cart WHERE username = #{username} AND num = 0
+    </delete>
+
+    <select id="GetAllGoodsIdInCartByUsername" resultType="int">
+        SELECT goodsId FROM cart WHERE username = #{username}
+    </select>
+
+    <select id="GetGoodsStockByGoodsId" resultType="int">
+        SELECT ifnull(goodsStock, 0) FROM goods WHERE goodsId = #{goodsId}
+    </select>
+
+    <select id="IsGoodsInCart" resultType="java.lang.Boolean">
+        select exists(select * from cart WHERE username = #{username} AND goodsId = #{goodsId})
+    </select>
+
+    <update id="updateCartGoodsNum">
+        UPDATE cart SET num = #{num} WHERE username = #{username} AND goodsId = #{goodsId}
+    </update>
+
+    <insert id="insertCartGoodsNum">
+        INSERT INTO cart
+            (username, goodsId, num)
+            VALUE
+            (#{username}, #{goodsId}, #{num})
+    </insert>
+
+    <delete id="DeleteGoodsInCart">
+        DELETE FROM cart WHERE username = #{username} AND goodsId = #{goodsId};
+    </delete>
+
+<!--    <select id="getAllShopnameInCart" resultType="java.lang.String">-->
+<!--        SELECT shopname FROM cart WHERE  = #{}-->
+<!--    </select>-->
+</mapper>

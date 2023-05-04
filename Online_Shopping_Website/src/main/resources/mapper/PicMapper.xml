@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.online_shopping_website.mapper.PicMapper">
+
+    <resultMap id="GoodMap" type="com.example.online_shopping_website.entity.pic">
+        <result column="goodsId" property="goodsId"></result>
+        <result column="pic" property="pic"></result>
+        <result column="goodspicsID" property="goodspicsID"></result>
+    </resultMap>
+    <select id="searchPicByGoodsId" resultMap="GoodMap">
+        SELECT * FROM goodspics where goodsId = #{goodsId}
+    </select>
+    <delete id="picDelete">
+        DELETE from goodspics WHERE goodsId = #{goodsId}
+    </delete>
+    <update id="goodsIdUpdate">
+        UPDATE goodspics SET goodsId = 0-#{goodsId} WHERE goodsId = #{goosId};
+    </update>
+</mapper>

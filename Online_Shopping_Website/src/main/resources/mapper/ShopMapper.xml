@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.online_shopping_website.mapper.ShopMapper">
+    <resultMap id="ShopMap" type="com.example.online_shopping_website.entity.Shop">
+        <result column="uid" property="uid"></result>
+        <result column="shopname" property="shopname"></result>
+        <result column="goodstype" property="goodstype"></result>
+        <result column="IDnum" property="IDnum"></result>
+        <result column="introduction" property="introduction"></result>
+        <result column="address" property="address"></result>
+        <result column="capital" property="capital"></result>
+        <result column="date" property="date"></result>
+        <result column="shopid" property="shopid"></result>
+        <result column="is_admitted" property="is_admitted"></result>
+        <result column="avatar" property="avatar"></result>
+    </resultMap>
+
+    <update id="updateUserShopID">
+        UPDATE user SET shopid = #{shopid} WHERE uid = #{uid}
+    </update>
+    <insert id="shopOpening" >
+        INSERT INTO shops
+        (uid,shopname,goodstype,IDnum,introduction,address,capital,date,is_admitted)
+        VALUES
+            (#{uid}, #{shopname}, #{goodstype}, #{IDnum}, #{introduction}, #{address}, #{capital}, #{date},#{is_admitted});
+    </insert>
+
+    <select id="SearchByShopname" resultMap="ShopMap">
+        SELECT * FROM shops WHERE shopname = #{shopname}
+    </select>
+
+    <select id="ShopSearchByIdnum" resultMap="ShopMap">
+        SELECT * FROM shops WHERE  idnum = #{idnum}
+    </select>
+
+    <select id="ShopSearchByUid" resultMap="ShopMap">
+        SELECT * FROM shops WHERE  uid = #{uid}
+    </select>
+
+    <update id="updateIsAdmitted">
+        UPDATE shops SET is_admitted = 1 WHERE shopname = #{shopname}
+    </update>
+
+    <select id="ShowAllShop" resultMap="ShopMap">
+        SELECT * FROM shops
+    </select>
+
+    <select id="ShowAllAdmittedShop" resultMap="ShopMap">
+        SELECT * FROM shops WHERE is_admitted = 1
+    </select>
+    <select id="ShowAllNotAdmittedShop" resultMap="ShopMap">
+        SELECT * FROM shops WHERE is_admitted = 0
+    </select>
+    <insert id="InsertGood" >
+        INSERT INTO goodstype
+            (shopid,goodtype)
+        VALUES
+            (#{shopid}, #{goodtype});
+    </insert>
+    
+    <update id="TransferCapitalToIntemediaryAccount">
+        update users set intermediaryAccount = intermediaryAccount + #{capital} WHERE usertype = 0;
+    </update>
+
+    <update id="TransferCapitalFromIntemediaryToProfitAccount">
+        UPDATE users SET intermediaryAccount = intermediaryAccount - #{capital} WHERE usertype = 0;
+        UPDATE users SET profitAccount = profitAccount + #{capital} WHERE usertype = 0;
+    </update>
+
+    <update id="AvatarUpdate">
+        UPDATE shops SET avatar = #{avatar} WHERE shopname = #{shopname}
+    </update>
+    <update id="AvatarDelete">
+        UPDATE shops SET avatar = null WHERE shopname = #{shopname}
+    </update>
+    
+    <select id="GetShopIsAdmitted" resultType="int">
+        SELECT is_admitted FROM shops WHERE shopname = #{shopname};
+    </select>
+
+    <update id="SetShopNormal">
+        UPDATE shops SET is_admitted = 1 WHERE shopname = #{shopname};
+    </update>
+
+    <update id="SetShopDeleted">
+        UPDATE shops SET is_admitted = 5 WHERE shopname = #{shopname};
+    </update>
+
+    <update id="SetShopRegistrationRejected">
+        UPDATE shops SET is_admitted = 2 WHERE shopname = #{shopname};
+    </update>
+
+    <update id="SetShopdeletionRejected">
+        UPDATE shops SET is_admitted = 4 WHERE shopname = #{shopname};
+    </update>
+
+    <update id="UnregisterShopByShopname">
+        UPDATE shops SET is_admitted = 3 WHERE shopname = #{shopname};
+    </update>
+
+    <update id="CancelShopUnregistyerByShopname">
+        UPDATE shops SET is_admitted = 1 WHERE shopname = #{shopname}
+    </update>
+    
+    <delete id="ClearShopInfoByShopname">
+        DELETE FROM shops WHERE shopname = #{shopname};
+    </delete>
+
+    <select id="GetShopAdmittedByShopname" resultType="int">
+        SELECT is_admitted FROM shops WHERE shopname = #{shopname};
+    </select>
+
+    <select id="GetAllDeletedShop" resultMap="ShopMap">
+        SELECT * FROM shops WHERE is_admitted = 5;
+    </select>
+
+    <select id="GetAllDeletingShop" resultMap="ShopMap">
+        SELECT * FROM shops WHERE is_admitted = 3;
+    </select>
+
+    <select id="GetCapitalByShopname" resultType="java.math.BigDecimal">
+        SELECT capital FROM shops WHERE shopname = #{shopname};
+    </select>
+
+    <update id="TransferCapitalFromIntemediary">
+        UPDATE users SET intermediaryAccount = intermediaryAccount - #{capital} WHERE usertype = 0;
+    </update>
+
+    <update id="TransferCapitalToProfitAccount">
+        UPDATE users SET profitAccount = profitAccount + #{capital} WHERE usertype = 0;
+    </update>
+</mapper>
