@@ -1,5 +1,6 @@
 package com.example.online_shopping_website.service;
 
+import com.example.online_shopping_website.entity.ShippingAddress;
 import com.example.online_shopping_website.entity.User;
 import com.example.online_shopping_website.util.JsonResult;
 
@@ -24,7 +25,6 @@ public interface IUserService {
 
     /**
      * 根据用户名查找用户
-     * @param username
      * @return 成功返回用户信息，失败返回空
      */
     User SearchByUsername(String username);
@@ -45,5 +45,8 @@ public interface IUserService {
 
     JsonResult getIntermediaryAccount();
     void deleteUserAvatar(String username);
-
+    JsonResult getAllShippingAddress(String username);
+    JsonResult addShippingAddress(ShippingAddress newAddress);
+    JsonResult deleteShippingAddress(int addressId);
+    JsonResult modifyShippingAddress(ShippingAddress modifiedAddress);
 }

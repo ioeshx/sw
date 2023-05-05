@@ -20,8 +20,8 @@
     </resultMap>
 
     <resultMap id="GoodMap" type="com.example.online_shopping_website.entity.Good">
-        <result column="introduction" property="introduction"></result>
-        <result column="goodsname" property="goodsname"></result>
+        <result column="introduction" property="introduction"/>
+        <result column="goodsname" property="goodsname"/>
         <result column="goodsPrice" property="goodsPrice"></result>
         <result column="goodsStock" property="goodsStock"></result>
         <result column="goodsCategory" property="goodsCategory"></result>
@@ -32,7 +32,18 @@
         <result column="shopname" property="shopname"></result>
     </resultMap>
 
-
+    <resultMap id="ShippingAddressMap" type="com.example.online_shopping_website.entity.ShippingAddress">
+        <result column="addressId" property="addressId"></result>
+        <result column="username" property="username0"></result>
+        <result column="uid" property="uid"></result>
+        <result column="receiverName" property="receiverName"></result>
+        <result column="phone" property="phone"></result>
+        <result column="province" property="province"></result>
+        <result column="municipality" property="municipality"></result>
+        <result column="county" property="county"></result>
+        <result column="township" property="township"></result>
+        <result column="detailAddress" property="detailAddress"></result>
+    </resultMap>
 
     <insert id="Insert" >
         INSERT INTO users(username, password)
@@ -148,9 +159,35 @@
     </update>
     
     <update id="TransferShopAccountBalanceToPrivateAccount">
-        UPDATE users SET privateAccount = privateAccount + #{ShopAccountBalance} WHERE uid = #{uid}
+        UPDATE users SET privateAccount = privateAccount + #{ShopAccountBalance} WHERE uid = #{uid};
     </update>
 
+    <select id="GetAllShippingAddress" resultMap="ShippingAddressMap">
+        SELECT * FROM shippingAddress WHERE username = #{username};
+    </select>
+
+    <insert id="AddShippingAddress" >
+        insert into shippingaddress
+            (username, receiverName, phone, province, municipality, county, township, detailAddress)
+        VALUES
+            (#{username}, #{receiverName}, #{phone}, #{province}, #{municipality}, #{county}, #{township}, #{detailAddress});
+    </insert>
+
+    <delete id="DeleteShippingAddressByAddressID">
+        delete from shippingaddress WHERE addressId = #{addressId}
+    </delete>
+
+    <update id="ModifyShippingAddressByAddressId">
+        UPDATE shippingAddress set
+            receiverName = #{receiverName},
+            phone = #{phone},
+            province = #{province},
+            municipality = #{municipality},
+            county = #{county},
+            township = #{township},
+            detailAddress = #{detailAddress}
+        WHERE addressId = #{addressId}
+    </update>
 </mapper>
 
 

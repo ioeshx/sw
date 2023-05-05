@@ -1,6 +1,7 @@
 package com.example.online_shopping_website.service.impl;
 
 import com.example.online_shopping_website.entity.Good;
+import com.example.online_shopping_website.entity.ShippingAddress;
 import com.example.online_shopping_website.entity.Transaction;
 import com.example.online_shopping_website.mapper.TransactionMapper;
 import com.example.online_shopping_website.mapper.UserMapper;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.List;
+import java.util.jar.JarException;
 
 import static com.example.online_shopping_website.entity.constant.AccountType.*;
 import static com.example.online_shopping_website.entity.constant.UserType.*;
@@ -226,7 +228,32 @@ public class UserServiceImpl implements IUserService {
         userMapper.AvatarDelete(username);
     }
 
+    @Override
+    public JsonResult getAllShippingAddress(String username){
+        JsonResult result = new JsonResult<>(YES);
+        List<ShippingAddress> allAddress = userMapper.GetAllShippingAddress(username);
+        result.setData(allAddress);
+        return result;
+    }
 
+    @Override
+    public JsonResult addShippingAddress(ShippingAddress newAddress){
+        JsonResult result = new JsonResult<>(YES,"成功添加收货地址！");
+        userMapper.AddShippingAddress(newAddress);
+        return result;
+    }
 
+    @Override
+    public JsonResult deleteShippingAddress(int addressId){
+        JsonResult result = new JsonResult<>(YES,"成功删除收货地址！");
+        userMapper.DeleteShippingAddressByAddressID(addressId);
+        return result;
+    }
 
+    @Override
+    public JsonResult modifyShippingAddress(ShippingAddress modifiedAddress){
+        JsonResult result = new JsonResult<>(YES,"修改地址成功");
+        userMapper.ModifyShippingAddressByAddressId(modifiedAddress);
+        return result;
+    }
 }

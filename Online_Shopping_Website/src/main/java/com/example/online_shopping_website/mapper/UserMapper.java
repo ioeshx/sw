@@ -1,5 +1,6 @@
 package com.example.online_shopping_website.mapper;
 
+import com.example.online_shopping_website.entity.ShippingAddress;
 import com.example.online_shopping_website.entity.User;
 
 import java.math.BigDecimal;
@@ -118,11 +119,12 @@ public interface UserMapper {
 
     int GetUidByShopname(String shopname);
     String DeleteShopAccountANDTransferBalanceToPrivateAccount(int uid);
-
     BigDecimal GetShopAccountByUid(int uid);
-
     void DeleteShopAccountByUid(int uid);
-
     void TransferShopAccountBalanceToPrivateAccount(int uid, BigDecimal ShopAccountBalance);
+    List<ShippingAddress> GetAllShippingAddress(String username);
+    void AddShippingAddress(ShippingAddress newAddress);
+    void DeleteShippingAddressByAddressID(int addressId);
+    void ModifyShippingAddressByAddressId(ShippingAddress modifiedAddress);
 }
 
