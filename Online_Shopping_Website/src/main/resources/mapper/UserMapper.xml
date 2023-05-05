@@ -175,7 +175,7 @@
     </insert>
 
     <delete id="DeleteReceiverAddressByAddressID">
-        delete from receiveraddress WHERE addressId = #{addressId};
+        UPDATE receiveraddress set state = -1 WHERE addressId = #{addressId};
     </delete>
 
     <update id="ModifyReceiverAddressByAddressId">
