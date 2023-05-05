@@ -1,7 +1,6 @@
 package com.example.online_shopping_website.service.impl;
 
-import com.example.online_shopping_website.entity.Good;
-import com.example.online_shopping_website.entity.ShippingAddress;
+import com.example.online_shopping_website.entity.ReceiverAddress;
 import com.example.online_shopping_website.entity.Transaction;
 import com.example.online_shopping_website.mapper.TransactionMapper;
 import com.example.online_shopping_website.mapper.UserMapper;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.List;
-import java.util.jar.JarException;
 
 import static com.example.online_shopping_website.entity.constant.AccountType.*;
 import static com.example.online_shopping_website.entity.constant.UserType.*;
@@ -229,31 +227,56 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public JsonResult getAllShippingAddress(String username){
+    public JsonResult getAllReceiverAddress(String username){
         JsonResult result = new JsonResult<>(YES);
-        List<ShippingAddress> allAddress = userMapper.GetAllShippingAddress(username);
+        List<ReceiverAddress> allAddress = userMapper.GetAllReceiverAddress(username);
         result.setData(allAddress);
         return result;
     }
 
     @Override
-    public JsonResult addShippingAddress(ShippingAddress newAddress){
+    public JsonResult addReceiverAddress(ReceiverAddress newAddress){
         JsonResult result = new JsonResult<>(YES,"成功添加收货地址！");
-        userMapper.AddShippingAddress(newAddress);
+        userMapper.AddReceiverAddress(newAddress);
         return result;
     }
 
     @Override
-    public JsonResult deleteShippingAddress(int addressId){
+    public JsonResult deleteReceiverAddress(int addressId){
         JsonResult result = new JsonResult<>(YES,"成功删除收货地址！");
-        userMapper.DeleteShippingAddressByAddressID(addressId);
+        userMapper.DeleteReceiverAddressByAddressID(addressId);
         return result;
     }
 
     @Override
-    public JsonResult modifyShippingAddress(ShippingAddress modifiedAddress){
+    public JsonResult modifyReceiverAddress(ReceiverAddress modifiedAddress){
         JsonResult result = new JsonResult<>(YES,"修改地址成功");
-        userMapper.ModifyShippingAddressByAddressId(modifiedAddress);
+        userMapper.ModifyReceiverAddressByAddressId(modifiedAddress);
+        return result;
+    }
+
+    @Override
+    public JsonResult setDefaultReceiverAddress(String username, int addressId){
+        JsonResult result = new JsonResult<>(YES, "设置默认地址成功！");
+        userMapper.deletePreviousDefaultAddress(username);
+        userMapper.setDefaultReceiverAddress(username, addressId);
+        return result;
+    }
+    @Override
+    public JsonResult getDefaultReceiverAddress(String username){
+        JsonResult result = new JsonResult<>(YES, "");
+        ReceiverAddress defaultAddress = userMapper.getDefaultReceiverAddress(username);
+        result.setData(defaultAddress);
+        return result;
+    }
+
+    @Override
+    public JsonResult purchaseNow(String username, int goodsId, int goodsNum){
+        JsonResult result = new JsonResult<>(YES,"购买成功!");
+        //1.检测余额
+
+        //2.检测商品库存
+
         return result;
     }
 }

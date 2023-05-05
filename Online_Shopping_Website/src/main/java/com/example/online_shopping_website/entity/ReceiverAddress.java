@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShippingAddress {
+public class ReceiverAddress {
     private int addressId;
     private String username;
     private int uid;
@@ -18,8 +18,9 @@ public class ShippingAddress {
     private String county;          //县级
     private String township;        //镇级
     private String detailAddress; //详细地址
+    private int state;
 
-    public ShippingAddress(String username, String receiverName, String phone, String province, String municipality, String county, String township, String detailAddress) {
+    public ReceiverAddress(String username, String receiverName, String phone, String province, String municipality, String county, String township, String detailAddress) {
         this.username = username;
         this.receiverName = receiverName;
         this.phone = phone;
@@ -30,7 +31,7 @@ public class ShippingAddress {
         this.detailAddress = detailAddress;
     }
 
-    public ShippingAddress(int addressId, String receiverName, String phone, String province, String municipality, String county, String township, String detailAddress) {
+    public ReceiverAddress(int addressId, String receiverName, String phone, String province, String municipality, String county, String township, String detailAddress) {
         this.addressId = addressId;
         this.receiverName = receiverName;
         this.phone = phone;

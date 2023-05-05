@@ -32,9 +32,9 @@
         <result column="shopname" property="shopname"></result>
     </resultMap>
 
-    <resultMap id="ShippingAddressMap" type="com.example.online_shopping_website.entity.ShippingAddress">
+    <resultMap id="ReceiverAddressMap" type="com.example.online_shopping_website.entity.ReceiverAddress">
         <result column="addressId" property="addressId"></result>
-        <result column="username" property="username0"></result>
+        <result column="username" property="username"></result>
         <result column="uid" property="uid"></result>
         <result column="receiverName" property="receiverName"></result>
         <result column="phone" property="phone"></result>
@@ -43,6 +43,7 @@
         <result column="county" property="county"></result>
         <result column="township" property="township"></result>
         <result column="detailAddress" property="detailAddress"></result>
+        <result column="state" property="state"></result>
     </resultMap>
 
     <insert id="Insert" >
@@ -162,23 +163,23 @@
         UPDATE users SET privateAccount = privateAccount + #{ShopAccountBalance} WHERE uid = #{uid};
     </update>
 
-    <select id="GetAllShippingAddress" resultMap="ShippingAddressMap">
-        SELECT * FROM shippingAddress WHERE username = #{username};
+    <select id="GetAllReceiverAddress" resultMap="ReceiverAddressMap">
+        SELECT * FROM receiveraddress WHERE username = #{username};
     </select>
 
-    <insert id="AddShippingAddress" >
-        insert into shippingaddress
+    <insert id="AddReceiverAddress" >
+        insert into receiveraddress
             (username, receiverName, phone, province, municipality, county, township, detailAddress)
         VALUES
             (#{username}, #{receiverName}, #{phone}, #{province}, #{municipality}, #{county}, #{township}, #{detailAddress});
     </insert>
 
-    <delete id="DeleteShippingAddressByAddressID">
-        delete from shippingaddress WHERE addressId = #{addressId}
+    <delete id="DeleteReceiverAddressByAddressID">
+        delete from receiveraddress WHERE addressId = #{addressId};
     </delete>
 
-    <update id="ModifyShippingAddressByAddressId">
-        UPDATE shippingAddress set
+    <update id="ModifyReceiverAddressByAddressId">
+        UPDATE receiveraddress set
             receiverName = #{receiverName},
             phone = #{phone},
             province = #{province},
@@ -186,8 +187,20 @@
             county = #{county},
             township = #{township},
             detailAddress = #{detailAddress}
-        WHERE addressId = #{addressId}
+        WHERE addressId = #{addressId};
     </update>
+
+    <update id="deletePreviousDefaultAddress">
+        UPDATE receiveraddress SET state = 0 WHERE username = #{username} AND state = 1;
+    </update>
+
+    <update id="setDefaultReceiverAddress">
+        UPDATE receiveraddress SET state = 1 WHERE username = #{username} AND addressId = #{addressId};
+    </update>
+
+    <select id="getDefaultReceiverAddress" resultMap="ReceiverAddressMap">
+        SELECT * FROM receiverAddress WHERE username = #{username} AND state = 1;
+    </select>
 </mapper>
 
 

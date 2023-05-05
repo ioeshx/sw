@@ -1,7 +1,6 @@
 package com.example.online_shopping_website.controller;
 
-import com.example.online_shopping_website.entity.ShippingAddress;
-import com.example.online_shopping_website.entity.Shop;
+import com.example.online_shopping_website.entity.ReceiverAddress;
 import com.example.online_shopping_website.entity.User;
 import com.example.online_shopping_website.service.IShopService;
 import com.example.online_shopping_website.service.IUserService;
@@ -184,15 +183,15 @@ public class UserController {
         return result;
     }
 
-    @RequestMapping("/api/getAllShippingAddress")
-    public JsonResult getAllShippingAddress(@RequestBody Map<String,Object> map){
+    @RequestMapping("/api/getAllReceiverAddress")
+    public JsonResult getAllReceiverAddress(@RequestBody Map<String,Object> map){
         String username = (String)map.get("username");
-        JsonResult result = userService.getAllShippingAddress(username);
+        JsonResult result = userService.getAllReceiverAddress(username);
         return result;
     }
 
-    @RequestMapping("/api/addShippingAddress")
-    public JsonResult addShippingAddress(@RequestBody Map<String,Object> map){
+    @RequestMapping("/api/addReceiverAddress")
+    public JsonResult addReceiverAddress(@RequestBody Map<String,Object> map){
         String username = (String)map.get("username");
         String receiverName = (String)map.get("receiverName");
         String phone = (String)map.get("phone");
@@ -201,21 +200,21 @@ public class UserController {
         String county = (String)map.get("county");
         String township = (String)map.get("township");
         String detailAddress = (String)map.get("detailAddress");
-        ShippingAddress newAddress = new ShippingAddress(username, receiverName, phone, province, municipality, county, township,detailAddress);
+        ReceiverAddress newAddress = new ReceiverAddress(username, receiverName, phone, province, municipality, county, township,detailAddress);
 
-        JsonResult result = userService.addShippingAddress(newAddress);
+        JsonResult result = userService.addReceiverAddress(newAddress);
         return result;
     }
 
-    @RequestMapping("/api/deleteShippingAddress")
-    public JsonResult deleteShippingAddress(@RequestBody Map<String,Object> map){
+    @RequestMapping("/api/deleteReceiverAddress")
+    public JsonResult deleteReceiverAddress(@RequestBody Map<String,Object> map){
         int addressID = (int) map.get("addressId");
-        JsonResult result = userService.deleteShippingAddress(addressID);
+        JsonResult result = userService.deleteReceiverAddress(addressID);
         return result;
     }
 
-    @RequestMapping("/api/modifyShippingAddress")
-    public JsonResult modifyShippingAddress(@RequestBody Map<String,Object> map){
+    @RequestMapping("/api/modifyReceiverAddress")
+    public JsonResult modifyReceiverAddress(@RequestBody Map<String,Object> map){
         int addressID = (int) map.get("addressId");
         String receiverName = (String)map.get("receiverName");
         String phone = (String)map.get("phone");
@@ -224,11 +223,36 @@ public class UserController {
         String county = (String)map.get("county");
         String township = (String)map.get("township");
         String detailAddress = (String)map.get("detailAddress");
-        ShippingAddress modifiedAddress = new ShippingAddress(addressID ,receiverName, phone, province, municipality, county, township,detailAddress);
+        ReceiverAddress modifiedAddress = new ReceiverAddress(addressID ,receiverName, phone, province, municipality, county, township,detailAddress);
 
-        JsonResult result = userService.modifyShippingAddress(modifiedAddress);
+        JsonResult result = userService.modifyReceiverAddress(modifiedAddress);
         return result;
     }
+
+    @RequestMapping("/api/setDefaultReceiverAddress")
+    public JsonResult setDefaultReceiverAddress(@RequestBody Map<String,Object> map){
+        String username = (String)map.get("username");
+        int addressId = (int)map.get("addressId");
+        JsonResult result = userService.setDefaultReceiverAddress(username, addressId);
+        return  result;
+    }
+
+    @RequestMapping("/api/getDefaultReceiverAddress")
+    public JsonResult getDefaultReceiverAddress(@RequestBody Map<String,Object> map){
+        String username = (String)map.get("username");
+        JsonResult result = userService.getDefaultReceiverAddress(username);
+        return result;
+    }
+
+    @RequestMapping("/api/purchaseNow")
+    public JsonResult purchaseNow(@RequestBody Map<String,Object> map){
+        int goodsId = (int)map.get("goodsId");
+        int goodsNum = (int) map.get("goodsNum");
+        String username = (String) map.get("username");
+        JsonResult result = userService.purchaseNow(username, goodsId, goodsNum);
+        return result;
+    }
+
 }
 
 

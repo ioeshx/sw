@@ -1,10 +1,9 @@
 package com.example.online_shopping_website.service;
 
-import com.example.online_shopping_website.entity.ShippingAddress;
+import com.example.online_shopping_website.entity.ReceiverAddress;
 import com.example.online_shopping_website.entity.User;
 import com.example.online_shopping_website.util.JsonResult;
 
-import java.io.File;
 import java.math.BigDecimal;
 
 public interface IUserService {
@@ -45,8 +44,11 @@ public interface IUserService {
 
     JsonResult getIntermediaryAccount();
     void deleteUserAvatar(String username);
-    JsonResult getAllShippingAddress(String username);
-    JsonResult addShippingAddress(ShippingAddress newAddress);
-    JsonResult deleteShippingAddress(int addressId);
-    JsonResult modifyShippingAddress(ShippingAddress modifiedAddress);
+    JsonResult getAllReceiverAddress(String username);
+    JsonResult addReceiverAddress(ReceiverAddress newAddress);
+    JsonResult deleteReceiverAddress(int addressId);
+    JsonResult modifyReceiverAddress(ReceiverAddress modifiedAddress);
+    JsonResult purchaseNow(String username, int goodsId, int goodsNum);
+    JsonResult setDefaultReceiverAddress(String username, int addressId);
+    JsonResult getDefaultReceiverAddress(String username);
 }
