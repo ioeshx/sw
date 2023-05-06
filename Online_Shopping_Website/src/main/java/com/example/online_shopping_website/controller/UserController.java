@@ -244,12 +244,14 @@ public class UserController {
         return result;
     }
 
-    @RequestMapping("/api/purchaseNow")
-    public JsonResult purchaseNow(@RequestBody Map<String,Object> map){
+    @RequestMapping("/api/purchaseInGoodsPage")
+    public JsonResult purchaseInGoodsPage(@RequestBody Map<String,Object> map){
         int goodsId = (int)map.get("goodsId");
         int goodsNum = (int) map.get("goodsNum");
+        int addressId = (int)map.get("addressId");
         String username = (String) map.get("username");
-        JsonResult result = userService.purchaseNow(username, goodsId, goodsNum);
+        JsonResult result1 = userService.purchaseInGoodsPage(username, goodsId, goodsNum, addressId);
+        JsonResult result = result1;
         return result;
     }
 

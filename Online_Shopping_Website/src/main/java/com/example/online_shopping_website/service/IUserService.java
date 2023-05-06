@@ -48,7 +48,7 @@ public interface IUserService {
     JsonResult addReceiverAddress(ReceiverAddress newAddress);
     JsonResult deleteReceiverAddress(int addressId);
     JsonResult modifyReceiverAddress(ReceiverAddress modifiedAddress);
-    JsonResult purchaseNow(String username, int goodsId, int goodsNum);
     JsonResult setDefaultReceiverAddress(String username, int addressId);
     JsonResult getDefaultReceiverAddress(String username);
+    JsonResult purchaseInGoodsPage(String username, int goodsId, int goodsNum, int addressId);
 }

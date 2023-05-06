@@ -1,10 +1,10 @@
 package com.example.online_shopping_website.service.impl;
 
-import com.example.online_shopping_website.entity.ReceiverAddress;
-import com.example.online_shopping_website.entity.Transaction;
+import com.example.online_shopping_website.entity.*;
+import com.example.online_shopping_website.mapper.GoodMapper;
+import com.example.online_shopping_website.mapper.OrderMapper;
 import com.example.online_shopping_website.mapper.TransactionMapper;
 import com.example.online_shopping_website.mapper.UserMapper;
-import com.example.online_shopping_website.entity.User;
 import com.example.online_shopping_website.service.IUserService;
 import com.example.online_shopping_website.service.ex.*;
 import com.example.online_shopping_website.util.JsonResult;
@@ -14,9 +14,11 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 import static com.example.online_shopping_website.entity.constant.AccountType.*;
+import static com.example.online_shopping_website.entity.constant.OrderState.pendingPayment;
 import static com.example.online_shopping_website.entity.constant.UserType.*;
 import static javax.security.auth.callback.ConfirmationCallback.*;
 
@@ -26,7 +28,10 @@ import static javax.security.auth.callback.ConfirmationCallback.*;
 public class UserServiceImpl implements IUserService {
     @Autowired
     private UserMapper userMapper;
-
+    @Autowired
+    private GoodMapper goodMapper;
+    @Autowired
+    private OrderMapper orderMapper;
     @Autowired
     private TransactionMapper transactionMapper;
     @Override
@@ -271,12 +276,27 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public JsonResult purchaseNow(String username, int goodsId, int goodsNum){
-        JsonResult result = new JsonResult<>(YES,"购买成功!");
-        //1.检测余额
+    public JsonResult purchaseInGoodsPage(String username, int goodsId, int goodsNum, int addressId){
+        JsonResult result = new JsonResult<>(YES,"创建订单成功");
+        Good good = goodMapper.getGoodsByGoodsId(goodsId);
+        //1.检测商品状态和库存
+        if (good.getGoodsStock() < goodsNum) {
+            result.setState(NO);
+            result.setMessage("商品库存不足");
+            return result;
+        }else if(false){     //商品状态和商店状态
 
-        //2.检测商品库存
-
+        }
+        //2.创建订单,并返回订单ID
+        BigDecimal unitPrice = new BigDecimal(good.getGoodsPrice());
+        BigDecimal totalPrice = unitPrice.multiply(BigDecimal.valueOf(goodsNum));
+        Order newOrder = new Order(username,totalPrice, addressId, pendingPayment);
+        orderMapper.creatOrder(newOrder); //chatgpt,设置ID
+        result.setData(newOrder);
+        //3.创建订单项
+        OrderItem orderItem = new OrderItem(newOrder.getOrderId(), goodsId, good.getGoodsname(),
+                                            BigDecimal.valueOf(good.getGoodsPrice()), goodsNum, good.getShopname());
+        orderMapper.createOrderItem(orderItem);
         return result;
     }
 }
