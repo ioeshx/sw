@@ -110,6 +110,8 @@ export default {
             this.$axios.post("/getValidGoodsByShopname", {
                 shopname: localStorage.getItem("shopname")
             }).then(res => {
+              console.log(localStorage.getItem("shopname"))
+              console.log(localStorage.getItem("username"))
                 this.validGoodsList = res.data.data;
                 console.log(this.validGoodsList)
             })

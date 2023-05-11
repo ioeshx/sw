@@ -288,7 +288,7 @@ export default {
     login: function() {
       this.$router.push({name:'Login'});
     },
-    register: function (form) {
+    c: function (form) {
       // 首先判断需要填写的信息是否已经完全填入
       this.$refs[form].validate((valid=>{
         console.log(this.form.usertype);
