@@ -13,23 +13,28 @@ import java.util.Date;
 public class Order {
     private int orderId;
     private String username;
-    private Date orderTime;
-    private BigDecimal totalPrice;
     private int addressId;
+    private String shopName;
+    private Date orderTime;
+    private int goodsId;
+    private String goodsName;
+    private BigDecimal unitPrice;
+    private int goodsNum;
+    private BigDecimal totalPrice;
+    private BigDecimal actualPayment;
     private int status;
 
-    public Order(String username, Date orderTime, BigDecimal totalPrice, int addressId, int status) {
+    public Order(String username, int addressId, String shopName, Date orderTime, int goodsId, String goodsName, BigDecimal unitPrice, int goodsNum, BigDecimal totalPrice, BigDecimal actualPayment, int status) {
         this.username = username;
+        this.addressId = addressId;
+        this.shopName = shopName;
         this.orderTime = orderTime;
+        this.goodsId = goodsId;
+        this.goodsName = goodsName;
+        this.unitPrice = unitPrice;
+        this.goodsNum = goodsNum;
         this.totalPrice = totalPrice;
-        this.addressId = addressId;
-        this.status = status;
-    }
-
-    public Order(String username, BigDecimal totalPrice, int addressId, int status) {
-        this.username = username;
-        this.totalPrice = totalPrice;
-        this.addressId = addressId;
+        this.actualPayment = actualPayment;
         this.status = status;
     }
 }

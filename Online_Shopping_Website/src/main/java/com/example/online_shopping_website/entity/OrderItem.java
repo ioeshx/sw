@@ -15,6 +15,7 @@ public class OrderItem {
     private String goodsName;
     private BigDecimal unitPrice;
     private int goodsNum;
+    private BigDecimal itemPrice;
     private int shopId;
     private String shopName;
 

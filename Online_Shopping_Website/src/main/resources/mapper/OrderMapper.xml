@@ -7,31 +7,25 @@
     <resultMap id="OrderMap" type="com.example.online_shopping_website.entity.Order">
         <result column="orderId" property="orderId"/>
         <result column="username" property="username"/>
-        <result column="orderTime" property="orderTime"/>
-        <result column="totalPrice" property="totalPrice"/>
         <result column="addressId" property="addressId"/>
-        <result column="status" property="status"/>
-    </resultMap>
-
-    <resultMap id="OrderItemMap" type="com.example.online_shopping_website.entity.OrderItem">
-        <result column="orderId" property="orderId"/>
+        <result column="shopName" property="shopName"/>
+        <result column="orderTime" property="orderTime"/>
         <result column="goodsId" property="goodsId"/>
         <result column="goodsName" property="goodsName"/>
         <result column="unitPrice" property="unitPrice"/>
         <result column="goodsNum" property="goodsNum"/>
-        <result column="shopName" property="shopName"/>
-        <result column="shopId" property="shopId"/>
+        <result column="totalPrice" property="totalPrice"/>
+        <result column="actualPayment" property="actualPayment"/>
+        <result column="status" property="status"/>
     </resultMap>
+
+
     <!--  用useGeneratedKeys和keyProperty把自动增长的orderId返回Order类  -->
     <insert id="creatOrder" useGeneratedKeys="true" keyProperty="orderId">
-        insert into order (username, orderTime, totalPrice, addressId, status)
+        insert into order (username, shopName,orderTime, goodsId, goodsName, unitPrice, goodsNum, totalPrice, actualPayment,addressId, status)
             values
-        (#{username}, NOW(), #{totalPrice}, #{addressId}, #{status})
+        (#{username}, #{shopName}, #{orderTime}, #{goodsId}, #{goodsName}, #{unitPrice}, #{goodsNum},#{totalPrice}, #{actualPayment}, #{addressId}, #{status})
     </insert>
 
-    <insert id="createOrderItem">
-        insert into order_item  (ordeId, goodsId, goodsName, unitPrice, goodsNum, shopName)
-            VALUES
-        (#{orderId}, #{goodsId}, #{goodsName}, #{unitPrice}, #{goodsNum}, #{shopName})
-    </insert>
+
 </mapper>

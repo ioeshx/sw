@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -275,28 +276,70 @@ public class UserServiceImpl implements IUserService {
         return result;
     }
 
-    @Override
-    public JsonResult purchaseInGoodsPage(String username, int goodsId, int goodsNum, int addressId){
-        JsonResult result = new JsonResult<>(YES,"创建订单成功");
-        Good good = goodMapper.getGoodsByGoodsId(goodsId);
-        //1.检测商品状态和库存
-        if (good.getGoodsStock() < goodsNum) {
-            result.setState(NO);
-            result.setMessage("商品库存不足");
-            return result;
-        }else if(false){     //商品状态和商店状态
+//    @Override
+//    public JsonResult purchaseInGoodsPage(String username, int goodsId, int goodsNum, int addressId){
+//        JsonResult result = new JsonResult<>(YES,"创建订单成功");
+//        Good good = goodMapper.getGoodsByGoodsId(goodsId);
+//        //1.检测商品状态和库存
+//        if (good.getGoodsStock() < goodsNum) {
+//            result.setState(NO);
+//            result.setMessage("商品库存不足");
+//            return result;
+//        }else if(false){     //商品状态和商店状态
+//
+//        }
+//        //2.创建订单,并返回订单ID
+//        BigDecimal unitPrice = new BigDecimal(good.getGoodsPrice());
+//        BigDecimal totalPrice = unitPrice.multiply(BigDecimal.valueOf(goodsNum));
+//        Date currentTime = new Date();
+//        Order newOrder = new Order(username,currentTime,totalPrice, addressId, pendingPayment);
+//        orderMapper.creatOrder(newOrder); //设置ID
+//        result.setData(newOrder);
+//        //3.创建订单项
+//        OrderItem orderItem = new OrderItem(newOrder.getOrderId(), goodsId, good.getGoodsname(),
+//                                            BigDecimal.valueOf(good.getGoodsPrice()), goodsNum, good.getShopname());
+//        orderMapper.createOrderItem(orderItem);
+//        return result;
+//    }
+//
+//    @Override
+//    public JsonResult purchaseInCart(String username, List<Integer> allGoodsId){
+//
+//    }
 
+    @Override
+    public JsonResult submitOrder(String username, int addressId, List<Integer> allGoodsId, List<Integer> allGoodsNum){
+        JsonResult result = new JsonResult<>(YES,"成功创建订单");
+        //检查商品库存
+        List<Integer> OutofStock = new ArrayList<>();
+        for(int i = 0; i < allGoodsNum.size(); i++)
+            if( goodMapper.GetGoodsStockByGoodsId(allGoodsId.get(i)) < allGoodsNum.get(i))
+                OutofStock.add(i);
+        if( !OutofStock.isEmpty() ) {
+            result.setState(NO);
+            result.setMessage("");
+            for (int j : OutofStock) {
+                String msg = goodMapper.GetGoodsNameByGoodsId(j) + ":库存不足;";
+                result.addMessage(msg);
+            }
+            return result;
         }
-        //2.创建订单,并返回订单ID
-        BigDecimal unitPrice = new BigDecimal(good.getGoodsPrice());
-        BigDecimal totalPrice = unitPrice.multiply(BigDecimal.valueOf(goodsNum));
-        Order newOrder = new Order(username,totalPrice, addressId, pendingPayment);
-        orderMapper.creatOrder(newOrder); //chatgpt,设置ID
-        result.setData(newOrder);
-        //3.创建订单项
-        OrderItem orderItem = new OrderItem(newOrder.getOrderId(), goodsId, good.getGoodsname(),
-                                            BigDecimal.valueOf(good.getGoodsPrice()), goodsNum, good.getShopname());
-        orderMapper.createOrderItem(orderItem);
-        return result;
+        //创建订单
+        Date orderTime = new Date();
+        List<Integer> orderIdList = new ArrayList<>();
+        for(int i = 0; i < allGoodsId.size(); i++){
+            Good good = goodMapper.getGoodsByGoodsId(allGoodsId.get(i));
+            BigDecimal unitPrice = new BigDecimal(good.getGoodsPrice());
+            BigDecimal totalPrice = unitPrice.multiply(new BigDecimal(allGoodsNum.get(i)));
+            //实付金额要另行计算
+            BigDecimal actualPayment = totalPrice;
+            Order order = new Order(username, addressId, good.getShopname(), orderTime,
+                                    good.getGoodsId(), good.getGoodsname(), new BigDecimal(good.getGoodsPrice()),
+                                    allGoodsNum.get(i), totalPrice, actualPayment, pendingPayment);
+            int orderId = orderMapper.creatOrder(order);
+            orderIdList.add(orderId);
+        }
+        result.setData(orderIdList);
+        return  result;
     }
 }

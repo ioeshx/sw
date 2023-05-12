@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import static javax.security.auth.callback.ConfirmationCallback.*;
@@ -237,24 +238,33 @@ public class UserController {
         return  result;
     }
 
-    @RequestMapping("/api/getDefaultReceiverAddress")
-    public JsonResult getDefaultReceiverAddress(@RequestBody Map<String,Object> map){
+//    @RequestMapping("/api/getDefaultReceiverAddress")
+//    public JsonResult getDefaultReceiverAddress(@RequestBody Map<String,Object> map){
+//        String username = (String)map.get("username");
+//        JsonResult result = userService.getDefaultReceiverAddress(username);
+//        return result;
+//    }
+//
+//    @RequestMapping("/api/purchaseInGoodsPage")
+//    public JsonResult purchaseInGoodsPage(@RequestBody Map<String,Object> map){
+//        int goodsId = (int)map.get("goodsId");
+//        int goodsNum = (int) map.get("goodsNum");
+//        int addressId = (int)map.get("addressId");
+//        String username = (String) map.get("username");
+//        JsonResult result = userService.purchaseInGoodsPage(username, goodsId, goodsNum, addressId);
+//        return result;
+//    }
+
+    @RequestMapping("/api/submitOrder")
+    public JsonResult submitOrder(@RequestBody Map<String,Object> map){
+        List<Integer> allGoodsId = (List<Integer>)map.get("allGoodsId");
+        List<Integer> allGoodsNum = (List<Integer>)map.get("allGoodsNum");
         String username = (String)map.get("username");
-        JsonResult result = userService.getDefaultReceiverAddress(username);
-        return result;
-    }
-
-    @RequestMapping("/api/purchaseInGoodsPage")
-    public JsonResult purchaseInGoodsPage(@RequestBody Map<String,Object> map){
-        int goodsId = (int)map.get("goodsId");
-        int goodsNum = (int) map.get("goodsNum");
         int addressId = (int)map.get("addressId");
-        String username = (String) map.get("username");
-        JsonResult result1 = userService.purchaseInGoodsPage(username, goodsId, goodsNum, addressId);
-        JsonResult result = result1;
+
+        JsonResult result = userService.submitOrder(username, addressId, allGoodsId, allGoodsNum);
         return result;
     }
-
 }
 
 
