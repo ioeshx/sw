@@ -342,4 +342,17 @@ public class UserServiceImpl implements IUserService {
         result.setData(orderIdList);
         return  result;
     }
+
+    @Override
+    public JsonResult getOrderByOrderId(int orderId){
+        JsonResult result = new JsonResult<>(YES,"成功");
+        Order order = orderMapper.getOrderByOrderId(orderId);
+        if(order == null){
+            result.setState(NO);
+            result.setMessage("失败");
+            return result;
+        }
+        result.setData(order);
+        return result;
+    }
 }

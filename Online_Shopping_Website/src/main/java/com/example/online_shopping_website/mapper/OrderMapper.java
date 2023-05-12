@@ -8,4 +8,5 @@ import java.math.BigDecimal;
 public interface OrderMapper {
     int creatOrder(Order newOrder);
     int createOrderItem(OrderItem orderItem);
+    Order getOrderByOrderId(int orderId);
 }

@@ -56,4 +56,5 @@ public interface IUserService {
     //JsonResult purchaseInCart(String username, List<Integer> allGoodsId);
 
     JsonResult submitOrder(String username, int addressId, List<Integer> allGoodsId, List<Integer> allGoodsNum);
+    JsonResult getOrderByOrderId(int orderId);
 }

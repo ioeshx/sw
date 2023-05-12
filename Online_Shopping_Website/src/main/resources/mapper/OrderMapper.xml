@@ -27,5 +27,7 @@
         (#{username}, #{shopName}, #{orderTime}, #{goodsId}, #{goodsName}, #{unitPrice}, #{goodsNum},#{totalPrice}, #{actualPayment}, #{addressId}, #{status})
     </insert>
 
-
+    <select id="getOrderByOrderId">
+        SELECT * FROM order WHERE orderId = #{orderId};
+    </select>
 </mapper>

@@ -265,6 +265,12 @@ public class UserController {
         JsonResult result = userService.submitOrder(username, addressId, allGoodsId, allGoodsNum);
         return result;
     }
+
+    @RequestMapping("/api/getOrderByOrderId")
+    public JsonResult getOrderByOrderId(@RequestBody Map<String,Object> map){
+        int orderId = (int)map.get("orderId");
+        return userService.getOrderByOrderId(orderId);
+    }
 }
 
 
