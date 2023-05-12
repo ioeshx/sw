@@ -91,8 +91,18 @@ const router = createRouter({
       path: '/GoodsRegister',
       name: 'GoodsRegister',
       component: () => import('../components/Dashboard/Goods/GoodsRegister.vue')
-    }
-    
+    },
+    {
+      path: "/order",
+      name: "Order",
+      component: ()=> import('/Users/lisaitie/lab_4/Shop/src/views/ShoppingList/Order.vue'),
+      props: true, // 使用 props 将参数传递给组件
+    },
+    {
+      path: '/Pay',
+      name: 'Pay',
+      component: ()=> import('/Users/lisaitie/lab_4/Shop/src/views/ShoppingList/Pay.vue'),
+    },
     // 下述页面是为了调试方便的组件路径，最终需要封装到views中，因此不需要额外添加拦截器
     // 提交项目前保证无组件路径
     

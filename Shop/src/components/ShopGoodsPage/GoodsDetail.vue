@@ -40,7 +40,7 @@
                     </div>
                     <div class="buyBtn">
                         <el-button class="btn" @click="addToCart"> 加入购物车 </el-button>
-                        <el-button class="btn"> 购买 </el-button>
+                        <el-button class="btn" @click="BuyNow"> 购买 </el-button>
                         <!-- TODO: 收藏美化 -->
                         <el-button class="btn" v-if="favorited" @click="Unfavorite"> 取消收藏 </el-button>
                         <el-button class="btn" v-else @click="addToFavorites"> 收藏 </el-button>
@@ -85,7 +85,8 @@ export default {
                 goodsStock: 23,
                 goodsPrice: 23,
                 favorites: 0,
-                shopname: ""
+                shopname: "",
+                num: 1,
             },
             favorited: false,
             num: 1,
@@ -180,7 +181,17 @@ export default {
                 } else {
                     this.$message.error("出现异常，请重试！");
                 }})
-        }
+        },
+        BuyNow(){
+            this.goods.num = this.num;
+            const selectedGoods = [];
+            selectedGoods.push(this.goods.num);
+            localStorage.setItem("selectedGoods", JSON.stringify(selectedGoods));
+            // 导航到下单页面，不需要传递参数
+            this.$router.push({
+            name: "Order",
+          });
+        },
     }
 }
 

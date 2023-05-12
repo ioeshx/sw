@@ -11,7 +11,7 @@ import InvalidGoodsInSL from '../ShoppingList/InvalidGoodsInSL.vue'
             <div class="settlement">
                 <p>已选择{{ selectedCount }}件商品</p>
                 <p>共计：{{ totalPrice }}元</p>
-                <el-button class="tBtn">结算</el-button>
+              <el-button class="tBtn" @click="handleSettlement">结算</el-button>
                 <el-button class="tBtn" @click="isDelete=1">管理</el-button>
             </div>
         </div>
@@ -49,7 +49,7 @@ import InvalidGoodsInSL from '../ShoppingList/InvalidGoodsInSL.vue'
                             店铺：{{ shop.shopname }}
                         </el-checkbox>
                     </div>
-                        
+
                     <div class="goods">
                         <div class="goodShow" v-for="goods in shop.goodReturnList" :key="goods.goodsId">
                             <el-checkbox class="check" v-model="goods.isChecked" />
@@ -57,7 +57,7 @@ import InvalidGoodsInSL from '../ShoppingList/InvalidGoodsInSL.vue'
                         </div>
                     </div>
 
-                </div> 
+                </div>
             </div>
 
             <!--失效商品-->
@@ -171,6 +171,25 @@ export default {
         }
     },
     methods: {
+      handleSettlement() {
+        const selectedGoods = [];
+        this.validCart.forEach((shop) => {
+          shop.goodReturnList.forEach((goods) => {
+            if (goods.isChecked) {
+              selectedGoods.push(goods);
+            }
+          });
+        });
+
+        // 存储选中的商品数据到localStorage
+        localStorage.setItem("selectedGoods", JSON.stringify(selectedGoods));
+
+        // 导航到下单页面，不需要传递参数
+        this.$router.push({
+          name: "Order",
+        });
+      },
+
         getValidCart() {
             //this.shop.goodReturnList = [this.goods]
             //this.validCart = [this.shop];
