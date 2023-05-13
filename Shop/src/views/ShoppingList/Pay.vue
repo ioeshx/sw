@@ -46,8 +46,26 @@ export default {
       });
     },
     pay() {
-      // TODO: 实现支付逻辑
-      console.log("支付功能尚未实现");
+      // 从localStorage获取orderIdList
+      const orderIds = JSON.parse(window.localStorage.getItem("orderIds"));
+      // 调用/payment方法
+      this.$axios
+          .post('/payment', { orderIds })
+          .then(response => {
+            // 处理响应
+            if (!response.data.success) {
+              // 支付成功，可以进行相关操作，例如显示成功消息，清空localStorage中的orderIdList等
+              console.log("支付成功");
+              localStorage.removeItem('orderIds');
+            } else {
+              // 支付失败，可以进行相关操作，例如显示错误消息等
+              console.error("支付失败");
+            }
+          })
+          .catch(error => {
+            // 处理网络错误或其他异常情况
+            console.error("Error:", error);
+          });
     },
   },
 };

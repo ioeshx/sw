@@ -2,11 +2,11 @@
 import Nav from '../../components/Public/Nav/ShopkeeperNav.vue'
 import ShoppingList from '../../components/ShoppingList/ShoppingList.vue'
 </script>
-
 <template>
   <Nav></Nav>
-  <div>
-    <h1>下单页面</h1>
+  <div class="wrap">
+  <div class="container">
+    <h1 class="title"><span class="title-inner">下单页面</span></h1>
     <div class="order-item" v-for="goods in selectedGoods" :key="goods.goodsId">
       <img :src="'data:image/jpeg;base64,' + goods.goodsAvatar[0]" />
       <div class="order-item-info">
@@ -15,8 +15,11 @@ import ShoppingList from '../../components/ShoppingList/ShoppingList.vue'
         <p>数量：{{ goods.num }}</p>
       </div>
     </div>
-    <h3>收货地址列表：</h3>
-    <div v-for="address in addressList" :key="address.addressId">
+    <div class="address-list-header">
+      <h3 class="address-list-title">收货地址列表：</h3>
+      <button class="submit-button2" @click = 'addAddress'>添加收货地址+</button>
+    </div>
+    <div class="address-item" v-for="address in addressList" :key="address.addressId">
       <input
           type="radio"
           :value="address.addressId"
@@ -26,7 +29,8 @@ import ShoppingList from '../../components/ShoppingList/ShoppingList.vue'
         收货人：{{ address.receiverName }} - 手机：{{ address.phone }} - 省：{{ address.province }} - 市：{{ address.municipality }} - 县：{{ address.county }} - 镇：{{ address.township }} - 详细地址：{{ address.detailAddress }}
       </p>
     </div>
-    <button @click="createOrder">下单</button>
+    <button class="submit-button" @click="createOrder">下单</button>
+  </div>
   </div>
 </template>
 
@@ -44,6 +48,11 @@ export default {
     this.getAllReceiverAddress();
   },
   methods: {
+    addAddress(){
+      this.$router.push({
+        name: "addAddress",
+      });
+    },
     getAllReceiverAddress() {
       this.$axios
           .post("/getAllReceiverAddress", { username: this.username })
@@ -60,7 +69,12 @@ export default {
             console.error("Error:", error);
           });
     },
+
     createOrder() {
+      if (!this.selectedAddressId) {
+        this.$message.error("请先选择一个收货地址");
+        return;
+      }
       const goodsIdList = this.selectedGoods.map((goods) => goods.goodsId);
       const numList = this.selectedGoods.map((goods) => goods.num);
       this.$axios
@@ -89,15 +103,84 @@ export default {
 };
 </script>
 <style>
-.order-item {
+.address-list-header {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.wrap{
+  width: 85%;
+  height: 100%;
+  margin:20px auto;
+  padding: 10px 0 30px;
+  background-color: #fff;
+  border-radius: 15px;
+  color: #303133;
+  border: 2px solid #ebeef5;
+  box-shadow: 2px 2px 12px 2px rgb(0 0 0 / 10%);
+}
+.container {
+  width: 80%;
+  margin: 0 auto;
+  color: darkgreen;
+}
+.title {
+  text-align: center;
+  margin-bottom: 50px;
+  position: relative;
+  padding: 10px;
+}
+.order-item,
+.address-item {
+  border: 4px solid #81A18B;
+  border-radius: 8px;
+  padding: 20px;
   margin-bottom: 20px;
 }
-.order-item img {
-  width: 100px;
-  height: 100px;
+.order-item {
+  display: flex;
 }
-.order-item-info {
+.h3{
+  margin:auto;
+}
+.order-item img {
+  width: 150px;
+  height: 150px;
+}
+.order-item-info,
+.address-item {
   margin-left: 10px;
+}
+.address-list-title {
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+}
+.submit-button {
+  display: block;
+  width: 200px;
+  height: 50px;
+  margin: 20px auto;
+  background-color: #4F7942;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.submit-button2 {
+  display: block;
+  width: 150px;
+  height: 30px;
+  margin-right: 0px;
+  background-color: #4F7942;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.submit-button:hover {
+  background-color: #6B8E23;
 }
 </style>

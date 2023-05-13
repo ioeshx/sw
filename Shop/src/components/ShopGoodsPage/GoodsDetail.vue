@@ -87,6 +87,7 @@ export default {
                 favorites: 0,
                 shopname: "",
                 num: 1,
+                goodsId: ""
             },
             favorited: false,
             num: 1,
@@ -121,6 +122,7 @@ export default {
                 this.goods.goodsPrice = parseFloat(goods.goodsPrice);
                 this.totalPrice = this.goods.goodsPrice;
                 this.goods.shopname = goods.shopname;
+                this.goods.goodsId = this.goodsId;
                 this.isFavorited();
             })
         },
@@ -185,8 +187,9 @@ export default {
         BuyNow(){
             this.goods.num = this.num;
             const selectedGoods = [];
-            selectedGoods.push(this.goods.num);
+            selectedGoods.push(this.goods);
             localStorage.setItem("selectedGoods", JSON.stringify(selectedGoods));
+            console.log(selectedGoods)
             // 导航到下单页面，不需要传递参数
             this.$router.push({
             name: "Order",

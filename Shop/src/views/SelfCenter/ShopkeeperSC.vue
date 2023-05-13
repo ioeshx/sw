@@ -20,8 +20,8 @@ import ShowAllAddress from "@/components/Dashboard/User/ShowAllAddress.vue";
                     <el-button class="change" @click="this.state=1">修改个人信息</el-button>
                     <el-button class="change" @click="this.state=2">添加地址</el-button>
                     <el-button class="change" @click="this.state=3">我的地址</el-button>
+                    <el-button class="change" @click="orderPage">订单管理</el-button>
                 </div>
-                <OrderShow />
             </div>
         </div>
         <div v-if="state==1">
@@ -54,7 +54,11 @@ export default{
     created(){
         interceptor(this);
         shopkeeperInterceptor(this);
-    }
+    },methods:{
+      orderPage(){
+          this.$router.push({ name: "OrderPage" });
+      }
+  }
 }
 </script>
 
@@ -75,7 +79,7 @@ export default{
     grid-template-rows: 100%;
     grid-column-gap: 50px;
     margin-top: 20px;
-    margin-left:40px
+    margin-left: 20px;
 }
 
 .infoShow{
