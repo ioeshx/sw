@@ -130,7 +130,7 @@
         SELECT IFNULL(goodsStock, 0) FROM goods WHERE goodsId = #{goodsId}
     </select>
 
-    <select id="GetGoodsNameByGoodsId">
+    <select id="GetGoodsNameByGoodsId" resultMap="GoodMap">
         SELECT goodsname FROM goods WHERE goodsId = #{goodsId};
     </select>
 </mapper>

@@ -42,6 +42,8 @@ export default {
       username: window.localStorage.getItem("username"),
       selectedGoods: JSON.parse(localStorage.getItem("selectedGoods")),
       selectedAddressId: null,
+      orderIds : [],
+      orders :[],
     };
   },
   created() {
@@ -79,16 +81,14 @@ export default {
       const numList = this.selectedGoods.map((goods) => goods.num);
       this.$axios
           .post("/orderCreating", {
-          username: this.username,
+          username: window.localStorage.getItem("username"),
           addressId: this.selectedAddressId,
           goodsIdList: goodsIdList,
           numList: numList})
           .then((response) => {
             if (!response.data.success) {
-              window.localStorage.setItem(
-                  "orderIds",
-                  response.data.data
-              );
+              this.orderIds = JSON.stringify(response.data.data);
+              window.localStorage.setItem("orderIds",this.orderIds);
             } else {
               console.error("Error creating order");
             }

@@ -1,5 +1,6 @@
 <script setup>
 import Nav from '../../components/Public/Nav/ShopkeeperNav.vue'
+import OrderToPay from '/Users/lisaitie/lab_4/Shop/src/views/OrderPage/OrderToPay.vue'  // 请将路径替换为orderToPay.vue的实际路径
 </script>
 
 <template>
@@ -9,6 +10,7 @@ import Nav from '../../components/Public/Nav/ShopkeeperNav.vue'
   <section>
     <el-tabs :tab-position=tabPosition class="tabs">
       <el-tab-pane label="待支付">
+        <OrderToPay/>
 <!--        <MyShopInfo class="info" v-if="isregistered && (!isToModify)" :shop="shop"/>
         <ShopRegister class="cont" v-else :shop="shop"/>
          -->

@@ -102,6 +102,7 @@ const router = createRouter({
       path: '/Pay',
       name: 'Pay',
       component: ()=> import('/Users/lisaitie/lab_4/Shop/src/views/ShoppingList/Pay.vue'),
+      param : 'orderIds'
     },
     {
       path: '/OrderPage',

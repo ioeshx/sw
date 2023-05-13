@@ -22,6 +22,7 @@ export default {
   data() {
     return {
       orders: [],
+      orderIdList :JSON.parse( window.localStorage.getItem("orderIdList"))
     };
   },
   created() {
@@ -29,8 +30,9 @@ export default {
   },
   methods: {
     getOrders() {
-      const orderIds = JSON.parse(window.localStorage.getItem("orderIds"));
-      orderIds.forEach((orderId) => {
+      let orderIdList = window.localStorage.getItem("orderIds");
+      orderIdList = JSON.parse(orderIdList);
+      orderIdList.forEach((orderId) => {
         this.$axios
             .post("/getOrderByOrderId", { orderId: orderId })
             .then((response) => {
