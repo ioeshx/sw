@@ -45,8 +45,10 @@ export default {
   },
   methods:{
     async cancelOrder(orderId) {
+      let orderIdList = [];
+      orderIdList.push(orderId);
       this.$axios
-          .post("/cancelOrder", { orderId: orderId })
+          .post("/cancelOrder", { orderIdList: orderIdList })
           .then((response) => {
             if (!response.data.success) {
               this.$message.success("撤销订单成功");

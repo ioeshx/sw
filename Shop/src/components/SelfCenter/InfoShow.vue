@@ -35,7 +35,7 @@ export default {
           idnum: "",
           email: "",
           avatar: "",
-          account:0
+          account:100
         },
         credit: 0,
       }

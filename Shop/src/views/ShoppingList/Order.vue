@@ -87,8 +87,9 @@ export default {
           numList: numList})
           .then((response) => {
             if (!response.data.success) {
-              this.orderIds = JSON.stringify(response.data.data);
+              this.orderIds = response.data.data;
               window.localStorage.setItem("orderIds",this.orderIds);
+              this.$router.push({ name: "Pay" });
             } else {
               console.error("Error creating order");
             }
@@ -96,7 +97,7 @@ export default {
           .catch((error) => {
             console.error("Error:", error);
           });
-          this.$router.push({ name: "Pay" });
+
     },
 
   },
