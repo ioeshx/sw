@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import EditAddressInfo from "/Users/lisaitie/lab_4/Shop/src/components/Dashboard/User/EditingAddressInfo.vue";
+import EditAddressInfo from "./EditingAddressInfo.vue";
 export default {
   components: {
     EditAddressInfo,
