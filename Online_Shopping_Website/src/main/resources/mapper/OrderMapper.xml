@@ -21,13 +21,37 @@
 
 
     <!--  用useGeneratedKeys和keyProperty把自动增长的orderId返回Order类  -->
-    <insert id="creatOrder" useGeneratedKeys="true" keyProperty="orderId">
-        insert into order (username, shopName,orderTime, goodsId, goodsName, unitPrice, goodsNum, totalPrice, actualPayment,addressId, status)
+    <insert id="creatOrder" parameterType="com.example.online_shopping_website.entity.Order" useGeneratedKeys="true" keyProperty="orderId">
+        insert into orders (username, shopName,orderTime, goodsId, goodsName, unitPrice, goodsNum, totalPrice, actualPayment,addressId, status)
             values
-        (#{username}, #{shopName}, #{orderTime}, #{goodsId}, #{goodsName}, #{unitPrice}, #{goodsNum},#{totalPrice}, #{actualPayment}, #{addressId}, #{status})
+        (#{username}, #{shopName}, #{orderTime}, #{goodsId}, #{goodsName}, #{unitPrice}, #{goodsNum},#{totalPrice}, #{actualPayment}, #{addressId}, #{status});
     </insert>
 
-    <select id="getOrderByOrderId">
-        SELECT * FROM order WHERE orderId = #{orderId};
+    <select id="getOrderByOrderId" resultMap="OrderMap">
+        SELECT * FROM orders WHERE orderId = #{orderId};
     </select>
+
+    <select id="getAllOrdersByUsername" resultMap="OrderMap">
+        SELECT * FROM orders WHERE username = #{username};
+    </select>
+
+    <select id="getUsernameByOrderId">
+        SELECT username FROM orders WHERE orderId = #{orderId};
+    </select>
+
+    <select id="getActualPaymentByOrderId">
+        SELECT acutualPayment FROM orders WHERE orderId = #{orderId};
+    </select>
+
+    <update id="SetOrderToPendingDeliveryByOrderId">
+        UPDATE orders SET status = 1 WHERE orderId = #{orderId};
+    </update>
+
+    <select id="GetOrderStatusByOrderId">
+        SELECT status FROM orders WHERE orderId = #{orderId};
+    </select>
+
+    <update id="CancelOrderByOrderId">
+        UPDATE orders SET status = 5 WHERE orderId = #{orderId};
+    </update>
 </mapper>

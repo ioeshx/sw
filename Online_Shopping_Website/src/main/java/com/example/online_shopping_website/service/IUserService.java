@@ -55,6 +55,9 @@ public interface IUserService {
     //JsonResult purchaseInGoodsPage(String username, int goodsId, int goodsNum, int addressId);
     //JsonResult purchaseInCart(String username, List<Integer> allGoodsId);
 
-    JsonResult submitOrder(String username, int addressId, List<Integer> allGoodsId, List<Integer> allGoodsNum);
+    JsonResult orderCreating(String username, int addressId, List<Integer> allGoodsId, List<Integer> allGoodsNum);
     JsonResult getOrderByOrderId(int orderId);
+    JsonResult getAllOrders(String username);
+    JsonResult payment(List<Integer> orderIdList);
+    JsonResult cancelOrder(List<Integer> orderIdList);
 }

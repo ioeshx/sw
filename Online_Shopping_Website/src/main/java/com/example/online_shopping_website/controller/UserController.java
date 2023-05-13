@@ -255,21 +255,40 @@ public class UserController {
 //        return result;
 //    }
 
-    @RequestMapping("/api/submitOrder")
-    public JsonResult submitOrder(@RequestBody Map<String,Object> map){
-        List<Integer> allGoodsId = (List<Integer>)map.get("allGoodsId");
-        List<Integer> allGoodsNum = (List<Integer>)map.get("allGoodsNum");
+    @RequestMapping("/api/orderCreating")
+    public JsonResult orderCreating(@RequestBody Map<String,Object> map){
+        List<Integer> allGoodsId = (List<Integer>)map.get("goodsIdList");
+        List<Integer> allGoodsNum = (List<Integer>)map.get("numList");
         String username = (String)map.get("username");
         int addressId = (int)map.get("addressId");
 
-        JsonResult result = userService.submitOrder(username, addressId, allGoodsId, allGoodsNum);
+        JsonResult result = userService.orderCreating(username, addressId, allGoodsId, allGoodsNum);
         return result;
     }
 
     @RequestMapping("/api/getOrderByOrderId")
     public JsonResult getOrderByOrderId(@RequestBody Map<String,Object> map){
-        int orderId = (int)map.get("orderId");
+        int orderId = (int)map.get("OrderId");
         return userService.getOrderByOrderId(orderId);
+    }
+
+    @RequestMapping ("/api/getAllOrders")
+    public JsonResult getAllOrders(@RequestBody Map<String,Object> map){
+        String username = (String)map.get("username");
+        return userService.getAllOrders(username);
+
+    }
+
+    @RequestMapping("/api/payment")
+    public JsonResult payment(@RequestBody Map<String,Object> map){
+        List<Integer> orderIdList = (List<Integer>) map.get("orderIdList");
+        return userService.payment(orderIdList);
+    }
+
+    @RequestMapping("/api/cancelOrder")
+    public JsonResult cancelOrder(@RequestBody Map<String,Object> map){
+        List<Integer> orderIdList = (List<Integer>) map.get("orderIdList");
+        return userService.cancelOrder(orderIdList);
     }
 }
 

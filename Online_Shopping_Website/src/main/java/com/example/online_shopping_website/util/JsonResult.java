@@ -73,4 +73,6 @@ public class JsonResult<E> implements Serializable {
     public void setData(E data) {
         this.data = data;
     }
+
+
 }

@@ -201,6 +201,14 @@
     <select id="getDefaultReceiverAddress" resultMap="ReceiverAddressMap">
         SELECT * FROM receiverAddress WHERE username = #{username} AND state = 1;
     </select>
+
+    <select id="UpdatePrivateAccount">
+        UPDATE users SET privateAccount = #{privateAccount} WHERE username = #{username};
+    </select>
+
+    <update id="TransferTotalPaymentToIntermediaryAccount">
+        UPDATE users SET intermediaryAccount = intermediaryAccount + #{totalPayment} WHERE usertype = 0;
+    </update>
 </mapper>
 
 
