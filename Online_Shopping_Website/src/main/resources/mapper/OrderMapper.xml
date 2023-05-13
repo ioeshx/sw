@@ -35,7 +35,7 @@
         SELECT * FROM orders WHERE username = #{username};
     </select>
 
-    <select id="getUsernameByOrderId" resultType="java.lang.String">
+    <select id="getUsernameByOrderId" resultMap="OrderMap">
         SELECT username FROM orders WHERE orderId = #{orderId};
     </select>
 

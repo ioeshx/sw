@@ -1,5 +1,5 @@
 <script setup>
-import Nav from '/Users/lisaitie/lab_4/Shop/src/components/Public/Nav/ShopkeeperNav.vue'
+import Nav from '../../components/Public/Nav/ShopkeeperNav.vue'
 </script>
 <template>
   <Nav></Nav>
