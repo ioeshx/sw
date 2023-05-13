@@ -35,12 +35,12 @@
         SELECT * FROM orders WHERE username = #{username};
     </select>
 
-    <select id="getUsernameByOrderId" resultMap="OrderMap">
+    <select id="getUsernameByOrderId" resultType="java.lang.String">
         SELECT username FROM orders WHERE orderId = #{orderId};
     </select>
 
     <select id="getActualPaymentByOrderId" resultType="java.math.BigDecimal">
-        SELECT acutualPayment FROM orders WHERE orderId = #{orderId};
+        SELECT actualPayment FROM orders WHERE orderId = #{orderId};
     </select>
 
     <update id="SetOrderToPendingDeliveryByOrderId">
