@@ -132,4 +132,8 @@
     <update id="TransferCapitalToProfitAccount">
         UPDATE users SET profitAccount = profitAccount + #{capital} WHERE usertype = 0;
     </update>
+
+    <select id="GetUidByShopName" resultType="int">
+        SELECT uid FROM shops WHERE shopname = #{shopname};
+    </select>
 </mapper>

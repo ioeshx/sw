@@ -35,11 +35,11 @@
         SELECT * FROM orders WHERE username = #{username};
     </select>
 
-    <select id="getUsernameByOrderId">
+    <select id="getUsernameByOrderId" resultType="java.lang.String">
         SELECT username FROM orders WHERE orderId = #{orderId};
     </select>
 
-    <select id="getActualPaymentByOrderId">
+    <select id="getActualPaymentByOrderId" resultType="java.math.BigDecimal">
         SELECT acutualPayment FROM orders WHERE orderId = #{orderId};
     </select>
 
@@ -47,11 +47,31 @@
         UPDATE orders SET status = 1 WHERE orderId = #{orderId};
     </update>
 
-    <select id="GetOrderStatusByOrderId">
+    <select id="GetOrderStatusByOrderId" resultType="int">
         SELECT status FROM orders WHERE orderId = #{orderId};
     </select>
 
     <update id="CancelOrderByOrderId">
         UPDATE orders SET status = 5 WHERE orderId = #{orderId};
     </update>
+
+    <update id="SetOrderToFinishedByOrderId">
+        UPDATE orders SET status = 4 WHERE orderId = #{orderId};
+    </update>
+
+    <select id="GetShopNameByOrderId">
+        SELECT ShopName FROM orders WHERE orderId = #{orderId};
+    </select>
+
+    <select id="GetGoodsIdByOrderId">
+        SELECT goodsId FROM orders WHERE orderId = #{orderId};
+    </select>
+    
+    <select id="GetGoodsNumByOrderId" resultType="int">
+        SELECT goodsNum FROM orders WHERE orderId = #{orderId};
+    </select>
+
+    <select id="GetOrdersByStatus" resultMap="OrderMap">
+        SELECT * FROM orders WHERE username = #{username} AND status = #{status};
+    </select>
 </mapper>

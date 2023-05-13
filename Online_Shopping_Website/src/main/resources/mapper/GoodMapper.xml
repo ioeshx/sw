@@ -133,4 +133,8 @@
     <select id="GetGoodsNameByGoodsId">
         SELECT goodsname FROM goods WHERE goodsId = #{goodsId};
     </select>
+
+    <update id="AddToGoodsSales">
+        UPDATE goods SET sales = sales + #{orderSales} WHERE goodsId = #{goodsId};
+    </update>
 </mapper>

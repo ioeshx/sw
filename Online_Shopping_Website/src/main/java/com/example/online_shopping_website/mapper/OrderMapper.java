@@ -15,4 +15,9 @@ public interface OrderMapper {
     void SetOrderToPendingDeliveryByOrderId(int orderId);
     int GetOrderStatusByOrderId(int orderId);
     void CancelOrderByOrderId(int orderId);
+    void SetOrderToFinishedByOrderId(int orderId);
+    String GetShopNameByOrderId(int orderId);
+    int GetGoodsIdByOrderId(int orderId);
+    int GetGoodsNumByOrderId(int orderId);
+    List<Order> GetOrdersByStatus(String username, int status);
 }

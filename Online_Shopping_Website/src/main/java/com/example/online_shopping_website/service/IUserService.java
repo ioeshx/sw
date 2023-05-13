@@ -60,4 +60,7 @@ public interface IUserService {
     JsonResult getAllOrders(String username);
     JsonResult payment(List<Integer> orderIdList);
     JsonResult cancelOrder(List<Integer> orderIdList);
+    JsonResult confirmReceipt(List<Integer> orderIdList);
+    JsonResult makingDelivery(List<Integer> orderIdList);
+    JsonResult getOrdersByStatus(String username, int status);
 }
