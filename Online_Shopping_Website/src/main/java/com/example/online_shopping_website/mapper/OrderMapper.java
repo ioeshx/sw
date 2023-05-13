@@ -20,4 +20,9 @@ public interface OrderMapper {
     int GetGoodsIdByOrderId(int orderId);
     int GetGoodsNumByOrderId(int orderId);
     List<Order> GetOrdersByStatus(String username, int status);
+    void SetOrderToPendingReception(int orderId);
+    void SetOrderToDeleted(int orderId);
+    void SetOrderToApplyingForRefund(int orderId);
+    void SetOrderToRefunded(int orderId);
+    List<Order> GetOrdersByShopName(String shopName);
 }

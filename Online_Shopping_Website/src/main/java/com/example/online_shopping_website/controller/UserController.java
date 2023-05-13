@@ -309,6 +309,31 @@ public class UserController {
         int status = (int)map.get("status");
         return userService.getOrdersByStatus(username, status);
     }
+
+    @RequestMapping("/api/deleteOrder")
+    public JsonResult deleteOrder(@RequestBody Map<String,Object> map){
+        List<Integer> orderIdList = (List<Integer>) map.get("orderIdList");
+        return userService.deleteOrder(orderIdList);
+    }
+
+    @RequestMapping("/api/refundOrder")
+    public JsonResult refundOrder(@RequestBody Map<String,Object> map){
+        List<Integer> orderIdList = (List<Integer>) map.get("orderIdList");
+        return userService.refundOrder(orderIdList);
+    }
+
+    @RequestMapping("/api/agreeToRefund")
+    public JsonResult agreeToRefund(@RequestBody Map<String,Object> map) {
+        List<Integer> orderIdList = (List<Integer>) map.get("orderIdList");
+        return userService.agreeToRefund(orderIdList);
+    }
+
+    @RequestMapping("/api/getAllOrdersOfShop")
+    public JsonResult getAllOrdersOfShop(@RequestBody Map<String,Object> map){
+        String shopName = (String)map.get("shopName");
+        return userService.getAllOrdersOfShop(shopName);
+    }
+
 }
 
 
