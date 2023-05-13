@@ -16,8 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.online_shopping_website.entity.constant.AccountType.*;
-import static com.example.online_shopping_website.entity.constant.OrderState.pendingPayment;
-import static com.example.online_shopping_website.entity.constant.OrderState.pendingReception;
+import static com.example.online_shopping_website.entity.constant.OrderState.*;
 import static com.example.online_shopping_website.entity.constant.UserType.*;
 import static javax.security.auth.callback.ConfirmationCallback.*;
 
@@ -373,9 +372,9 @@ public class UserServiceImpl implements IUserService {
         BigDecimal privateAccount = userMapper.GetPrivateAccountByUsername(username);
         BigDecimal totalPayment = new BigDecimal(0);
         for(int orderId : orderIdList)
-            totalPayment.add(orderMapper.getActualPaymentByOrderId(orderId));
+            totalPayment = totalPayment.add(orderMapper.getActualPaymentByOrderId(orderId));
 
-        if( privateAccount.compareTo(totalPayment) == -1) {  //余额不足：个人账户余额小于订单费用
+        if(privateAccount.compareTo(totalPayment) < 0) {  //余额不足：个人账户余额小于订单费用
             result.setState(NO);
             String msg = "余额不足！账户余额是：" + privateAccount.toString() + " 总支付费用是：" + totalPayment.toString();
             result.setMessage(msg);
@@ -458,7 +457,21 @@ public class UserServiceImpl implements IUserService {
     public JsonResult makingDelivery(List<Integer> orderIdList){
         JsonResult result = new JsonResult(YES,"发货成功");
         //TODO
-
+        List<Integer> WrongOrderId = new ArrayList<>();
+        for(Integer orderId : orderIdList){
+            if(orderMapper.GetOrderStatusByOrderId(orderId) == pendingDelivery)
+                orderMapper.SetOrderToPendingReception(orderId);
+            else
+                WrongOrderId.add(orderId);
+        }
+        if( !WrongOrderId.isEmpty()){
+            result.setState(NO);
+            result.setMessage("");
+            for(Integer orderId : WrongOrderId){
+                String msg = "订单编号" + orderId.toString() + "不可发货;";
+                result.addMessage(msg);
+            }
+        }
         return result;
     }
 
@@ -466,5 +479,87 @@ public class UserServiceImpl implements IUserService {
     public JsonResult getOrdersByStatus(String username, int status){
         List<Order> orders = orderMapper.GetOrdersByStatus(username, status);
         return new JsonResult(YES,"成功",orders);
+    }
+
+    @Override
+    public JsonResult deleteOrder(List<Integer> orderIdList){
+        JsonResult result = new JsonResult(YES,"删除成功");
+        List<Integer> WrongOrderIdList = new ArrayList<>();
+        for(Integer orderId : orderIdList){
+            Integer status = orderMapper.GetOrderStatusByOrderId(orderId);
+            if( status == finished || status == canceled || status == refunded)
+                orderMapper.SetOrderToDeleted(orderId);
+            else
+                WrongOrderIdList.add(orderId);
+        }
+        if( !WrongOrderIdList.isEmpty()){
+            result.setState(NO);
+            result.setMessage("");
+            for(Integer orderId : orderIdList){
+                String msg = "订单编号" + orderId.toString() + "无法删除!";
+                result.addMessage(msg);
+            }
+        }
+        return  result;
+    }
+
+    @Override
+    public JsonResult refundOrder(List<Integer> orderIdList){
+        JsonResult result = new JsonResult(YES,"申请退款成功！");
+        List<Integer> WrongOrderIdList = new ArrayList<>();
+        for(Integer orderId : orderIdList){
+            Integer status = orderMapper.GetOrderStatusByOrderId(orderId);
+            if( status == pendingDelivery || status == pendingReception )
+                orderMapper.SetOrderToApplyingForRefund(orderId);   //把订单状态改为"申请退款中"
+            else
+                WrongOrderIdList.add(orderId);
+        }
+        if( !WrongOrderIdList.isEmpty()){
+            result.setState(NO);
+            result.setMessage("");
+            for(Integer orderId : orderIdList){
+                String msg = "订单编号" + orderId.toString() + "无法申请退款!";
+                result.addMessage(msg);
+            }
+        }
+        return  result;
+    }
+
+    @Override
+    public JsonResult agreeToRefund(List<Integer> orderIdList){
+        JsonResult result = new JsonResult(YES,"退款成功！");
+        List<Integer> WrongOrderIdList = new ArrayList<>();
+        for(Integer orderId : orderIdList){
+            Integer status = orderMapper.GetOrderStatusByOrderId(orderId);
+            if( status == applyingForRefund ){
+                //把订单状态改成"已退款"
+                orderMapper.SetOrderToRefunded(orderId);
+                //把钱从中间账号转回个人账号
+                BigDecimal actualPayment = orderMapper.getActualPaymentByOrderId(orderId);
+                String username = orderMapper.getUsernameByOrderId(orderId);
+                userMapper.SubtractFromIntermediaryAccount(actualPayment);
+                userMapper.AddToPrivateAccount(username, actualPayment);
+            }
+            else
+                WrongOrderIdList.add(orderId);
+        }
+        if( !WrongOrderIdList.isEmpty()){
+            result.setState(NO);
+            result.setMessage("");
+            for(Integer orderId : orderIdList){
+                String msg = "订单编号" + orderId.toString() + "无法同意退款!";
+                result.addMessage(msg);
+            }
+        }
+        return  result;
+    }
+
+    @Override
+    public JsonResult getAllOrdersOfShop(String shopName){
+        List<Order> orders = orderMapper.GetOrdersByShopName(shopName);
+        if(!orders.isEmpty())
+            return new JsonResult<>(YES, "成功！", orders);
+        else
+            return new JsonResult<>(NO, "失败!");
     }
 }

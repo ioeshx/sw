@@ -32,7 +32,7 @@
     </select>
 
     <select id="getAllOrdersByUsername" resultMap="OrderMap">
-        SELECT * FROM orders WHERE username = #{username};
+        SELECT * FROM orders WHERE username = #{username} AND status != -1;
     </select>
 
     <select id="getUsernameByOrderId" resultType="java.lang.String">
@@ -59,11 +59,11 @@
         UPDATE orders SET status = 4 WHERE orderId = #{orderId};
     </update>
 
-    <select id="GetShopNameByOrderId">
+    <select id="GetShopNameByOrderId" resultType="java.lang.String">
         SELECT ShopName FROM orders WHERE orderId = #{orderId};
     </select>
 
-    <select id="GetGoodsIdByOrderId">
+    <select id="GetGoodsIdByOrderId" resultType="int">
         SELECT goodsId FROM orders WHERE orderId = #{orderId};
     </select>
     
@@ -73,5 +73,25 @@
 
     <select id="GetOrdersByStatus" resultMap="OrderMap">
         SELECT * FROM orders WHERE username = #{username} AND status = #{status};
+    </select>
+
+    <update id="SetOrderToPendingReception">
+        UPDATE orders SET status = 2 WHERE orderId = #{orderId};
+    </update>
+
+    <update id="SetOrderToDeleted">
+        UPDATE orders SET status = -1 WHERE orderId = #{orderId};
+    </update>
+
+    <update id="SetOrderToApplyingForRefund">
+        UPDATE orders SET status = 7 WHERE orderId = #{orderId};
+    </update>
+
+    <update id="SetOrderToRefunded">
+        UPDATE orders SET status = 6 WHERE orderId = #{orderId};
+    </update>
+
+    <select id="GetOrdersByShopName" resultMap="OrderMap">
+        SELECT * FROM orders WHERE shopName = #{shopName};
     </select>
 </mapper>

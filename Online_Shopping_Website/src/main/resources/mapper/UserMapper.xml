@@ -221,6 +221,10 @@
     <update id="AddToShopAccount">
         UPDATE users SET shopAccount = shopAccount + #{money} WHERE uid = #{uid};
     </update>
+
+    <update id="AddToPrivateAccount">
+        UPDATE users SET privateAccount = privateAccount + #{money} WHERE username = #{username};
+    </update>
 </mapper>
 
 
