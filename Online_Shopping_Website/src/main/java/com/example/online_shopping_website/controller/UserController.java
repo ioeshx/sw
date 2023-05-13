@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import static javax.security.auth.callback.ConfirmationCallback.*;
@@ -237,22 +238,58 @@ public class UserController {
         return  result;
     }
 
-    @RequestMapping("/api/getDefaultReceiverAddress")
-    public JsonResult getDefaultReceiverAddress(@RequestBody Map<String,Object> map){
+//    @RequestMapping("/api/getDefaultReceiverAddress")
+//    public JsonResult getDefaultReceiverAddress(@RequestBody Map<String,Object> map){
+//        String username = (String)map.get("username");
+//        JsonResult result = userService.getDefaultReceiverAddress(username);
+//        return result;
+//    }
+//
+//    @RequestMapping("/api/purchaseInGoodsPage")
+//    public JsonResult purchaseInGoodsPage(@RequestBody Map<String,Object> map){
+//        int goodsId = (int)map.get("goodsId");
+//        int goodsNum = (int) map.get("goodsNum");
+//        int addressId = (int)map.get("addressId");
+//        String username = (String) map.get("username");
+//        JsonResult result = userService.purchaseInGoodsPage(username, goodsId, goodsNum, addressId);
+//        return result;
+//    }
+
+    @RequestMapping("/api/orderCreating")
+    public JsonResult orderCreating(@RequestBody Map<String,Object> map){
+        List<Integer> allGoodsId = (List<Integer>)map.get("goodsIdList");
+        List<Integer> allGoodsNum = (List<Integer>)map.get("numList");
         String username = (String)map.get("username");
-        JsonResult result = userService.getDefaultReceiverAddress(username);
+        int addressId = (int)map.get("addressId");
+
+        JsonResult result = userService.orderCreating(username, addressId, allGoodsId, allGoodsNum);
         return result;
     }
 
-    @RequestMapping("/api/purchaseNow")
-    public JsonResult purchaseNow(@RequestBody Map<String,Object> map){
-        int goodsId = (int)map.get("goodsId");
-        int goodsNum = (int) map.get("goodsNum");
-        String username = (String) map.get("username");
-        JsonResult result = userService.purchaseNow(username, goodsId, goodsNum);
-        return result;
+    @RequestMapping("/api/getOrderByOrderId")
+    public JsonResult getOrderByOrderId(@RequestBody Map<String,Object> map){
+        int orderId = (int)map.get("OrderId");
+        return userService.getOrderByOrderId(orderId);
     }
 
+    @RequestMapping ("/api/getAllOrders")
+    public JsonResult getAllOrders(@RequestBody Map<String,Object> map){
+        String username = (String)map.get("username");
+        return userService.getAllOrders(username);
+
+    }
+
+    @RequestMapping("/api/payment")
+    public JsonResult payment(@RequestBody Map<String,Object> map){
+        List<Integer> orderIdList = (List<Integer>) map.get("orderIdList");
+        return userService.payment(orderIdList);
+    }
+
+    @RequestMapping("/api/cancelOrder")
+    public JsonResult cancelOrder(@RequestBody Map<String,Object> map){
+        List<Integer> orderIdList = (List<Integer>) map.get("orderIdList");
+        return userService.cancelOrder(orderIdList);
+    }
 }
 
 

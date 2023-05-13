@@ -5,6 +5,7 @@ import com.example.online_shopping_website.entity.User;
 import com.example.online_shopping_website.util.JsonResult;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface IUserService {
     /**
@@ -48,7 +49,15 @@ public interface IUserService {
     JsonResult addReceiverAddress(ReceiverAddress newAddress);
     JsonResult deleteReceiverAddress(int addressId);
     JsonResult modifyReceiverAddress(ReceiverAddress modifiedAddress);
-    JsonResult purchaseNow(String username, int goodsId, int goodsNum);
     JsonResult setDefaultReceiverAddress(String username, int addressId);
     JsonResult getDefaultReceiverAddress(String username);
+
+    //JsonResult purchaseInGoodsPage(String username, int goodsId, int goodsNum, int addressId);
+    //JsonResult purchaseInCart(String username, List<Integer> allGoodsId);
+
+    JsonResult orderCreating(String username, int addressId, List<Integer> allGoodsId, List<Integer> allGoodsNum);
+    JsonResult getOrderByOrderId(int orderId);
+    JsonResult getAllOrders(String username);
+    JsonResult payment(List<Integer> orderIdList);
+    JsonResult cancelOrder(List<Integer> orderIdList);
 }

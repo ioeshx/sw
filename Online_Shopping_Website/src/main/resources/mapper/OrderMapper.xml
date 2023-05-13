@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.online_shopping_website.mapper.OrderMapper">
+    <resultMap id="OrderMap" type="com.example.online_shopping_website.entity.Order">
+        <result column="orderId" property="orderId"/>
+        <result column="username" property="username"/>
+        <result column="addressId" property="addressId"/>
+        <result column="shopName" property="shopName"/>
+        <result column="orderTime" property="orderTime"/>
+        <result column="goodsId" property="goodsId"/>
+        <result column="goodsName" property="goodsName"/>
+        <result column="unitPrice" property="unitPrice"/>
+        <result column="goodsNum" property="goodsNum"/>
+        <result column="totalPrice" property="totalPrice"/>
+        <result column="actualPayment" property="actualPayment"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+
+    <!--  用useGeneratedKeys和keyProperty把自动增长的orderId返回Order类  -->
+    <insert id="creatOrder" parameterType="com.example.online_shopping_website.entity.Order" useGeneratedKeys="true" keyProperty="orderId">
+        insert into orders (username, shopName,orderTime, goodsId, goodsName, unitPrice, goodsNum, totalPrice, actualPayment,addressId, status)
+            values
+        (#{username}, #{shopName}, #{orderTime}, #{goodsId}, #{goodsName}, #{unitPrice}, #{goodsNum},#{totalPrice}, #{actualPayment}, #{addressId}, #{status});
+    </insert>
+
+    <select id="getOrderByOrderId" resultMap="OrderMap">
+        SELECT * FROM orders WHERE orderId = #{orderId};
+    </select>
+
+    <select id="getAllOrdersByUsername" resultMap="OrderMap">
+        SELECT * FROM orders WHERE username = #{username};
+    </select>
+
+    <select id="getUsernameByOrderId">
+        SELECT username FROM orders WHERE orderId = #{orderId};
+    </select>
+
+    <select id="getActualPaymentByOrderId">
+        SELECT acutualPayment FROM orders WHERE orderId = #{orderId};
+    </select>
+
+    <update id="SetOrderToPendingDeliveryByOrderId">
+        UPDATE orders SET status = 1 WHERE orderId = #{orderId};
+    </update>
+
+    <select id="GetOrderStatusByOrderId">
+        SELECT status FROM orders WHERE orderId = #{orderId};
+    </select>
+
+    <update id="CancelOrderByOrderId">
+        UPDATE orders SET status = 5 WHERE orderId = #{orderId};
+    </update>
+</mapper>

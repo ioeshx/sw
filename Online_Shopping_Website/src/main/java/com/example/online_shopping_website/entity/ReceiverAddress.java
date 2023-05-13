@@ -17,7 +17,7 @@ public class ReceiverAddress {
     private String municipality;    //市级
     private String county;          //县级
     private String township;        //镇级
-    private String detailAddress; //详细地址
+    private String detailAddress;   //详细地址
     private int state;
 
     public ReceiverAddress(String username, String receiverName, String phone, String province, String municipality, String county, String township, String detailAddress) {

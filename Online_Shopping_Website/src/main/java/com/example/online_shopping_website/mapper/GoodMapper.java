@@ -3,6 +3,7 @@ package com.example.online_shopping_website.mapper;
 import com.example.online_shopping_website.entity.Good;
 import com.example.online_shopping_website.entity.pic;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface GoodMapper {
@@ -35,11 +36,10 @@ public interface GoodMapper {
     Boolean isFavorite(String username, int goodsId);
     int GetGoodsStockByGoodsId(int goodsId);
     void DeleteGoods(int goodsId);
-
     String GetShopnamByGoodsId(int goodsId);
-
     int GetGoodStatusByGoodsId(int goodsId);
-
     Good getGoodsByGoodsId(int goodsId);
     Good setSearch(int modifyStatus,String shopname);
+    BigDecimal GetGoodsPriceByGoodsId(int goodsId);
+    String GetGoodsNameByGoodsId(int goodsId);
 }

@@ -1,10 +1,10 @@
 package com.example.online_shopping_website.service.impl;
 
-import com.example.online_shopping_website.entity.ReceiverAddress;
-import com.example.online_shopping_website.entity.Transaction;
+import com.example.online_shopping_website.entity.*;
+import com.example.online_shopping_website.mapper.GoodMapper;
+import com.example.online_shopping_website.mapper.OrderMapper;
 import com.example.online_shopping_website.mapper.TransactionMapper;
 import com.example.online_shopping_website.mapper.UserMapper;
-import com.example.online_shopping_website.entity.User;
 import com.example.online_shopping_website.service.IUserService;
 import com.example.online_shopping_website.service.ex.*;
 import com.example.online_shopping_website.util.JsonResult;
@@ -13,10 +13,13 @@ import org.springframework.stereotype.Service;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 import static com.example.online_shopping_website.entity.constant.AccountType.*;
+import static com.example.online_shopping_website.entity.constant.OrderState.pendingPayment;
 import static com.example.online_shopping_website.entity.constant.UserType.*;
 import static javax.security.auth.callback.ConfirmationCallback.*;
 
@@ -26,7 +29,10 @@ import static javax.security.auth.callback.ConfirmationCallback.*;
 public class UserServiceImpl implements IUserService {
     @Autowired
     private UserMapper userMapper;
-
+    @Autowired
+    private GoodMapper goodMapper;
+    @Autowired
+    private OrderMapper orderMapper;
     @Autowired
     private TransactionMapper transactionMapper;
     @Override
@@ -270,12 +276,141 @@ public class UserServiceImpl implements IUserService {
         return result;
     }
 
-    @Override
-    public JsonResult purchaseNow(String username, int goodsId, int goodsNum){
-        JsonResult result = new JsonResult<>(YES,"购买成功!");
-        //1.检测余额
+//    @Override
+//    public JsonResult purchaseInGoodsPage(String username, int goodsId, int goodsNum, int addressId){
+//        JsonResult result = new JsonResult<>(YES,"创建订单成功");
+//        Good good = goodMapper.getGoodsByGoodsId(goodsId);
+//        //1.检测商品状态和库存
+//        if (good.getGoodsStock() < goodsNum) {
+//            result.setState(NO);
+//            result.setMessage("商品库存不足");
+//            return result;
+//        }else if(false){     //商品状态和商店状态
+//
+//        }
+//        //2.创建订单,并返回订单ID
+//        BigDecimal unitPrice = new BigDecimal(good.getGoodsPrice());
+//        BigDecimal totalPrice = unitPrice.multiply(BigDecimal.valueOf(goodsNum));
+//        Date currentTime = new Date();
+//        Order newOrder = new Order(username,currentTime,totalPrice, addressId, pendingPayment);
+//        orderMapper.creatOrder(newOrder); //设置ID
+//        result.setData(newOrder);
+//        //3.创建订单项
+//        OrderItem orderItem = new OrderItem(newOrder.getOrderId(), goodsId, good.getGoodsname(),
+//                                            BigDecimal.valueOf(good.getGoodsPrice()), goodsNum, good.getShopname());
+//        orderMapper.createOrderItem(orderItem);
+//        return result;
+//    }
+//
+//    @Override
+//    public JsonResult purchaseInCart(String username, List<Integer> allGoodsId){
+//
+//    }
 
-        //2.检测商品库存
+    @Override
+    public JsonResult orderCreating(String username, int addressId, List<Integer> allGoodsId, List<Integer> allGoodsNum){
+        JsonResult result = new JsonResult<>(YES,"成功创建订单");
+        //检查商品库存
+        List<Integer> OutofStock = new ArrayList<>();
+        for(int i = 0; i < allGoodsNum.size(); i++)
+            if( goodMapper.GetGoodsStockByGoodsId(allGoodsId.get(i)) < allGoodsNum.get(i))
+                OutofStock.add(i);
+        if( !OutofStock.isEmpty() ) {
+            result.setState(NO);
+            result.setMessage("");
+            for (int j : OutofStock) {
+                String msg = goodMapper.GetGoodsNameByGoodsId(j) + ":库存不足;";
+                result.addMessage(msg);
+            }
+            return result;
+        }
+        //创建订单
+        Date orderTime = new Date();
+        List<Integer> orderIdList = new ArrayList<>();
+        for(int i = 0; i < allGoodsId.size(); i++){
+            Good good = goodMapper.getGoodsByGoodsId(allGoodsId.get(i));
+            BigDecimal unitPrice = new BigDecimal(good.getGoodsPrice());
+            BigDecimal totalPrice = unitPrice.multiply(new BigDecimal(allGoodsNum.get(i)));
+            //实付金额要另行计算
+            BigDecimal actualPayment = totalPrice;
+            Order order = new Order(username, addressId, good.getShopname(), orderTime,
+                                    good.getGoodsId(), good.getGoodsname(), new BigDecimal(good.getGoodsPrice()),
+                                    allGoodsNum.get(i), totalPrice, actualPayment, pendingPayment);
+            orderMapper.creatOrder(order);
+            orderIdList.add(order.getOrderId());
+        }
+        result.setData(orderIdList);
+        return  result;
+    }
+
+    @Override
+    public JsonResult getOrderByOrderId(int orderId){
+        JsonResult result = new JsonResult<>(YES,"成功");
+        Order order = orderMapper.getOrderByOrderId(orderId);
+        if(order == null){
+            result.setState(NO);
+            result.setMessage("失败");
+            return result;
+        }
+        result.setData(order);
+        return result;
+    }
+
+    @Override
+    public JsonResult getAllOrders(String username){
+        List<Order> allOrders = orderMapper.getAllOrdersByUsername(username);
+        if(allOrders.isEmpty())
+            return new JsonResult<>(NO,"没有订单！",allOrders);
+        else
+            return new JsonResult<>(YES,"成功",allOrders);
+    }
+
+    @Override
+    public JsonResult payment(List<Integer> orderIdList){
+        JsonResult result = new JsonResult<>(YES,"订单支付成功");
+
+        String username = orderMapper.getUsernameByOrderId(orderIdList.get(0));
+        BigDecimal privateAccount = userMapper.GetPrivateAccountByUsername(username);
+        BigDecimal totalPayment = new BigDecimal(0);
+        for(int orderId : orderIdList)
+            totalPayment.add(orderMapper.getActualPaymentByOrderId(orderId));
+
+        if( privateAccount.compareTo(totalPayment) == -1) {  //余额不足：个人账户余额小于订单费用
+            result.setState(NO);
+            String msg = "余额不足！账户余额是：" + privateAccount.toString() + " 总支付费用是：" + totalPayment.toString();
+            result.setMessage(msg);
+        }else{                                           //余额充足，个人账户余额减去订单费用，并设置订单状态为“待发货”
+            privateAccount = privateAccount.subtract(totalPayment);
+            userMapper.UpdatePrivateAccount(username, privateAccount);
+            for(int orderId : orderIdList)
+                orderMapper.SetOrderToPendingDeliveryByOrderId(orderId);
+            //金额转入商城中间账户
+            userMapper.TransferTotalPaymentToIntermediaryAccount(totalPayment);
+        }
+
+        return result;
+    }
+
+    @Override
+    public JsonResult cancelOrder(List<Integer> orderIdList){
+        JsonResult result = new JsonResult<>(YES,"订单撤销成功");
+        //对orderIdList中的order逐个检查，并且设置为撤销
+        List<Integer> irrevocableOrders = new ArrayList<>();
+        for(int orderId : orderIdList) {
+            if(orderMapper.GetOrderStatusByOrderId(orderId) == pendingPayment)
+                orderMapper.CancelOrderByOrderId(orderId);
+            else{
+                irrevocableOrders.add(orderId);
+            }
+        }
+        //不可撤销的订单
+        if( !irrevocableOrders.isEmpty() ){
+            result.setMessage("");
+            for (Integer orderId : irrevocableOrders ){
+                String msg = "订单编号" + orderId.toString() + "不可撤销";
+                result.addMessage(msg);
+            }
+        }
 
         return result;
     }

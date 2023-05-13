@@ -99,8 +99,8 @@
         UPDATE goods SET favorites = favorites - 1 WHERE goosId = #{goosId};
     </insert>
 
-    <select id="isFavorite" resultType="java.lang.Boolean">
-        SELECT EXISTS(SELECT * from favorite WHERE username = {username} AND goodsId = #{goodsId});
+    <select id="isFavorite" resultType="boolean">
+        SELECT EXISTS(SELECT * from favorite WHERE username = #{username} AND goodsId = #{goodsId});
     </select>
 
     <select id="StatusSearch" resultMap="GoodMap">
@@ -128,5 +128,9 @@
 
     <select id="GetGoodsStockByGoodsId" resultType="int">
         SELECT IFNULL(goodsStock, 0) FROM goods WHERE goodsId = #{goodsId}
+    </select>
+
+    <select id="GetGoodsNameByGoodsId">
+        SELECT goodsname FROM goods WHERE goodsId = #{goodsId};
     </select>
 </mapper>
