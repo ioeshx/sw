@@ -93,4 +93,5 @@ public interface ShopMapper {
     void TransferCapitalToProfitAccount(BigDecimal capital);
 
     List<Shop> GetAllDeletingShop();
+    int GetUidByShopName(String shopName);
 }

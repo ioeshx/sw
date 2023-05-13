@@ -42,4 +42,5 @@ public interface GoodMapper {
     Good setSearch(int modifyStatus,String shopname);
     BigDecimal GetGoodsPriceByGoodsId(int goodsId);
     String GetGoodsNameByGoodsId(int goodsId);
+    void AddToGoodsSales(int goodsId, int orderSales);
 }

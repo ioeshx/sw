@@ -1,10 +1,7 @@
 package com.example.online_shopping_website.service.impl;
 
 import com.example.online_shopping_website.entity.*;
-import com.example.online_shopping_website.mapper.GoodMapper;
-import com.example.online_shopping_website.mapper.OrderMapper;
-import com.example.online_shopping_website.mapper.TransactionMapper;
-import com.example.online_shopping_website.mapper.UserMapper;
+import com.example.online_shopping_website.mapper.*;
 import com.example.online_shopping_website.service.IUserService;
 import com.example.online_shopping_website.service.ex.*;
 import com.example.online_shopping_website.util.JsonResult;
@@ -20,6 +17,7 @@ import java.util.List;
 
 import static com.example.online_shopping_website.entity.constant.AccountType.*;
 import static com.example.online_shopping_website.entity.constant.OrderState.pendingPayment;
+import static com.example.online_shopping_website.entity.constant.OrderState.pendingReception;
 import static com.example.online_shopping_website.entity.constant.UserType.*;
 import static javax.security.auth.callback.ConfirmationCallback.*;
 
@@ -33,6 +31,8 @@ public class UserServiceImpl implements IUserService {
     private GoodMapper goodMapper;
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private ShopMapper shopMapper;
     @Autowired
     private TransactionMapper transactionMapper;
     @Override
@@ -405,13 +405,66 @@ public class UserServiceImpl implements IUserService {
         }
         //不可撤销的订单
         if( !irrevocableOrders.isEmpty() ){
+            result.setState(NO);
             result.setMessage("");
             for (Integer orderId : irrevocableOrders ){
-                String msg = "订单编号" + orderId.toString() + "不可撤销";
+                String msg = "订单编号" + orderId.toString() + "不可撤销;";
+                result.addMessage(msg);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public JsonResult confirmReceipt(List<Integer> orderIdList){
+        JsonResult result = new JsonResult<>(YES,"确认收货成功！");
+        List<Integer> nonConfirmReceipt = new ArrayList<>();
+        for (int orderId : orderIdList){
+            if(orderMapper.GetOrderStatusByOrderId(orderId) == pendingReception){
+                //订单是“待收货”状态，把它设置成“已完成”
+                orderMapper.SetOrderToFinishedByOrderId(orderId);
+                //把订单费用转给商户
+                BigDecimal actualPayment = orderMapper.getActualPaymentByOrderId(orderId);
+                BigDecimal commission = actualPayment.multiply(new BigDecimal(0.05));   //佣金
+                BigDecimal ShopGain = actualPayment.subtract(commission);                   //商店收入
+                String shopName = orderMapper.GetShopNameByOrderId(orderId);
+                int uid = shopMapper.GetUidByShopName(shopName);
+                //从中间账户减去订单费用，佣金转入商城利润账户 剩下的传到商店账户
+                userMapper.SubtractFromIntermediaryAccount(actualPayment);
+                userMapper.AddToProfitAccount(commission);
+                userMapper.AddToShopAccount(uid, ShopGain);
+                //增加商品销量
+                int goodsId = orderMapper.GetGoodsIdByOrderId(orderId);
+                int orderSales = orderMapper.GetGoodsNumByOrderId(orderId);
+                goodMapper.AddToGoodsSales(goodsId, orderSales);
+            }else{
+                nonConfirmReceipt.add(orderId);
+            }
+        }
+
+        if( !nonConfirmReceipt.isEmpty()) {
+            result.setState(NO);
+            result.setMessage("");
+            for (Integer orderId : nonConfirmReceipt) {
+                String msg = "订单编号" + orderId.toString() + "无法确认收货!";
                 result.addMessage(msg);
             }
         }
 
+        return  result;
+    }
+
+    @Override
+    public JsonResult makingDelivery(List<Integer> orderIdList){
+        JsonResult result = new JsonResult(YES,"发货成功");
+        //TODO
+
         return result;
+    }
+
+    @Override
+    public JsonResult getOrdersByStatus(String username, int status){
+        List<Order> orders = orderMapper.GetOrdersByStatus(username, status);
+        return new JsonResult(YES,"成功",orders);
     }
 }

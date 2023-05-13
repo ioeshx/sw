@@ -290,6 +290,25 @@ public class UserController {
         List<Integer> orderIdList = (List<Integer>) map.get("orderIdList");
         return userService.cancelOrder(orderIdList);
     }
+
+    @RequestMapping("/api/confirmReceipt")
+    public JsonResult confirmReceipt(@RequestBody Map<String,Object> map){
+        List<Integer> orderIdList = (List<Integer>) map.get("orderIdList");
+        return userService.confirmReceipt(orderIdList);
+    }
+
+    @RequestMapping("/api/makingDelivery")
+    public JsonResult makingDelivery(@RequestBody Map<String,Object> map){
+        List<Integer> orderIdList = (List<Integer>) map.get("orderIdList");
+        return userService.makingDelivery(orderIdList);
+    }
+
+    @RequestMapping("/api/getOrdersByStatus")
+    public JsonResult getOrdersByStatus(@RequestBody Map<String,Object> map){
+        String username = (String)map.get("username");
+        int status = (int)map.get("status");
+        return userService.getOrdersByStatus(username, status);
+    }
 }
 
 

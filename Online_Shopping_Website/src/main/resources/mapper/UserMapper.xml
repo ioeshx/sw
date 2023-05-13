@@ -209,6 +209,18 @@
     <update id="TransferTotalPaymentToIntermediaryAccount">
         UPDATE users SET intermediaryAccount = intermediaryAccount + #{totalPayment} WHERE usertype = 0;
     </update>
+
+    <update id="SubtractFromIntermediaryAccount">
+        UPDATE users SET intermediaryAccount = intermediaryAccount - #{money} WHERE usertype = 0;
+    </update>
+
+    <update id="AddToProfitAccount">
+        UPDATE users SET profitAccount = profitAccount + #{money} WHERE usertype = 0;
+    </update>
+    
+    <update id="AddToShopAccount">
+        UPDATE users SET shopAccount = shopAccount + #{money} WHERE uid = #{uid};
+    </update>
 </mapper>
 
 

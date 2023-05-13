@@ -130,7 +130,10 @@ public interface UserMapper {
     void setDefaultReceiverAddress(String username, int addressId);
     ReceiverAddress getDefaultReceiverAddress(String username);
     void UpdatePrivateAccount(String username, BigDecimal privateAccount);
-
     void TransferTotalPaymentToIntermediaryAccount(BigDecimal totalPayment);
+    void SubtractFromIntermediaryAccount(BigDecimal money);
+    void AddToProfitAccount(BigDecimal money);
+    void AddToShopAccount(int uid, BigDecimal money);
+
 }
 
