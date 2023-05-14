@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>待支付订单</h2>
+    <h2>商家已发货</h2>
     <div v-for="order in orders" :key="order.orderId">
       <p>用户名：{{ order.username }}</p>
       <p>收货人：{{ order.addressDetail.receiverName }} - 手机：{{ order.addressDetail.phone }} - 省：{{ order.addressDetail.province }} - 市：{{ order.addressDetail.municipality }} - 县：{{ order.addressDetail.county }} - 镇：{{ order.addressDetail.township }} - 详细地址：{{ order.addressDetail.detailAddress }}</p>
@@ -12,8 +12,8 @@
       <p>商品数量：{{ order.goodsNum }}</p>
       <p>总价：{{ order.totalPrice }}</p>
       <p>实际支付金额：{{ order.actualPayment }}</p>
-      <el-button type="danger" @click="cancelOrder(order.orderId)">申请退款</el-button>
-      <el-button type="danger" @click="cancelOrder(order.orderId)">确认收货</el-button>
+      <el-button type="danger" @click="refund(order.orderId)">申请退款</el-button>
+      <el-button type="primary" @click="Done(order.orderId)">确认收货</el-button>
     </div>
   </div>
 </template>
@@ -54,18 +54,36 @@ export default {
         });
   },
   methods:{
-    async cancelOrder(orderId) {
+    async refund(orderId) {
       let orderIdList = [];
       orderIdList.push(orderId);
       this.$axios
-          .post("/cancelOrder", { orderIdList: orderIdList })
+          .post("/refundOrder", { orderIdList: orderIdList })
           .then((response) => {
             if (!response.data.success) {
-              this.$message.success("撤销订单成功");
-              this.$router.push({ name: "shopkeeperSelfCenter" });
+              this.$message.success("退款受理中");
+              this.$router.push({ name: "userSelfCenter" });
             } else {
-              this.$message.error("撤销订单失败");
-              this.$router.push({ name: "shopkeeperSelfCenter" });
+              this.$message.error("退款申请失败");
+              this.$router.push({ name: "userSelfCenter" });
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+    },
+    async Done(orderId) {
+      let orderIdList = [];
+      orderIdList.push(orderId);
+      this.$axios
+          .post("/confirmReceipt", { orderIdList: orderIdList })
+          .then((response) => {
+            if (!response.data.success) {
+              this.$message.success("已收货！");
+              this.$router.push({ name: "userSelfCenter" });
+            } else {
+              this.$message.error("收货失败");
+              this.$router.push({ name: "userSelfCenter" });
             }
           })
           .catch((error) => {

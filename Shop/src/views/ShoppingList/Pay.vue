@@ -1,5 +1,5 @@
 <script setup>
-import Nav from '../../components/Public/Nav/ShopkeeperNav.vue'
+import Nav from '../../components/Public/Nav/UserNav.vue'
 </script>
 
 <template>
@@ -40,14 +40,17 @@ export default {
   methods: {
     getOrders() {
       let orderIds = window.localStorage.getItem("orderIds");
-      let orderIdList = orderIds.split(',');
-      window.localStorage.setItem("orderIdsTest2",orderIdList);
+      let orderIdListTest = orderIds.split(',');
+      let orderIdList = [];
+      for (var i = 0;i<orderIdListTest.length;i++){
+        orderIdList[i] = parseInt(orderIdListTest[i]);
+      }
+      window.localStorage.setItem("orderIdsTest",orderIdList);
       for (var i = 0;i<orderIdList.length;i++){
         console.log(orderIdList[i]);
       }
       orderIdList.forEach((orderId) => {
-
-        this.$axios.post("/getOrderByOrderId", { OrderId: parseInt(orderId) })
+        this.$axios.post("/getOrderByOrderId", { OrderId: orderId})
             .then((response) => {
               if (!response.data.success) {
                 this.orders.push(response.data.data);
@@ -62,16 +65,23 @@ export default {
     },
     pay() {
       // 从localStorage获取orderIdList
-      const orderIds = JSON.parse(window.localStorage.getItem("orderIds"));
+      let orderIds = window.localStorage.getItem("orderIds");
+      let orderIdListTest = orderIds.split(',');
+      let orderIdList = [];
+      for (var i = 0;i<orderIdListTest.length;i++){
+        orderIdList[i] = parseInt(orderIdListTest[i]);
+      }
       // 调用/payment方法
       this.$axios
-          .post('/payment', { orderIds })
+          .post('/payment', { orderIdList:orderIdList })
           .then(response => {
             // 处理响应
-            if (!response.data.success) {
+            if (response.data.state == 0) {
               // 支付成功，可以进行相关操作，例如显示成功消息，清空localStorage中的orderIdList等
               console.log("支付成功");
               localStorage.removeItem('orderIds');
+              localStorage.removeItem('orderIdListTest');
+              this.$router.push({ name: "OrderPage" });
             } else {
               // 支付失败，可以进行相关操作，例如显示错误消息等
               console.error("支付失败");

@@ -54,12 +54,12 @@ const router = createRouter({
     },
     {
       path: '/shopkeeperSelfCenter',
-      name: 'shopkeeperCenter',
+      name: 'shopkeeperSelfCenter',
       component: () => import('../views/SelfCenter/ShopkeeperSC.vue')
     },
     {
       path: '/userSL',
-      name: 'userShoppingList',
+      name: 'userSL',
       component: () => import('../views/ShoppingList/UserSL.vue')
     },
     {

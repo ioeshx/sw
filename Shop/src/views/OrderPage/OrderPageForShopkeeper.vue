@@ -3,6 +3,7 @@ import Nav from '../../components/Public/Nav/ShopkeeperNav.vue'
 import OrderToSendOut4Shopkeeper from "@/views/OrderPage/OrderToSendOut4Shopkeeper.vue";
 import OrderToRefund4Shopkeeper from "@/views/OrderPage/OrderToRefund4Shopkeeper.vue";
 import OrderDone4Shopkeeper from "@/views/OrderPage/OrderDone4Shopkeeper.vue";
+import OrderDelivered4Shopkeeper from "@/views/OrderPage/OrderDelivered4Shopkeeper.vue";
 import OrderToPay from './OrderToPay.vue'  // 请将路径替换为orderToPay.vue的实际路径
 </script>
 
@@ -14,6 +15,12 @@ import OrderToPay from './OrderToPay.vue'  // 请将路径替换为orderToPay.vu
     <el-tabs :tab-position=tabPosition class="tabs">
       <el-tab-pane label="待发货">
         <OrderToSendOut4Shopkeeper/>
+        <!--        <MyShopInfo class="info" v-if="isregistered && (!isToModify)" :shop="shop"/>
+                <ShopRegister class="cont" v-else :shop="shop"/>
+                 -->
+      </el-tab-pane>
+      <el-tab-pane label="已发货">
+        <OrderDelivered4Shopkeeper/>
         <!--        <MyShopInfo class="info" v-if="isregistered && (!isToModify)" :shop="shop"/>
                 <ShopRegister class="cont" v-else :shop="shop"/>
                  -->

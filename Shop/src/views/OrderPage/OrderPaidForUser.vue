@@ -1,6 +1,10 @@
 <script setup>
 import OrderToPay from './OrderToPay.vue'// 请将路径替换为orderToPay.vue的实际路径
 import OrderToSendOut4User from "@/views/OrderPage/OrderToSendOut4User.vue";
+import OrderDelivered4User from "@/views/OrderPage/OrderDelivered4User.vue";
+import OrderDone4User from "@/views/OrderPage/OrderDone4User.vue";
+import OrderToRefund4User from "@/views/OrderPage/OrderToRefund4User.vue";
+import OrderRefundDone4User from "@/views/OrderPage/OrderRefundDone4User.vue";
 </script>
 
 <template>
@@ -14,17 +18,24 @@ import OrderToSendOut4User from "@/views/OrderPage/OrderToSendOut4User.vue";
       </el-tab-pane>
 
       <el-tab-pane  label="已发货">
+        <OrderDelivered4User/>
         <!--        <Goods4Shopkeeper/>
         -->
       </el-tab-pane>
 
       <el-tab-pane label="已完成">
+        <OrderDone4User/>
         <!--        <ShopAccountInfo />
                 <Transaction4Shopkeeper />
                 -->
       </el-tab-pane>
       <el-tab-pane label="待退款">
+        <OrderToRefund4User/>
       </el-tab-pane>
+      <el-tab-pane label="已退款">
+        <OrderRefundDone4User/>
+      </el-tab-pane>
+
     </el-tabs>
   </section>
 

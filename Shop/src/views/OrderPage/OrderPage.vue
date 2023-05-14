@@ -2,6 +2,7 @@
 import Nav from '../../components/Public/Nav/UserNav.vue'
 import OrderToPay from './OrderToPay.vue'// 请将路径替换为orderToPay.vue的实际路径
 import OrderPaidForUser from "@/views/OrderPage/OrderPaidForUser.vue";
+import OrdercancelPage from "@/views/OrderPage/OrdercancelPage.vue";
 </script>
 
 <template>
@@ -23,6 +24,7 @@ import OrderPaidForUser from "@/views/OrderPage/OrderPaidForUser.vue";
       </el-tab-pane>
 
       <el-tab-pane label="已撤销">
+        <OrdercancelPage/>
 <!--        <ShopAccountInfo />
         <Transaction4Shopkeeper />
         -->

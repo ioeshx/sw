@@ -12,7 +12,7 @@
       <p>商品数量：{{ order.goodsNum }}</p>
       <p>总价：{{ order.totalPrice }}</p>
       <p>实际支付金额：{{ order.actualPayment }}</p>
-      <el-button type="danger" @click="cancelOrder(order.orderId)">申请退款</el-button>
+      <el-button type="danger" @click="refund(order.orderId)">申请退款</el-button>
     </div>
   </div>
 </template>
@@ -65,6 +65,24 @@ export default {
             } else {
               this.$message.error("撤销订单失败");
               this.$router.push({ name: "shopkeeperSelfCenter" });
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+    },
+    async refund(orderId) {
+      let orderIdList = [];
+      orderIdList.push(orderId);
+      this.$axios
+          .post("/refundOrder", { orderIdList: orderIdList })
+          .then((response) => {
+            if (!response.data.success) {
+              this.$message.success("退款受理中");
+              this.$router.push({ name: "userSelfCenter" });
+            } else {
+              this.$message.error("退款申请失败");
+              this.$router.push({ name: "userSelfCenter" });
             }
           })
           .catch((error) => {

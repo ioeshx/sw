@@ -62,10 +62,10 @@ export default {
           .then((response) => {
             if (!response.data.success) {
               this.$message.success("撤销订单成功");
-              this.$router.push({ name: "shopkeeperSelfCenter" });
+              this.$router.push({ name: "userSelfCenter" });
             } else {
               this.$message.error("撤销订单失败");
-              this.$router.push({ name: "shopkeeperSelfCenter" });
+              this.$router.push({ name: "userSelfCenter" });
             }
           })
           .catch((error) => {
@@ -80,10 +80,10 @@ export default {
           .then((response) => {
             if (response.data.state==0) {
               this.$message.success("支付订单成功");
-              this.$router.push({ name: "shopkeeperSelfCenter" });
+              this.$router.push({ name: "userSelfCenter" });
             } else {
               this.$message.error("余额不足");
-              this.$router.push({ name: "shopkeeperSelfCenter" });
+              this.$router.push({ name: "userSelfCenter" });
             }
           })
           .catch((error) => {
