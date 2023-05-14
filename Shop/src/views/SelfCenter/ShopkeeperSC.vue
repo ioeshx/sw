@@ -18,8 +18,6 @@ import ShowAllAddress from "@/components/Dashboard/User/ShowAllAddress.vue";
                 <div class="infoShow">
                     <InfoShow></InfoShow>
                     <el-button class="change" @click="this.state=1">修改个人信息</el-button>
-                    <el-button class="change" @click="this.state=2">添加地址</el-button>
-                    <el-button class="change" @click="this.state=3">我的地址</el-button>
                     <el-button class="change" @click="orderPage">订单管理</el-button>
                 </div>
             </div>
@@ -27,14 +25,6 @@ import ShowAllAddress from "@/components/Dashboard/User/ShowAllAddress.vue";
         <div v-if="state==1">
             <h1 class="titleChange">个人信息修改</h1>
             <SetUserInfo class="changeWrap"/>
-        </div>
-        <div v-if="state==2">
-            <h1 class="titleChange">添加地址</h1>
-            <SetAddress class="changeWrap"/>
-        </div>
-        <div v-if="state==3">
-            <h1 class="titleChange">我的地址</h1>
-            <ShowAllAddress class="changeWrap"/>
         </div>
 
         
@@ -45,18 +35,30 @@ import ShowAllAddress from "@/components/Dashboard/User/ShowAllAddress.vue";
 
 <script>
 import { interceptor, shopkeeperInterceptor } from "../../interceptor";
+import axios from "axios";
 export default{
     data() {
         return{
-            state:0
+            state:0,
+            shopname :""
         }
     },
-    created(){
+    mounted() {
+      axios.post('/getShopInfoByUsername',{username : window.localStorage.getItem("username")})
+          .then(response => {
+            if (response.data.state == 0) {
+              this.shopname = response.data.data.shopname;
+              window.localStorage.setItem("shopname",this.shopname)}
+              }
+              )
+    },
+
+  created(){
         interceptor(this);
         shopkeeperInterceptor(this);
     },methods:{
       orderPage(){
-          this.$router.push({ name: "OrderPage" });
+          this.$router.push({ name: "OrderPageForShopkeeper" });
       }
   }
 }

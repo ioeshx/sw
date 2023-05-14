@@ -12,8 +12,7 @@
       <p>商品数量：{{ order.goodsNum }}</p>
       <p>总价：{{ order.totalPrice }}</p>
       <p>实际支付金额：{{ order.actualPayment }}</p>
-      <el-button type="danger" @click="cancelOrder(order.orderId)">撤销</el-button>
-      <el-button type="primary" @click="payOrder(order.orderId)">支付</el-button>
+      <el-button type="danger" @click="cancelOrder(order.orderId)">取消申请退款</el-button>
     </div>
   </div>
 </template>
@@ -30,7 +29,7 @@ export default {
   },
   mounted() {
     axios.post('/getOrdersByStatus',{username : this.username,
-    status: 0})
+      status: 3})
         .then(response => {
           if (response.data.state === 0) {
             this.orders = response.data.data;
@@ -72,24 +71,6 @@ export default {
             console.error("Error:", error);
           });
     },
-    async payOrder(orderId){
-      let orderIdList = [];
-      orderIdList.push(orderId);
-      this.$axios
-          .post("/payment", { orderIdList: orderIdList })
-          .then((response) => {
-            if (response.data.state==0) {
-              this.$message.success("支付订单成功");
-              this.$router.push({ name: "shopkeeperSelfCenter" });
-            } else {
-              this.$message.error("余额不足");
-              this.$router.push({ name: "shopkeeperSelfCenter" });
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-    }
   }
 }
 </script>

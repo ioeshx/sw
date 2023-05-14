@@ -110,6 +110,12 @@ const router = createRouter({
       component: ()=> import('../views/OrderPage/OrderPage.vue'),
     },
     {
+      path: '/OrderPageForShopkeeper',
+      name: 'OrderPageForShopkeeper',
+      component: ()=> import('../views/OrderPage/OrderPageForShopkeeper.vue'),
+    },
+
+    {
       path: '/addAddress',
       name: 'addAddress',
       component: ()=> import('../views/ShoppingList/addAddress.vue'),

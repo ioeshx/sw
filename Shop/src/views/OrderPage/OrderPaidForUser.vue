@@ -1,11 +1,13 @@
 <script setup>
-import OrderToPay from './OrderToPay.vue'  // 请将路径替换为orderToPay.vue的实际路径
+import OrderToPay from './OrderToPay.vue'// 请将路径替换为orderToPay.vue的实际路径
+import OrderToSendOut4User from "@/views/OrderPage/OrderToSendOut4User.vue";
 </script>
 
 <template>
   <section>
     <el-tabs :tab-position=tabPosition class="tabs">
       <el-tab-pane label="待发货">
+        <OrderToSendOut4User/>
         <!--        <MyShopInfo class="info" v-if="isregistered && (!isToModify)" :shop="shop"/>
                 <ShopRegister class="cont" v-else :shop="shop"/>
                  -->
