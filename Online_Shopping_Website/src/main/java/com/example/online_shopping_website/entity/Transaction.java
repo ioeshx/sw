@@ -11,13 +11,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Transaction {
-    private int transactionId;
-    private Date transactionDate;
-    private int transactionType;
-    private int accountType;
-    private String fromWho;
-    private String toWho;
-    private BigDecimal amount;
-    private BigDecimal balance;
+    private int transactionId;      //交易ID
+    private Date transactionDate;   //日期
+    private int transactionType;    //交易类型
+    private int accountType;        //什么类型的账户对应的流水 在AccountTye类中
+    private String host;            //交易的主体
+    private String counterparty;    //交易的另一方
+    private BigDecimal amount;      //金额数量
+
 
 }

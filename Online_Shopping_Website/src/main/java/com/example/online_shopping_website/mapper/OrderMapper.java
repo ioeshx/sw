@@ -25,4 +25,5 @@ public interface OrderMapper {
     void SetOrderToApplyingForRefund(int orderId);
     void SetOrderToRefunded(int orderId);
     List<Order> GetOrdersByShopName(String shopName);
+    List<Order> GetOrdersByShopNameAndStatus(String shopName, int status);
 }

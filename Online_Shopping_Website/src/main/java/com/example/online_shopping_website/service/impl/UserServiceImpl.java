@@ -570,4 +570,13 @@ public class UserServiceImpl implements IUserService {
         else
             return new JsonResult<>(NO, "失败!");
     }
+
+    @Override
+    public JsonResult getOrdersOfShopByStatus(String shopName, int status){
+        List<Order> orders = orderMapper.GetOrdersByShopNameAndStatus(shopName, status);
+        if(!orders.isEmpty())
+            return new JsonResult<>(YES, "成功！", orders);
+        else
+            return new JsonResult<>(NO, "失败!");
+    }
 }
