@@ -129,6 +129,7 @@ public interface UserMapper {
     void deletePreviousDefaultAddress(String username);
     void setDefaultReceiverAddress(String username, int addressId);
     ReceiverAddress getDefaultReceiverAddress(String username);
+    ReceiverAddress getReceiverAddressByAddressId(int addressId);
     void UpdatePrivateAccount(String username, BigDecimal privateAccount);
     void TransferTotalPaymentToIntermediaryAccount(BigDecimal totalPayment);
     void SubtractFromIntermediaryAccount(BigDecimal money);
