@@ -9,6 +9,5 @@ public class OrderState {
     public static final int finished = 4;           //订单完成
     public static final int canceled = 5;           //订单取消
     public static final int refunded = 6;           //已退款
-    public static final int applyingForRefund = 7;     //申请退款中
 
 }
