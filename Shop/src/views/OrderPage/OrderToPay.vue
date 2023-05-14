@@ -2,18 +2,15 @@
   <div>
     <h2>待支付订单</h2>
     <div v-for="order in orders" :key="order.orderId">
-      <h3>订单编号：{{ order.orderId }}</h3>
       <p>用户名：{{ order.username }}</p>
       <p>收货地址：{{ order.addressId }}</p>
       <p>店铺名称：{{ order.shopName }}</p>
       <p>下单时间：{{ order.orderTime }}</p>
-      <p>商品编号：{{ order.goodsId }}</p>
       <p>商品名称：{{ order.goodsName }}</p>
       <p>商品单价：{{ order.unitPrice }}</p>
       <p>商品数量：{{ order.goodsNum }}</p>
       <p>总价：{{ order.totalPrice }}</p>
       <p>实际支付金额：{{ order.actualPayment }}</p>
-      <p>订单状态：{{ order.status }}</p>
       <el-button type="danger" @click="cancelOrder(order.orderId)">撤销</el-button>
       <el-button type="primary" @click="payOrder(order.orderId)">支付</el-button>
     </div>
@@ -31,12 +28,24 @@ export default {
     }
   },
   mounted() {
-    axios.post('/getAllOrders',{username : this.username})
+    axios.post('/getOrdersByStatus',{username : this.username,
+    status: 0})
         .then(response => {
           if (response.data.state === 0) {
             this.orders = response.data.data;
+            this.orders.forEach(order =>{
+              axios.post('/getAddressByAddressId', {addressId: order.addressId})
+                  .then(res => {
+                    if (res.data.state === 0) {
+                      // 将获取到的地址详情添加到订单对象中
+                      order.addressDetail = res.data.data;
+                    }else {
+                      console.error('获取地址详情失败');
+                    }
+                  })
+            })
           } else {
-            console.error('Error fetching orders');
+            console.error('没有订单');
           }
         })
         .catch(error => {

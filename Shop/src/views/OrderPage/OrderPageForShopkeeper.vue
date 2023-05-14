@@ -1,7 +1,6 @@
 <script setup>
 import Nav from '../../components/Public/Nav/UserNav.vue'
-import OrderToPay from './OrderToPay.vue'// 请将路径替换为orderToPay.vue的实际路径
-import OrderPaidForUser from "@/views/OrderPage/OrderPaidForUser.vue";
+import OrderToPay from './OrderToPay.vue'  // 请将路径替换为orderToPay.vue的实际路径
 </script>
 
 <template>
@@ -10,22 +9,22 @@ import OrderPaidForUser from "@/views/OrderPage/OrderPaidForUser.vue";
 
   <section>
     <el-tabs :tab-position=tabPosition class="tabs">
-      <el-tab-pane label="待支付">
+      <el-tab-pane label="待发货">
         <OrderToPay/>
-<!--        <MyShopInfo class="info" v-if="isregistered && (!isToModify)" :shop="shop"/>
-        <ShopRegister class="cont" v-else :shop="shop"/>
-         -->
+        <!--        <MyShopInfo class="info" v-if="isregistered && (!isToModify)" :shop="shop"/>
+                <ShopRegister class="cont" v-else :shop="shop"/>
+                 -->
       </el-tab-pane>
 
-      <el-tab-pane  label="已支付">
-<!--        <Goods4Shopkeeper/>
--->         <OrderPaidForUser/>
-      </el-tab-pane>
-
-      <el-tab-pane label="已撤销">
-<!--        <ShopAccountInfo />
-        <Transaction4Shopkeeper />
+      <el-tab-pane  label="待退款">
+        <!--        <Goods4Shopkeeper/>
         -->
+      </el-tab-pane>
+
+      <el-tab-pane label="已完成">
+        <!--        <ShopAccountInfo />
+                <Transaction4Shopkeeper />
+                -->
       </el-tab-pane>
     </el-tabs>
   </section>

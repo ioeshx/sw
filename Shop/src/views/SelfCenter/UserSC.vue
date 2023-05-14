@@ -4,6 +4,8 @@ import InfoShow from '../../components/SelfCenter/InfoShow.vue'
 import OrderShow from '../../components/SelfCenter/OrderShow.vue'
 import Nav from '../../components/Public/Nav/UserNav.vue'
 import SetUserInfo from '../../components/Dashboard/User/SetUserInfo.vue'
+import SetAddress from "@/components/Dashboard/User/SetAddress.vue";
+import ShowAllAddress from "@/components/Dashboard/User/ShowAllAddress.vue";
 </script>
 
 <template>
@@ -16,15 +18,25 @@ import SetUserInfo from '../../components/Dashboard/User/SetUserInfo.vue'
                 <div class="infoShow">
                     <InfoShow></InfoShow>
                     <el-button class="change" @click="this.state=1">修改个人信息</el-button>
+                    <el-button class="change" @click="this.state=2">添加地址</el-button>
+                    <el-button class="change" @click="this.state=3">我的地址</el-button>
+                    <el-button class="change" @click="orderPage">订单管理</el-button>
                 </div>
                 <OrderShow />
             </div>
         </div>
-        <div v-if="state==1">
-            <h1 class="titleChange">个人信息修改</h1>
-            <SetUserInfo class="changeWrap"/>
-        </div>
-        
+      <div v-if="state==1">
+        <h1 class="titleChange">个人信息修改</h1>
+        <SetUserInfo class="changeWrap"/>
+      </div>
+      <div v-if="state==2">
+        <h1 class="titleChange">添加地址</h1>
+        <SetAddress class="changeWrap"/>
+      </div>
+      <div v-if="state==3">
+        <h1 class="titleChange">我的地址</h1>
+        <ShowAllAddress class="changeWrap"/>
+      </div>
     </section>
 
 
@@ -41,7 +53,11 @@ export default{
     created(){
         interceptor(this);
         userInterceptor(this);
-    }
+    },methods: {
+    orderPage() {
+      this.$router.push({name: "OrderPage"});
+    },
+  }
 }
 </script>
 
