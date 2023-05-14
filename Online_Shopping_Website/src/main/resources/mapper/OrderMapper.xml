@@ -94,4 +94,8 @@
     <select id="GetOrdersByShopName" resultMap="OrderMap">
         SELECT * FROM orders WHERE shopName = #{shopName};
     </select>
+
+    <select id="GetOrdersByShopNameAndStatus" resultMap="OrderMap">
+        SELECT * FROM orders WHERE shopName = #{shopName} and status = #{status};
+    </select>
 </mapper>

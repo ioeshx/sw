@@ -339,6 +339,12 @@ public class UserController {
         return userService.getAllOrdersOfShop(shopName);
     }
 
+    @RequestMapping("/api/getOrdersOfShopByStatus")
+    public JsonResult getOrdersOfShopByStatus(@RequestBody Map<String,Object> map){
+        String shopName = (String)map.get("shopName");
+        int status = (int)map.get("status");
+        return userService.getOrdersOfShopByStatus(shopName, status);
+    }
 }
 
 

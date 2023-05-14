@@ -68,4 +68,5 @@ public interface IUserService {
     JsonResult refundOrder(List<Integer> orderIdList);
     JsonResult agreeToRefund(List<Integer> orderIdList);
     JsonResult getAllOrdersOfShop(String shopName);
+    JsonResult getOrdersOfShopByStatus(String shopName, int status);
 }
