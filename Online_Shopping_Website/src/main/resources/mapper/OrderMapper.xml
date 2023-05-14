@@ -83,8 +83,8 @@
         UPDATE orders SET status = -1 WHERE orderId = #{orderId};
     </update>
 
-    <update id="SetOrderToApplyingForRefund">
-        UPDATE orders SET status = 7 WHERE orderId = #{orderId};
+    <update id="SetOrderToPendingRefund">
+        UPDATE orders SET status = 3 WHERE orderId = #{orderId};
     </update>
 
     <update id="SetOrderToRefunded">

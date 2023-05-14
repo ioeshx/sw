@@ -7,6 +7,7 @@ import com.example.online_shopping_website.service.ex.*;
 import com.example.online_shopping_website.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.online_shopping_website.service.TransactionService;
 
 
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static com.example.online_shopping_website.entity.constant.AccountType.*;
 import static com.example.online_shopping_website.entity.constant.OrderState.*;
+import static com.example.online_shopping_website.entity.constant.TransactionType.*;
 import static com.example.online_shopping_website.entity.constant.UserType.*;
 import static javax.security.auth.callback.ConfirmationCallback.*;
 
@@ -24,6 +26,7 @@ import static javax.security.auth.callback.ConfirmationCallback.*;
 /**用户模块业务层的实现类*/
 @Service
 public class UserServiceImpl implements IUserService {
+    private TransactionService transactionService;
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -160,31 +163,42 @@ public class UserServiceImpl implements IUserService {
         JsonResult result = new JsonResult<>(YES);
         int userType = userMapper.GetUserTypeByUsername(username);
         BigDecimal balance = new BigDecimal(0);
+
         //根据userType和accountType来判断，直接在mapper层加上。
         switch (userType){
             case admin:
                 if(accountType == profitAccount) {
                     userMapper.RechargeProfitAccountByUsername(username, credit);
                     balance = userMapper.GetProfitAccountByUsername(username);
+                    //插入流水记录
+                    transactionService.InsertTransaction(username, username, chargeToProfitAccount, profitAccount, credit);
                 }
                 else if (accountType == intermediaryAccount) {
                     userMapper.RechargeIntermediaryAccountByUsername(username, credit);
                     balance = userMapper.GetIntermediaryAccountByUsername(username);
+                    //插入流水记录
+                    transactionService.InsertTransaction(username, username, chargeToIntermediaryAccount, intermediaryAccount, credit);
                 }
                 break;
             case merchant:
                 if(accountType == privateAccount) {
                     userMapper.RechargePrivateAccountByUsername(username, credit);
                     balance = userMapper.GetPrivateAccountByUsername(username);
+                    //插入流水记录
+                    transactionService.InsertTransaction(username, username, chargeToPrivateAccount, privateAccount, credit);
                 }
                 else if (accountType == shopAccount) {
                     userMapper.RechargeShopAccountByUsername(username, credit);
                     balance = userMapper.GetShopAccountByUsername(username);
+                    //插入流水记录
+                    transactionService.InsertTransaction(username, username, chargeToShopAccount, shopAccount, credit);
                 }
                 break;
             case buyer: {
                 userMapper.RechargePrivateAccountByUsername(username, credit);
                 balance = userMapper.GetPrivateAccountByUsername(username);
+                //插入流水记录
+                transactionService.InsertTransaction(username, username, chargeToPrivateAccount, privateAccount, credit);
             }
                 break;
             default:
@@ -518,7 +532,7 @@ public class UserServiceImpl implements IUserService {
         for(Integer orderId : orderIdList){
             Integer status = orderMapper.GetOrderStatusByOrderId(orderId);
             if( status == pendingDelivery || status == pendingReception )
-                orderMapper.SetOrderToApplyingForRefund(orderId);   //把订单状态改为"申请退款中"
+                orderMapper.SetOrderToPendingRefund(orderId);   //把订单状态改为"待退款"
             else
                 WrongOrderIdList.add(orderId);
         }
@@ -539,7 +553,7 @@ public class UserServiceImpl implements IUserService {
         List<Integer> WrongOrderIdList = new ArrayList<>();
         for(Integer orderId : orderIdList){
             Integer status = orderMapper.GetOrderStatusByOrderId(orderId);
-            if( status == applyingForRefund ){
+            if( status == pendingRefunding ){
                 //把订单状态改成"已退款"
                 orderMapper.SetOrderToRefunded(orderId);
                 //把钱从中间账号转回个人账号

@@ -104,16 +104,6 @@ public class UserController {
     }
 
 
-//    public JsonResult<User> uploadAvatar(@RequestBody AvatarLoader avatarLoader /*@RequestParam("avatar") MultipartFile avatarFile, @RequestParam("username") String username*/) throws IOException {
-//            User user = new User();
-//            MultipartFile avatarFile = avatarLoader.getAvatarFile();
-//            String username = avatarLoader.getUsername();
-//            byte[] avatarData = avatarFile.getBytes();
-//            userService.UpdateAvatar(username,avatarData);
-//            JsonResult result = new JsonResult<User>(YES,"用户头像上传成功");
-//            user.setAvatar(avatarData);
-//            return result;
-//    }
     @PostMapping("/api/setUserAvatar")
     public JsonResult<User> uploadAvatar(@RequestParam("image") MultipartFile avatarFile,@RequestParam("username") String username) throws IOException {
         User user = new User();
@@ -176,13 +166,6 @@ public class UserController {
         return result;
     }
 
-    @RequestMapping("/api/getUserTransactions")
-    public JsonResult getUserTransactions(@RequestBody Map<String,Object> map){
-        String username = (String)map.get("username");
-        JsonResult result = new JsonResult<>();
-        result = userService.getUserTransactions(username);
-        return result;
-    }
 
     @RequestMapping("/api/getAllReceiverAddress")
     public JsonResult getAllReceiverAddress(@RequestBody Map<String,Object> map){
@@ -250,15 +233,7 @@ public class UserController {
         int addressId = (int)map.get("addressId");
         return userService.getReceiverAddressByAddressId(addressId);
     }
-//    @RequestMapping("/api/purchaseInGoodsPage")
-//    public JsonResult purchaseInGoodsPage(@RequestBody Map<String,Object> map){
-//        int goodsId = (int)map.get("goodsId");
-//        int goodsNum = (int) map.get("goodsNum");
-//        int addressId = (int)map.get("addressId");
-//        String username = (String) map.get("username");
-//        JsonResult result = userService.purchaseInGoodsPage(username, goodsId, goodsNum, addressId);
-//        return result;
-//    }
+
 
     @RequestMapping("/api/orderCreating")
     public JsonResult orderCreating(@RequestBody Map<String,Object> map){

@@ -8,16 +8,20 @@
     <resultMap id="TransactionMap" type="com.example.online_shopping_website.entity.Transaction">
         <result column="transactionId" property="transactionId"/>
         <result column="transactionDate" property="transactionDate"/>
-        <result column="fromWho" property="fromWho"/>
-        <result column="toWho" property="toWho"/>
         <result column="transactionType" property="transactionType"/>
+        <result column="accountType" property="accountType"/>
+        <result column="host" property="host"/>
+        <result column="counterparty" property="counterparty"/>
         <result column="amount" property="amount"/>
-        <result column="balance" property="balance"/>
     </resultMap>
 
     <select id="getAllTransactionsByusername" resultMap="TransactionMap">
-        SELECT transactionDate,fromWho,toWho,amount,balance FROM transaction WHERE fromWho = #{username}
+        SELECT transactionDate,host,counterparty,amount FROM transaction WHERE host = #{username}
     </select>
 
-
+    <insert id="InsertTransaction">
+        INSERT INTO transaction (transactionDate, transactionType, accountType, host, counterparty, amount)
+            VALUES
+            (#{transactionDate}, #{transactionType}, #{accountType}, #{host}, #{counterparty}, #{amount})
+    </insert>
 </mapper>

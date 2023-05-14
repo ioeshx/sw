@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface TransactionMapper {
 
-    public List<Transaction>  getAllTransactionsByusername(String username);
+    List<Transaction>  getAllTransactionsByusername(String username);
+
+    void InsertTransaction(Transaction transaction);
 }

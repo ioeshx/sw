@@ -22,7 +22,7 @@ public interface OrderMapper {
     List<Order> GetOrdersByStatus(String username, int status);
     void SetOrderToPendingReception(int orderId);
     void SetOrderToDeleted(int orderId);
-    void SetOrderToApplyingForRefund(int orderId);
+    void SetOrderToPendingRefund(int orderId);
     void SetOrderToRefunded(int orderId);
     List<Order> GetOrdersByShopName(String shopName);
     List<Order> GetOrdersByShopNameAndStatus(String shopName, int status);
