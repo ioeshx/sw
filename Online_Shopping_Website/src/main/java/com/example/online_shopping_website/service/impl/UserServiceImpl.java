@@ -1,6 +1,7 @@
 package com.example.online_shopping_website.service.impl;
 
 import com.example.online_shopping_website.entity.*;
+import com.example.online_shopping_website.entity.constant.AccountType;
 import com.example.online_shopping_website.mapper.*;
 import com.example.online_shopping_website.service.IUserService;
 import com.example.online_shopping_website.service.ex.*;
@@ -171,13 +172,13 @@ public class UserServiceImpl implements IUserService {
                     userMapper.RechargeProfitAccountByUsername(username, credit);
                     balance = userMapper.GetProfitAccountByUsername(username);
                     //插入流水记录
-                    transactionService.InsertTransaction(username, username, chargeToProfitAccount, profitAccount, credit);
+                    transactionService.InsertTransaction("管理员", "管理员", profitAccount, profitAccount ,chargeToProfitAccount, credit);
                 }
                 else if (accountType == intermediaryAccount) {
                     userMapper.RechargeIntermediaryAccountByUsername(username, credit);
                     balance = userMapper.GetIntermediaryAccountByUsername(username);
                     //插入流水记录
-                    transactionService.InsertTransaction(username, username, chargeToIntermediaryAccount, intermediaryAccount, credit);
+                    transactionService.InsertTransaction("管理员", "管理员", intermediaryAccount, intermediaryAccount, chargeToIntermediaryAccount, credit);
                 }
                 break;
             case merchant:
@@ -185,20 +186,21 @@ public class UserServiceImpl implements IUserService {
                     userMapper.RechargePrivateAccountByUsername(username, credit);
                     balance = userMapper.GetPrivateAccountByUsername(username);
                     //插入流水记录
-                    transactionService.InsertTransaction(username, username, chargeToPrivateAccount, privateAccount, credit);
+                    transactionService.InsertTransaction(username, username, privateAccount, privateAccount, chargeToPrivateAccount, credit);
                 }
                 else if (accountType == shopAccount) {
                     userMapper.RechargeShopAccountByUsername(username, credit);
                     balance = userMapper.GetShopAccountByUsername(username);
                     //插入流水记录
-                    transactionService.InsertTransaction(username, username, chargeToShopAccount, shopAccount, credit);
+                    transactionService.InsertTransaction(username, username, shopAccount, shopAccount, chargeToShopAccount, credit);
                 }
                 break;
             case buyer: {
                 userMapper.RechargePrivateAccountByUsername(username, credit);
                 balance = userMapper.GetPrivateAccountByUsername(username);
                 //插入流水记录
-                transactionService.InsertTransaction(username, username, chargeToPrivateAccount, privateAccount, credit);
+                transactionService.InsertTransaction(username, username, privateAccount , privateAccount,
+                                                    chargeToPrivateAccount,  credit);
             }
                 break;
             default:
@@ -407,6 +409,9 @@ public class UserServiceImpl implements IUserService {
                 orderMapper.SetOrderToPendingDeliveryByOrderId(orderId);
             //金额转入商城中间账户
             userMapper.TransferTotalPaymentToIntermediaryAccount(totalPayment);
+            //插入流水记录
+            transactionService.InsertTransaction(username, "管理员", AccountType.privateAccount, intermediaryAccount,
+                                                 paymentToIntermediaryAccount, totalPayment);
         }
 
         return result;
@@ -450,10 +455,17 @@ public class UserServiceImpl implements IUserService {
                 BigDecimal ShopGain = actualPayment.subtract(commission);                   //商店收入
                 String shopName = orderMapper.GetShopNameByOrderId(orderId);
                 int uid = shopMapper.GetUidByShopName(shopName);
+                String merchantName = userMapper.GetUserByUid(uid).getUsername();
                 //从中间账户减去订单费用，佣金转入商城利润账户 剩下的传到商店账户
                 userMapper.SubtractFromIntermediaryAccount(actualPayment);
                 userMapper.AddToProfitAccount(commission);
                 userMapper.AddToShopAccount(uid, ShopGain);
+                //插入“订单利润转入商店账户”的流水记录
+                transactionService.InsertTransaction("管理员", merchantName, intermediaryAccount, shopAccount,
+                                                        profitToShopAccount, ShopGain);
+                //插入”佣金转入利润账户“
+                transactionService.InsertTransaction("管理员", "管理员", intermediaryAccount, profitAccount,
+                                                      commissionToProfitAccount, commission );
                 //增加商品销量
                 int goodsId = orderMapper.GetGoodsIdByOrderId(orderId);
                 int orderSales = orderMapper.GetGoodsNumByOrderId(orderId);
@@ -561,6 +573,9 @@ public class UserServiceImpl implements IUserService {
                 String username = orderMapper.getUsernameByOrderId(orderId);
                 userMapper.SubtractFromIntermediaryAccount(actualPayment);
                 userMapper.AddToPrivateAccount(username, actualPayment);
+                //插入流水记录
+                transactionService.InsertTransaction("管理员", username, intermediaryAccount, privateAccount,
+                                                        refundToPrivateAccount, actualPayment);
             }
             else
                 WrongOrderIdList.add(orderId);

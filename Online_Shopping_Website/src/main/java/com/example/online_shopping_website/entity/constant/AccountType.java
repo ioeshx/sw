@@ -8,4 +8,7 @@ public class AccountType {
     public static final int profitAccount = 1;
 
     public static final int intermediaryAccount = 2;
+
+    public static final int adminIntermediaryAccount = 3;
+    public static final int adminProfitAccount = 4;
 }
