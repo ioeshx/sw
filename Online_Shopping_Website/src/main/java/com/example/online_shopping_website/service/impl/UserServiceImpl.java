@@ -275,6 +275,14 @@ public class UserServiceImpl implements IUserService {
         return result;
     }
 
+    @Override
+    public JsonResult getReceiverAddressByAddressId(int addressId){
+        ReceiverAddress address = userMapper.getReceiverAddressByAddressId(addressId);
+        if(address == null)
+            return new JsonResult<>(NO,"地址ID对应的地址不存在");
+        else
+            return new JsonResult<>(YES,"",address);
+    }
 //    @Override
 //    public JsonResult purchaseInGoodsPage(String username, int goodsId, int goodsNum, int addressId){
 //        JsonResult result = new JsonResult<>(YES,"创建订单成功");

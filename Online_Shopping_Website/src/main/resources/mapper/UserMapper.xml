@@ -202,6 +202,10 @@
         SELECT * FROM receiverAddress WHERE username = #{username} AND state = 1;
     </select>
 
+    <select id="getReceiverAddressByAddressId" resultMap="ReceiverAddressMap">
+        SELECT * FROM receiveraddress WHERE addressId = #{addressId};
+    </select>
+
     <select id="UpdatePrivateAccount">
         UPDATE users SET privateAccount = #{privateAccount} WHERE username = #{username};
     </select>

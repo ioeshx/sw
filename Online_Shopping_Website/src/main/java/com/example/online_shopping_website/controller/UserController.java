@@ -238,13 +238,18 @@ public class UserController {
         return  result;
     }
 
-//    @RequestMapping("/api/getDefaultReceiverAddress")
-//    public JsonResult getDefaultReceiverAddress(@RequestBody Map<String,Object> map){
-//        String username = (String)map.get("username");
-//        JsonResult result = userService.getDefaultReceiverAddress(username);
-//        return result;
-//    }
-//
+    @RequestMapping("/api/getDefaultReceiverAddress")
+    public JsonResult getDefaultReceiverAddress(@RequestBody Map<String,Object> map){
+        String username = (String)map.get("username");
+        JsonResult result = userService.getDefaultReceiverAddress(username);
+        return result;
+    }
+
+    @RequestMapping("/api/getReceiverAddressByAddressId")
+    public JsonResult getReceiverAddressByAddressId(@RequestBody Map<String,Object> map){
+        int addressId = (int)map.get("addressId");
+        return userService.getReceiverAddressByAddressId(addressId);
+    }
 //    @RequestMapping("/api/purchaseInGoodsPage")
 //    public JsonResult purchaseInGoodsPage(@RequestBody Map<String,Object> map){
 //        int goodsId = (int)map.get("goodsId");
