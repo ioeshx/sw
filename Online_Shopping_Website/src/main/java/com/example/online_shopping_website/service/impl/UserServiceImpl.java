@@ -19,6 +19,8 @@ import java.util.List;
 
 import static com.example.online_shopping_website.entity.constant.AccountType.*;
 import static com.example.online_shopping_website.entity.constant.OrderState.*;
+import static com.example.online_shopping_website.entity.constant.PeriodType.Month;
+import static com.example.online_shopping_website.entity.constant.PeriodType.Week;
 import static com.example.online_shopping_website.entity.constant.TransactionType.*;
 import static com.example.online_shopping_website.entity.constant.UserType.*;
 import static javax.security.auth.callback.ConfirmationCallback.*;
@@ -213,22 +215,6 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-    @Override
-    public JsonResult getUserTransactions(String username,  int accountType){
-        //判断用户类型来选择SQL语句
-        List<Transaction> allTransactions = new ArrayList<>();
-        int userType = userMapper.GetUserTypeByUsername(username);
-        if(userType != admin)
-            allTransactions = transactionMapper.getTransactionsByUsername(username, accountType);
-        else
-            allTransactions = transactionMapper.GetAdminTransactions(accountType);
-
-        if(!allTransactions.isEmpty())
-            return new JsonResult<>(YES,"成功获取流水记录", allTransactions);
-        else
-            return new JsonResult<>(NO, "未找到流水记录");
-    }
-
 
 
     @Override
@@ -308,6 +294,7 @@ public class UserServiceImpl implements IUserService {
         else
             return new JsonResult<>(YES,"",address);
     }
+
 //    @Override
 //    public JsonResult purchaseInGoodsPage(String username, int goodsId, int goodsNum, int addressId){
 //        JsonResult result = new JsonResult<>(YES,"创建订单成功");
@@ -620,17 +607,70 @@ public class UserServiceImpl implements IUserService {
         else
             return new JsonResult<>(NO, "失败!");
     }
+
+
+    @Override
+    public JsonResult getUserTransactions(String username,  int accountType){
+        //判断用户类型来选择SQL语句
+        List<Transaction> allTransactions = new ArrayList<>();
+        int userType = userMapper.GetUserTypeByUsername(username);
+        if(userType != admin)
+            allTransactions = transactionMapper.GetTransactionsByUsername(username, accountType);
+        else
+            allTransactions = transactionMapper.GetAdminTransactions(accountType);
+
+        if(!allTransactions.isEmpty())
+            return new JsonResult<>(YES,"成功获取流水记录", allTransactions);
+        else
+            return new JsonResult<>(NO, "未找到流水记录");
+    }
+
     @Override
     public JsonResult getUserProfit(String username, int periodType){
         int userType = userMapper.GetUserTypeByUsername(username);
-        JsonResult result = new JsonResult<>();
-        if(userType == admin){
+        JsonResult result = new JsonResult<>(YES,"成功！");
+        BigDecimal profit = new BigDecimal(0);
+        List<BigDecimal> profits = new ArrayList<>();
 
-        }else if(userType == merchant){
-
+        if(userType == admin){  //管理员计算流水利润，利润只算订单的佣金和商店注册资金
+            if(periodType == Week)     //近一周利润
+                profits= transactionMapper.GetAdminProfitForWeek();
+            else if(periodType == Month)  //近一个月利润
+                profits = transactionMapper.GetAdminProfitForMonth();
+        }else if(userType == merchant){ //商家计算流水利润，利润只算订单支付的金额
+            if(periodType == Week)     //近一周利润
+                profits= transactionMapper.GetShopProfitForWeek(username);
+            else if(periodType == Month)  //近一个月利润
+                profits = transactionMapper.GetShopProfitForMonth(username);
         }else if(userType == buyer){
-            return new JsonResult<>(NO,"普通用户无法计算流水利润");
+            return new JsonResult<>(NO,"普通买家无法计算流水利润");
         }
+
+        for(BigDecimal p : profits)
+            profit = profit.add(p);
+        result.setData(profit);
         return result;
+    }
+
+    @Override
+    public JsonResult getUserTransactionsByPeriod(String username, int accountType, int periodType){
+        List<Transaction> allTransactions = new ArrayList<>();
+        int userType = userMapper.GetUserTypeByUsername(username);
+        if(userType != admin){
+            if(periodType == Week)
+                allTransactions = transactionMapper.GetTransactionsByUsernameForWeek(username, accountType);
+            else if(periodType == Month)
+                allTransactions = transactionMapper.GetTransactionsByUsernameForMonth(username, accountType);
+        } else{
+            if(periodType == Week)
+                allTransactions = transactionMapper.GetAdminTransactionsForWeek();
+            else if(periodType == Month)
+                allTransactions = transactionMapper.GetAdminTransactionsForMonth();
+        }
+
+        if(!allTransactions.isEmpty())
+            return new JsonResult<>(YES,"成功获取流水记录", allTransactions);
+        else
+            return new JsonResult<>(NO, "未找到流水记录");
     }
 }

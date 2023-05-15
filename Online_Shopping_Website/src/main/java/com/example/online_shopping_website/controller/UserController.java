@@ -334,6 +334,14 @@ public class UserController {
         int periodType = (int)map.get("periodType");
         return userService.getUserProfit(username, periodType);
     }
+
+    @RequestMapping("/api/getUserTransactionsByPeriod")
+    public JsonResult getUserTransactionsByPeriod(@RequestBody Map<String,Object> map){
+        String username = (String)map.get("username");
+        int accountType = (int)map.get("accountType");
+        int periodType = (int)map.get("periodType");
+        return userService.getUserTransactionsByPeriod(username, accountType,periodType);
+    }
 }
 
 

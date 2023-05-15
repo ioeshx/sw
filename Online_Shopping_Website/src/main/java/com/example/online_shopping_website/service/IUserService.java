@@ -39,6 +39,7 @@ public interface IUserService {
 
     JsonResult getUserTransactions(String username, int accountType);
     JsonResult getUserProfit(String username, int periodType);
+    JsonResult getUserTransactionsByPeriod(String username, int accountType, int periodType);
 
     JsonResult getShopAccount(String username);
 
