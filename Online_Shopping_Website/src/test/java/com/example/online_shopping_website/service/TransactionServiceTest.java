@@ -20,7 +20,7 @@ public class TransactionServiceTest {
 
     @Test
     public void InsertTransaction(){
-        transactionService.InsertTransaction("jason", "ivy", chargeToPrivateAccount, privateAccount,
-                                             new BigDecimal(100));
+        transactionService.InsertTransaction("jason", "jason", privateAccount, privateAccount,
+                                            chargeToPrivateAccount, new BigDecimal(100));
     }
 }

@@ -136,6 +136,6 @@ public interface UserMapper {
     void AddToProfitAccount(BigDecimal money);
     void AddToShopAccount(int uid, BigDecimal money);
     void AddToPrivateAccount(String username, BigDecimal money);
-
+    User GetUserByUid(int uid);
 }
 

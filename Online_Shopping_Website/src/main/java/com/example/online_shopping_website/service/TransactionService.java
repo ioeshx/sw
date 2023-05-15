@@ -12,10 +12,10 @@ import java.util.Date;
 public class TransactionService {
     @Autowired
     private TransactionMapper transactionMapper;
-    public void InsertTransaction(String host, String counterparty, int transactionType, int accountType, BigDecimal amount){
+    public void InsertTransaction(String outPart, String inPart, int outAccountType, int inAccountType,
+                                  int transactionType,  BigDecimal amount){
         Date transactionDate = new Date();
-        Transaction transaction = new Transaction(transactionDate, transactionType, accountType,
-                                                  host, counterparty, amount  );
+        Transaction transaction = new Transaction(transactionDate, transactionType, outPart, inPart, outAccountType, inAccountType, amount );
         transactionMapper.InsertTransaction(transaction);
         return ;
     }
