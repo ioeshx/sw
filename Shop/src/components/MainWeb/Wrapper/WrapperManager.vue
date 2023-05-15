@@ -4,6 +4,8 @@ import ShopShow4Manager from '../Components/ShopShow4Manager.vue'
 import GoodsShow4Manager from '../../Dashboard/Goods/GoodsShow4Manager.vue';
 import ProfitAccount from '../../../components/Dashboard/Manager/ProfitAccount.vue'
 import IntermediaryAccount from '../../../components/Dashboard/Manager/IntermediaryAccount.vue'
+import adminIntermediaryAccount from "../../../views/transactionPage/adminIntermediaryAccount.vue";
+import shopAccount from "../../..//views/transactionPage/shopAccount.vue";
 </script>
 
 <template>
@@ -41,6 +43,17 @@ import IntermediaryAccount from '../../../components/Dashboard/Manager/Intermedi
                         <IntermediaryAccount />
                     </el-tab-pane>
                 </el-tabs>
+
+            </el-tab-pane>
+            <el-tab-pane  label="管理员流水">
+              <el-tabs tab-position="left">
+                <el-tab-pane label="商城利润流水">
+                  <adminIntermediaryAccount />
+                </el-tab-pane>
+                <el-tab-pane label="中间账户流水">
+                  <shopAccount />
+                </el-tab-pane>
+              </el-tabs>
 
             </el-tab-pane>
         </el-tabs>
