@@ -214,11 +214,19 @@ public class UserServiceImpl implements IUserService {
 
 
     @Override
-    public JsonResult getUserTransactions(String username){
-        JsonResult result = new JsonResult<>(YES);
-        List<Transaction> allTransactionResult = transactionMapper.getAllTransactionsByusername(username);
-        result.setData(allTransactionResult);
-        return result;
+    public JsonResult getUserTransactions(String username,  int accountType){
+        //判断用户类型来选择SQL语句
+        List<Transaction> allTransactions = new ArrayList<>();
+        int userType = userMapper.GetUserTypeByUsername(username);
+        if(userType != admin)
+            allTransactions = transactionMapper.getTransactionsByUsername(username, accountType);
+        else
+            allTransactions = transactionMapper.GetAdminTransactions(accountType);
+
+        if(!allTransactions.isEmpty())
+            return new JsonResult<>(YES,"成功获取流水记录", allTransactions);
+        else
+            return new JsonResult<>(NO, "未找到流水记录");
     }
 
 
@@ -611,5 +619,18 @@ public class UserServiceImpl implements IUserService {
             return new JsonResult<>(YES, "成功！", orders);
         else
             return new JsonResult<>(NO, "失败!");
+    }
+    @Override
+    public JsonResult getUserProfit(String username, int periodType){
+        int userType = userMapper.GetUserTypeByUsername(username);
+        JsonResult result = new JsonResult<>();
+        if(userType == admin){
+
+        }else if(userType == merchant){
+
+        }else if(userType == buyer){
+            return new JsonResult<>(NO,"普通用户无法计算流水利润");
+        }
+        return result;
     }
 }

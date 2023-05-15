@@ -320,6 +320,20 @@ public class UserController {
         int status = (int)map.get("status");
         return userService.getOrdersOfShopByStatus(shopName, status);
     }
+
+    @RequestMapping("/api/getUserTransactions")
+    public JsonResult getUserTransactions(@RequestBody Map<String,Object> map){
+        String username = (String)map.get("username");
+        int accountType = (int)map.get("accountType");
+        return userService.getUserTransactions(username, accountType);
+    }
+
+    @RequestMapping("/api/getUserProfit")
+    public JsonResult getUserProfit(@RequestBody Map<String,Object> map){
+        String username = (String)map.get("username");
+        int periodType = (int)map.get("periodType");
+        return userService.getUserProfit(username, periodType);
+    }
 }
 
 
