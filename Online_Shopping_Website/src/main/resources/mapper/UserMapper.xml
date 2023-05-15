@@ -229,6 +229,10 @@
     <update id="AddToPrivateAccount">
         UPDATE users SET privateAccount = privateAccount + #{money} WHERE username = #{username};
     </update>
+
+    <select id="GetUserByUid" resultMap="UserMap">
+        SELECT * FROM users WHERE uid =#{uid};
+    </select>
 </mapper>
 
 

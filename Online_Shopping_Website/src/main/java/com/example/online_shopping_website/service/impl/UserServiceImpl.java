@@ -1,12 +1,14 @@
 package com.example.online_shopping_website.service.impl;
 
 import com.example.online_shopping_website.entity.*;
+import com.example.online_shopping_website.entity.constant.AccountType;
 import com.example.online_shopping_website.mapper.*;
 import com.example.online_shopping_website.service.IUserService;
 import com.example.online_shopping_website.service.ex.*;
 import com.example.online_shopping_website.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.online_shopping_website.service.TransactionService;
 
 
 import java.math.BigDecimal;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import static com.example.online_shopping_website.entity.constant.AccountType.*;
 import static com.example.online_shopping_website.entity.constant.OrderState.*;
+import static com.example.online_shopping_website.entity.constant.TransactionType.*;
 import static com.example.online_shopping_website.entity.constant.UserType.*;
 import static javax.security.auth.callback.ConfirmationCallback.*;
 
@@ -24,6 +27,7 @@ import static javax.security.auth.callback.ConfirmationCallback.*;
 /**用户模块业务层的实现类*/
 @Service
 public class UserServiceImpl implements IUserService {
+    private TransactionService transactionService;
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -160,31 +164,43 @@ public class UserServiceImpl implements IUserService {
         JsonResult result = new JsonResult<>(YES);
         int userType = userMapper.GetUserTypeByUsername(username);
         BigDecimal balance = new BigDecimal(0);
+
         //根据userType和accountType来判断，直接在mapper层加上。
         switch (userType){
             case admin:
                 if(accountType == profitAccount) {
                     userMapper.RechargeProfitAccountByUsername(username, credit);
                     balance = userMapper.GetProfitAccountByUsername(username);
+                    //插入流水记录
+                    transactionService.InsertTransaction("管理员", "管理员", adminProfitAccount, adminProfitAccount ,chargeToProfitAccount, credit);
                 }
                 else if (accountType == intermediaryAccount) {
                     userMapper.RechargeIntermediaryAccountByUsername(username, credit);
                     balance = userMapper.GetIntermediaryAccountByUsername(username);
+                    //插入流水记录
+                    transactionService.InsertTransaction("管理员", "管理员", adminIntermediaryAccount, adminIntermediaryAccount, chargeToIntermediaryAccount, credit);
                 }
                 break;
             case merchant:
                 if(accountType == privateAccount) {
                     userMapper.RechargePrivateAccountByUsername(username, credit);
                     balance = userMapper.GetPrivateAccountByUsername(username);
+                    //插入流水记录
+                    transactionService.InsertTransaction(username, username, privateAccount, privateAccount, chargeToPrivateAccount, credit);
                 }
                 else if (accountType == shopAccount) {
                     userMapper.RechargeShopAccountByUsername(username, credit);
                     balance = userMapper.GetShopAccountByUsername(username);
+                    //插入流水记录
+                    transactionService.InsertTransaction(username, username, shopAccount, shopAccount, chargeToShopAccount, credit);
                 }
                 break;
             case buyer: {
                 userMapper.RechargePrivateAccountByUsername(username, credit);
                 balance = userMapper.GetPrivateAccountByUsername(username);
+                //插入流水记录
+                transactionService.InsertTransaction(username, username, privateAccount , privateAccount,
+                                                    chargeToPrivateAccount,  credit);
             }
                 break;
             default:
@@ -393,6 +409,9 @@ public class UserServiceImpl implements IUserService {
                 orderMapper.SetOrderToPendingDeliveryByOrderId(orderId);
             //金额转入商城中间账户
             userMapper.TransferTotalPaymentToIntermediaryAccount(totalPayment);
+            //插入流水记录
+            transactionService.InsertTransaction(username, "管理员", AccountType.privateAccount, adminIntermediaryAccount,
+                                                 paymentToIntermediaryAccount, totalPayment);
         }
 
         return result;
@@ -436,10 +455,17 @@ public class UserServiceImpl implements IUserService {
                 BigDecimal ShopGain = actualPayment.subtract(commission);                   //商店收入
                 String shopName = orderMapper.GetShopNameByOrderId(orderId);
                 int uid = shopMapper.GetUidByShopName(shopName);
+                String merchantName = userMapper.GetUserByUid(uid).getUsername();
                 //从中间账户减去订单费用，佣金转入商城利润账户 剩下的传到商店账户
                 userMapper.SubtractFromIntermediaryAccount(actualPayment);
                 userMapper.AddToProfitAccount(commission);
                 userMapper.AddToShopAccount(uid, ShopGain);
+                //插入“订单利润转入商店账户”的流水记录
+                transactionService.InsertTransaction("管理员", merchantName, adminIntermediaryAccount, shopAccount,
+                                                        profitToShopAccount, ShopGain);
+                //插入”佣金转入利润账户“
+                transactionService.InsertTransaction("管理员", "管理员", adminIntermediaryAccount, adminProfitAccount,
+                                                      commissionToProfitAccount, commission );
                 //增加商品销量
                 int goodsId = orderMapper.GetGoodsIdByOrderId(orderId);
                 int orderSales = orderMapper.GetGoodsNumByOrderId(orderId);
@@ -486,7 +512,10 @@ public class UserServiceImpl implements IUserService {
     @Override
     public JsonResult getOrdersByStatus(String username, int status){
         List<Order> orders = orderMapper.GetOrdersByStatus(username, status);
-        return new JsonResult(YES,"成功",orders);
+        if(!orders.isEmpty())
+            return new JsonResult(YES,"成功",orders);
+        else
+            return new JsonResult<>(NO,"失败");
     }
 
     @Override
@@ -518,7 +547,7 @@ public class UserServiceImpl implements IUserService {
         for(Integer orderId : orderIdList){
             Integer status = orderMapper.GetOrderStatusByOrderId(orderId);
             if( status == pendingDelivery || status == pendingReception )
-                orderMapper.SetOrderToApplyingForRefund(orderId);   //把订单状态改为"申请退款中"
+                orderMapper.SetOrderToPendingRefund(orderId);   //把订单状态改为"待退款"
             else
                 WrongOrderIdList.add(orderId);
         }
@@ -539,7 +568,7 @@ public class UserServiceImpl implements IUserService {
         List<Integer> WrongOrderIdList = new ArrayList<>();
         for(Integer orderId : orderIdList){
             Integer status = orderMapper.GetOrderStatusByOrderId(orderId);
-            if( status == applyingForRefund ){
+            if( status == pendingRefunding ){
                 //把订单状态改成"已退款"
                 orderMapper.SetOrderToRefunded(orderId);
                 //把钱从中间账号转回个人账号
@@ -547,6 +576,9 @@ public class UserServiceImpl implements IUserService {
                 String username = orderMapper.getUsernameByOrderId(orderId);
                 userMapper.SubtractFromIntermediaryAccount(actualPayment);
                 userMapper.AddToPrivateAccount(username, actualPayment);
+                //插入流水记录
+                transactionService.InsertTransaction("管理员", username, adminIntermediaryAccount, privateAccount,
+                                                        refundToPrivateAccount, actualPayment);
             }
             else
                 WrongOrderIdList.add(orderId);

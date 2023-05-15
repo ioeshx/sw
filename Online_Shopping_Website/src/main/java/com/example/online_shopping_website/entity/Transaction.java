@@ -14,10 +14,19 @@ public class Transaction {
     private int transactionId;      //交易ID
     private Date transactionDate;   //日期
     private int transactionType;    //交易类型
-    private int accountType;        //什么类型的账户对应的流水 在AccountTye类中
-    private String host;            //交易的主体
-    private String counterparty;    //交易的另一方
+    private String outPart;         //交易的转出方，存用户名
+    private String inPart;          //交易的转入方，存用户名
+    private int outAccountType;     //转出方的账户类型
+    private int inAccountType;      //转入方的账户类型
     private BigDecimal amount;      //金额数量
 
-
+    public Transaction(Date transactionDate, int transactionType, String outPart, String inPart, int outAccountType, int inAccountType, BigDecimal amount) {
+        this.transactionDate = transactionDate;
+        this.transactionType = transactionType;
+        this.outPart = outPart;
+        this.inPart = inPart;
+        this.outAccountType = outAccountType;
+        this.inAccountType = inAccountType;
+        this.amount = amount;
+    }
 }

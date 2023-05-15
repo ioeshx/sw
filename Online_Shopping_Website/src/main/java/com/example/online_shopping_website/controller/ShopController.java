@@ -72,9 +72,7 @@ public class ShopController {
         return result;
     }
     @RequestMapping("/api/getMyShopInfo")
-    public  JsonResult<ShopInfo> getMyShopInfo(@RequestBody Map<String,Object> userMap
-                                               //@RequestParam("shopname") String shopname
-    ){
+    public  JsonResult<ShopInfo> getMyShopInfo(@RequestBody Map<String,Object> userMap){
 
         String shopname = (String)userMap.get("shopname");
         System.out.println(shopname);
@@ -120,10 +118,7 @@ public class ShopController {
         return Result;
     }
     @RequestMapping("/api/getShopInfoByUsername")
-    public  JsonResult<Shop> GetShopInformation(//@RequestBody User user
-                                                @RequestBody Map<String,Object> userMap
-                                                //@RequestParam("username") String username
-    ){
+    public  JsonResult<Shop> GetShopInformation(@RequestBody Map<String,Object> userMap){
         String username = (String)userMap.get("username");
         //String username = user.getUsername();
         JsonResult<Shop> Result = new JsonResult<>(YES);

@@ -6,6 +6,7 @@ import com.example.online_shopping_website.mapper.ShopMapper;
 import com.example.online_shopping_website.entity.User;
 import com.example.online_shopping_website.mapper.UserMapper;
 import com.example.online_shopping_website.service.IShopService;
+import com.example.online_shopping_website.service.TransactionService;
 import com.example.online_shopping_website.service.ex.*;
 import com.example.online_shopping_website.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import static com.example.online_shopping_website.entity.constant.AccountType.*;
+import static com.example.online_shopping_website.entity.constant.TransactionType.*;
 import static com.example.online_shopping_website.entity.constant.admit.*;
 import static javax.security.auth.callback.ConfirmationCallback.*;
 
@@ -26,6 +29,7 @@ public class ShopServiceImpl implements IShopService {
     private ShopMapper shopMapper;
     @Autowired
     private UserMapper userMapper;
+    private TransactionService transactionService;
     @Override
     public void open(Shop shop){
         String shopname = shop.getShopname();
@@ -43,6 +47,10 @@ public class ShopServiceImpl implements IShopService {
         //注册申请时，把注册资金转账到商城中间账户
         BigDecimal capital = new BigDecimal(shop.getCapital());
         shopMapper.TransferCapitalToIntemediaryAccount(capital);
+        //插入流水记录
+        int uid = shopMapper.GetUidByShopName(shopname);
+        String username = userMapper.GetUserByUid(uid).getUsername();
+        transactionService.InsertTransaction(username , "管理员" , privateAccount, adminIntermediaryAccount , registerCapitalToIntermediaryAccount, capital);
     }
     @Override
     public Shop shop_admitted(String shopname){
@@ -177,7 +185,8 @@ public class ShopServiceImpl implements IShopService {
                     BigDecimal capital = shopMapper.GetCapitalByShopname(shopname);
                     shopMapper.TransferCapitalFromIntemediary(capital);
                     shopMapper.TransferCapitalToProfitAccount(capital);
-
+                    //同意注册商店，插入流水记录
+                    transactionService.InsertTransaction("管理员", "管理员", adminIntermediaryAccount, adminProfitAccount, registerCapitalToProfitAccount,  capital);
                     shopMapper.SetShopNormal(shopname);
                 }
                 else{
@@ -191,7 +200,11 @@ public class ShopServiceImpl implements IShopService {
                     BigDecimal ShopAccountBalance = userMapper.GetShopAccountByUid(uid);
                     userMapper.DeleteShopAccountByUid(uid);
                     userMapper.TransferShopAccountBalanceToPrivateAccount(uid, ShopAccountBalance);
-                    //userMapper.DeleteShopAccountANDTransferBalanceToPrivateAccount(uid);
+
+                    //同意删除商店，插入流水记录
+                    String username = userMapper.GetUserByUid(uid).getUsername();
+                    transactionService.InsertTransaction(username, username, shopAccount, privateAccount,
+                                                        shopAccountToPrivateAccount, ShopAccountBalance);
                     shopMapper.SetShopDeleted(shopname);
                 }
                 else{
