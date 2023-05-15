@@ -10,7 +10,6 @@ import Nav from '../../components/Public/Nav/UserNav.vue'
       <div class="order-item" v-for="order in orders" :key="order.orderId">
         <div class="order-item-info">
           <h2>订单ID：{{ order.orderId }}</h2>
-          <p>收货地址ID: {{ order.addressId }}</p>
           <p>用户名: {{ order.username }}</p>
           <p>创建时间: {{ order.createTime }}</p>
           <p>商品ID: {{ order.goodsId }}</p>
