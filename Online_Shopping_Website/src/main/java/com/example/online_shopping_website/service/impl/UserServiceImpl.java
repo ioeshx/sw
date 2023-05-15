@@ -27,7 +27,6 @@ import static javax.security.auth.callback.ConfirmationCallback.*;
 /**用户模块业务层的实现类*/
 @Service
 public class UserServiceImpl implements IUserService {
-    private TransactionService transactionService;
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -36,6 +35,8 @@ public class UserServiceImpl implements IUserService {
     private OrderMapper orderMapper;
     @Autowired
     private ShopMapper shopMapper;
+    @Autowired
+    private TransactionService transactionService;
     @Autowired
     private TransactionMapper transactionMapper;
     @Override

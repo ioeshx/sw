@@ -29,6 +29,7 @@ public class ShopServiceImpl implements IShopService {
     private ShopMapper shopMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
     private TransactionService transactionService;
     @Override
     public void open(Shop shop){
