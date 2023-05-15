@@ -37,7 +37,8 @@ public interface IUserService {
     String GetAvatar(String username);
     JsonResult recharge(String username, BigDecimal credit,int accountType);
 
-    JsonResult getUserTransactions(String username);
+    JsonResult getUserTransactions(String username, int accountType);
+    JsonResult getUserProfit(String username, int periodType);
 
     JsonResult getShopAccount(String username);
 

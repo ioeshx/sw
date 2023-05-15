@@ -16,8 +16,14 @@
         <result column="amount" property="amount"/>
     </resultMap>
 
-    <select id="getAllTransactionsByusername" resultMap="TransactionMap">
-        SELECT transactionDate,out,in,amount FROM transaction WHERE out = #{username}
+    <select id="getTransactionsByUsername" resultMap="TransactionMap">
+        SELECT * FROM transaction
+            WHERE (outPart = #{username} OR inPart = #{username}) AND (outAccountType = #{accountType} OR inAccountType = #{accountType});
+    </select>
+
+    <select id="GetAdminTransactions" resultMap="TransactionMap">
+        SELECT * FROM transaction
+        WHERE (outPart = '管理员' OR inPart = '管理员' ) AND (outAccountType = #{accountType} OR inAccountType = #{accountType});
     </select>
 
     <insert id="InsertTransaction">
