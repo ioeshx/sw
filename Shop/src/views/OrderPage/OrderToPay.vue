@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>待支付订单</h2>
+    <h2 class="title">待支付订单</h2>
     <div v-for="order in orders" :key="order.orderId">
       <p>用户名：{{ order.username }}</p>
       <p>收货人：{{ order.addressDetail.receiverName }} - 手机：{{ order.addressDetail.phone }} - 省：{{ order.addressDetail.province }} - 市：{{ order.addressDetail.municipality }} - 县：{{ order.addressDetail.county }} - 镇：{{ order.addressDetail.township }} - 详细地址：{{ order.addressDetail.detailAddress }}</p>
@@ -93,3 +93,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+.title {
+  color: #008000;
+  text-align: center;
+  margin-bottom: 20px;
+}
+</style>

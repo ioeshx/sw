@@ -1,10 +1,9 @@
 <template>
   <div>
-    <h2>待支付订单</h2>
+    <h2>待发货订单</h2>
     <div v-for="order in orders" :key="order.orderId">
       <p>用户名：{{ order.username }}</p>
       <p>收货人：{{ order.addressDetail.receiverName }} - 手机：{{ order.addressDetail.phone }} - 省：{{ order.addressDetail.province }} - 市：{{ order.addressDetail.municipality }} - 县：{{ order.addressDetail.county }} - 镇：{{ order.addressDetail.township }} - 详细地址：{{ order.addressDetail.detailAddress }}</p>
-
       <p>店铺名称：{{ order.shopName }}</p>
       <p>下单时间：{{ order.orderTime }}</p>
       <p>商品名称：{{ order.goodsName }}</p>
@@ -36,7 +35,7 @@ export default {
             this.orders.forEach(order =>{
               axios.post('/getReceiverAddressByAddressId', {addressId: order.addressId})
                   .then(res => {
-                    if (res.data.state === 0) {
+                    if (res.data.state == 0) {
                       // 将获取到的地址详情添加到订单对象中
                       order.addressDetail = res.data.data;
                     }else {
