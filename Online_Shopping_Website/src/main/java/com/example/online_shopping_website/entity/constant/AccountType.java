@@ -9,6 +9,6 @@ public class AccountType {
 
     public static final int intermediaryAccount = 2;
 
-    public static final int adminIntermediaryAccount = 3;
-    public static final int adminProfitAccount = 4;
+    public static final int adminIntermediaryAccount = 3;   //管理员中间账户
+    public static final int adminProfitAccount = 4;         //管理员利润账户
 }

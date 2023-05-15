@@ -7,7 +7,7 @@ public class TransactionType {
     public static final int chargeToProfitAccount = 4;          //利润账户充值
     public static final int registerCapitalToIntermediaryAccount = 5;   //申请商店注册，商店注册资金向中间账户转账
     public static final int registerCapitalToProfitAccount = 6;         //管理员同意商店注册，商店注册资金从中间账户向利润账户转账
-    public static final int registerCapitalToPrivateAccount = 12;        //管理员拒绝商店注册，商店注册资金从中间账户向个人账户转账
+    public static final int registerCapitalToPrivateAccount = 12;       //管理员拒绝商店注册，商店注册资金从中间账户向个人账户转账
     public static final int shopAccountToPrivateAccount = 7;            //删除商店后，商店账户转入个人账户
     public static final int paymentToIntermediaryAccount = 8;           //支付订单后，金额转入中间账户
     public static final int commissionToProfitAccount = 9;              //完成订单后，佣金从中间账户转入商城利润账户

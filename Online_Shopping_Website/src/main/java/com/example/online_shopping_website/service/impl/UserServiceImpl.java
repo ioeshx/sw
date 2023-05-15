@@ -172,13 +172,13 @@ public class UserServiceImpl implements IUserService {
                     userMapper.RechargeProfitAccountByUsername(username, credit);
                     balance = userMapper.GetProfitAccountByUsername(username);
                     //插入流水记录
-                    transactionService.InsertTransaction("管理员", "管理员", profitAccount, profitAccount ,chargeToProfitAccount, credit);
+                    transactionService.InsertTransaction("管理员", "管理员", adminProfitAccount, adminProfitAccount ,chargeToProfitAccount, credit);
                 }
                 else if (accountType == intermediaryAccount) {
                     userMapper.RechargeIntermediaryAccountByUsername(username, credit);
                     balance = userMapper.GetIntermediaryAccountByUsername(username);
                     //插入流水记录
-                    transactionService.InsertTransaction("管理员", "管理员", intermediaryAccount, intermediaryAccount, chargeToIntermediaryAccount, credit);
+                    transactionService.InsertTransaction("管理员", "管理员", adminIntermediaryAccount, adminIntermediaryAccount, chargeToIntermediaryAccount, credit);
                 }
                 break;
             case merchant:
@@ -410,7 +410,7 @@ public class UserServiceImpl implements IUserService {
             //金额转入商城中间账户
             userMapper.TransferTotalPaymentToIntermediaryAccount(totalPayment);
             //插入流水记录
-            transactionService.InsertTransaction(username, "管理员", AccountType.privateAccount, intermediaryAccount,
+            transactionService.InsertTransaction(username, "管理员", AccountType.privateAccount, adminIntermediaryAccount,
                                                  paymentToIntermediaryAccount, totalPayment);
         }
 
@@ -461,10 +461,10 @@ public class UserServiceImpl implements IUserService {
                 userMapper.AddToProfitAccount(commission);
                 userMapper.AddToShopAccount(uid, ShopGain);
                 //插入“订单利润转入商店账户”的流水记录
-                transactionService.InsertTransaction("管理员", merchantName, intermediaryAccount, shopAccount,
+                transactionService.InsertTransaction("管理员", merchantName, adminIntermediaryAccount, shopAccount,
                                                         profitToShopAccount, ShopGain);
                 //插入”佣金转入利润账户“
-                transactionService.InsertTransaction("管理员", "管理员", intermediaryAccount, profitAccount,
+                transactionService.InsertTransaction("管理员", "管理员", adminIntermediaryAccount, adminProfitAccount,
                                                       commissionToProfitAccount, commission );
                 //增加商品销量
                 int goodsId = orderMapper.GetGoodsIdByOrderId(orderId);
@@ -512,7 +512,10 @@ public class UserServiceImpl implements IUserService {
     @Override
     public JsonResult getOrdersByStatus(String username, int status){
         List<Order> orders = orderMapper.GetOrdersByStatus(username, status);
-        return new JsonResult(YES,"成功",orders);
+        if(!orders.isEmpty())
+            return new JsonResult(YES,"成功",orders);
+        else
+            return new JsonResult<>(NO,"失败");
     }
 
     @Override
@@ -574,7 +577,7 @@ public class UserServiceImpl implements IUserService {
                 userMapper.SubtractFromIntermediaryAccount(actualPayment);
                 userMapper.AddToPrivateAccount(username, actualPayment);
                 //插入流水记录
-                transactionService.InsertTransaction("管理员", username, intermediaryAccount, privateAccount,
+                transactionService.InsertTransaction("管理员", username, adminIntermediaryAccount, privateAccount,
                                                         refundToPrivateAccount, actualPayment);
             }
             else

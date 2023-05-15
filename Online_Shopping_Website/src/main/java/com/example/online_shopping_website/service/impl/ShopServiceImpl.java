@@ -50,7 +50,7 @@ public class ShopServiceImpl implements IShopService {
         //插入流水记录
         int uid = shopMapper.GetUidByShopName(shopname);
         String username = userMapper.GetUserByUid(uid).getUsername();
-        transactionService.InsertTransaction(username , "管理员" , privateAccount, intermediaryAccount , registerCapitalToIntermediaryAccount, capital);
+        transactionService.InsertTransaction(username , "管理员" , privateAccount, adminIntermediaryAccount , registerCapitalToIntermediaryAccount, capital);
     }
     @Override
     public Shop shop_admitted(String shopname){
@@ -186,7 +186,7 @@ public class ShopServiceImpl implements IShopService {
                     shopMapper.TransferCapitalFromIntemediary(capital);
                     shopMapper.TransferCapitalToProfitAccount(capital);
                     //同意注册商店，插入流水记录
-                    transactionService.InsertTransaction("管理员", "管理员", intermediaryAccount, profitAccount, registerCapitalToProfitAccount,  capital);
+                    transactionService.InsertTransaction("管理员", "管理员", adminIntermediaryAccount, adminProfitAccount, registerCapitalToProfitAccount,  capital);
                     shopMapper.SetShopNormal(shopname);
                 }
                 else{

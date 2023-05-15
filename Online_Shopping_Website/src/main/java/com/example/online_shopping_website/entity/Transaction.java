@@ -16,9 +16,9 @@ public class Transaction {
     private int transactionType;    //交易类型
     private String outPart;         //交易的转出方，存用户名
     private String inPart;          //交易的转入方，存用户名
-    private int outAccountType; //转出方的账户类型
-    private int inAccountType;  //转入方的账户类型
-    private BigDecimal amount;  //金额数量
+    private int outAccountType;     //转出方的账户类型
+    private int inAccountType;      //转入方的账户类型
+    private BigDecimal amount;      //金额数量
 
     public Transaction(Date transactionDate, int transactionType, String outPart, String inPart, int outAccountType, int inAccountType, BigDecimal amount) {
         this.transactionDate = transactionDate;
