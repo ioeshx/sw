@@ -16,7 +16,7 @@
         <result column="amount" property="amount"/>
     </resultMap>
 
-    <select id="getTransactionsByUsername" resultMap="TransactionMap">
+    <select id="GetTransactionsByUsername" resultMap="TransactionMap">
         SELECT * FROM transaction
             WHERE (outPart = #{username} OR inPart = #{username}) AND (outAccountType = #{accountType} OR inAccountType = #{accountType});
     </select>
@@ -31,4 +31,52 @@
             VALUES
             (#{transactionDate}, #{transactionType}, #{outPart}, #{inPart}, #{outAccountType}, #{inAccountType}, #{amount})
     </insert>
+
+    <select id="GetAdminProfitForWeek" resultType="java.math.BigDecimal">
+        SELECT amount FROM transaction
+            WHERE (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() ) AND transactionType = 9;
+    </select>
+
+    <select id="GetAdminProfitForMonth" resultType="java.math.BigDecimal">
+        SELECT amount FROM transaction
+            WHERE (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() ) AND transactionType = 9;
+    </select>
+
+    <select id="GetShopProfitForWeek" resultType="java.math.BigDecimal">
+        SELECT amount FROM transaction
+            WHERE (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW() ) AND transactionType = 10;
+    </select>
+
+    <select id="GetShopProfitForMonth" resultType="java.math.BigDecimal">
+        SELECT amount FROM transaction
+            WHERE (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() ) AND transactionType = 10;
+    </select>
+
+    <select id="GetTransactionsByUsernameForWeek" resultMap="TransactionMap">
+        SELECT * FROM transaction
+        WHERE (outPart = #{username} OR inPart = #{username}) AND
+              (outAccountType = #{accountType} OR inAccountType = #{accountType}) AND
+              (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW());
+    </select>
+
+    <select id="GetTransactionsByUsernameForMonth" resultMap="TransactionMap">
+        SELECT * FROM transaction
+        WHERE (outPart = #{username} OR inPart = #{username}) AND
+            (outAccountType = #{accountType} OR inAccountType = #{accountType}) AND
+            (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW());
+    </select>
+
+    <select id="GetAdminTransactionsForWeek" resultMap="TransactionMap">
+        SELECT * FROM transaction
+        WHERE   (outPart = '管理员' OR inPart = '管理员' ) AND
+                (outAccountType = #{accountType} OR inAccountType = #{accountType}) AND
+            (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW());
+    </select>
+
+    <select id="GetAdminTransactionsForMonth" resultMap="TransactionMap">
+        SELECT * FROM transaction
+        WHERE   (outPart = '管理员' OR inPart = '管理员' ) AND
+                (outAccountType = #{accountType} OR inAccountType = #{accountType}) AND
+            (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW());
+    </select>
 </mapper>
