@@ -7,4 +7,5 @@ public interface IPromotionService {
     JsonResult adminStartPromotion(Promotion p);
     JsonResult getPromotions(int type);
     JsonResult applyForPromotion(String username);
+    JsonResult adminGetAllApplication();
 }

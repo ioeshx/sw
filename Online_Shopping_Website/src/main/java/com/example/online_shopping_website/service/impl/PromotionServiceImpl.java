@@ -42,6 +42,6 @@ public class PromotionServiceImpl implements IPromotionService {
 
     @Override
     public JsonResult applyForPromotion(String username){
-            return new JsonResult<>(NO,"未找到活动记录");
+
     }
 }

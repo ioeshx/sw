@@ -33,5 +33,8 @@ public class PromotionController {
         return promotionService.applyForPromotion(username);
     }
 
-
+    @RequestMapping("/api/adminGetAllApplication")
+    public JsonResult adminGetAllApplication(@RequestBody Map<String,Object> map){
+        return promotionService.adminGetAllApplication();
+    }
 }
