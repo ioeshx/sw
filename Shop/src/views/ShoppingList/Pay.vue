@@ -78,6 +78,7 @@ export default {
             if (response.data.state == 0) {
               // 支付成功，可以进行相关操作，例如显示成功消息，清空localStorage中的orderIdList等
               console.log("支付成功");
+              this.$message.success("支付成功")
               localStorage.removeItem('orderIds');
               localStorage.removeItem('orderIdListTest');
               this.$router.push({ name: "OrderPage" });

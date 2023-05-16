@@ -5,7 +5,8 @@ import GoodsShow4Manager from '../../Dashboard/Goods/GoodsShow4Manager.vue';
 import ProfitAccount from '../../../components/Dashboard/Manager/ProfitAccount.vue'
 import IntermediaryAccount from '../../../components/Dashboard/Manager/IntermediaryAccount.vue'
 import adminIntermediaryAccount from "../../../views/transactionPage/adminIntermediaryAccount.vue";
-import shopAccount from "../../..//views/transactionPage/shopAccount.vue";
+import adminProfitAccount from "@/views/transactionPage/adminProfitAccount.vue";
+import activityPage from "@/components/Dashboard/Manager/activityPage.vue";
 </script>
 
 <template>
@@ -51,11 +52,14 @@ import shopAccount from "../../..//views/transactionPage/shopAccount.vue";
                   <adminIntermediaryAccount />
                 </el-tab-pane>
                 <el-tab-pane label="中间账户流水">
-                  <shopAccount />
+                  <adminProfitAccount />
                 </el-tab-pane>
               </el-tabs>
 
             </el-tab-pane>
+          <el-tab-pane  label="开启活动">
+  <!--          <activityPage/>-->
+          </el-tab-pane>
         </el-tabs>
         
     </div>

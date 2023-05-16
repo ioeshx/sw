@@ -7,6 +7,7 @@ import Goods4Shopkeeper from '../../DashBoard/Goods/Goods4Shopkeeper.vue'
 import Transaction4Shopkeeper from '../../../components/Dashboard/Shop/Transactions4Shopkeeper.vue'
 import ShopAccountInfo from '../../../components/Dashboard/Shop/ShopAccountInfo.vue'
 //import SearchTop from '../../../components/Dashboard/Goods/SearchG.vue'
+import activityPage4Shopkeeper from "@/components/Dashboard/Shop/activityPage4Shopkeeper.vue";
 import { RouterLink, RouterView } from 'vue-router'
 </script>
 
@@ -25,9 +26,8 @@ import { RouterLink, RouterView } from 'vue-router'
                 <Goods4Shopkeeper/>
             </el-tab-pane>
 
-            <el-tab-pane v-if="shop.is_admitted==1" label="店铺流水">
-                <ShopAccountInfo />
-                <Transaction4Shopkeeper />
+            <el-tab-pane v-if="shop.is_admitted==1" label="商品活动">
+                <activityPage4Shopkeeper />
             </el-tab-pane>
         </el-tabs>
     </section>

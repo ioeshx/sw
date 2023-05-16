@@ -22,7 +22,7 @@
       <p>实际支付金额：{{ order.actualPayment }}</p>
       <div class="button-group">
         <el-button type="danger" size="large" @click="refund(order.orderId)">申请退款</el-button>
-        <el-button type="primary" size="large" @click="Done(order.orderId)">申请退款</el-button>
+        <el-button type="primary" size="large" @click="Done(order.orderId)">确认收货</el-button>
       </div>
     </div>
   </div>
