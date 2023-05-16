@@ -24,9 +24,13 @@
         (1, #{promotionName} ,#{endTime}, #{goodsTypeInPromotion}, #{promotionFund}, #{promotionStartLine}, #{promotionPaymentReduce}, #{registrationCapitalLimit}, #{monthlySaleIncomeLimit}, #{monthlySalesLimit})
     </insert>
 
-    <select id="GetPromotions" resultMap="PromotionMap">
-        SELECT  promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit
+    <select id="GetCurrentPromotions" resultMap="PromotionMap">
+        SELECT  promotionId, promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit
                 FROM promotion WHERE status = 1;
     </select>
 
+    <select id="AdminGetAllPromotions" resultMap="PromotionMap">
+        SELECT  promotionId, promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit
+                FROM promotion;
+    </select>
 </mapper>

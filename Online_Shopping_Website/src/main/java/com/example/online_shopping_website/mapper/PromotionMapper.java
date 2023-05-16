@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface PromotionMapper {
     int InsertPromotion(Promotion p);
-    List<Promotion> GetPromotions();
+    List<Promotion> GetCurrentPromotions();
+    List<Promotion> AdminGetAllPromotions();
 }

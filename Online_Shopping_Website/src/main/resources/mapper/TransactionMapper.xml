@@ -70,13 +70,13 @@
         SELECT * FROM transaction
         WHERE   (outPart = '管理员' OR inPart = '管理员' ) AND
                 (outAccountType = #{accountType} OR inAccountType = #{accountType}) AND
-            (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW());
+                (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 7 DAY) AND NOW());
     </select>
 
     <select id="GetAdminTransactionsForMonth" resultMap="TransactionMap">
         SELECT * FROM transaction
         WHERE   (outPart = '管理员' OR inPart = '管理员' ) AND
                 (outAccountType = #{accountType} OR inAccountType = #{accountType}) AND
-            (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW());
+                (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW());
     </select>
 </mapper>

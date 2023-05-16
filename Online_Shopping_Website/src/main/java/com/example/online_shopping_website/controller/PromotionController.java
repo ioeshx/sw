@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class PromotionController {
@@ -21,7 +22,16 @@ public class PromotionController {
     }
 
     @RequestMapping("/api/getPromotions")
-    public JsonResult getPromotions(){
-        return promotionService.getPromotions();
+    public JsonResult getPromotions(@RequestBody Map<String,Object> map){
+        int type = (int)map.get("type");
+        return promotionService.getPromotions(type);
     }
+
+    @RequestMapping("/api/applyForPromotion")
+    public JsonResult applyForPromotion(@RequestBody Map<String,Object> map){
+        String username = (String) map.get("username");
+        return promotionService.applyForPromotion(username);
+    }
+
+
 }

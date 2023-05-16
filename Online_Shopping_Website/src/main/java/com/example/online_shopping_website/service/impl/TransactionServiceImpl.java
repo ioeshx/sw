@@ -80,9 +80,9 @@ public class TransactionServiceImpl implements ITransactionService {
                 allTransactions = transactionMapper.GetTransactionsByUsernameForMonth(username, accountType);
         } else{
             if(periodType == Week)
-                allTransactions = transactionMapper.GetAdminTransactionsForWeek();
+                allTransactions = transactionMapper.GetAdminTransactionsForWeek(accountType);
             else if(periodType == Month)
-                allTransactions = transactionMapper.GetAdminTransactionsForMonth();
+                allTransactions = transactionMapper.GetAdminTransactionsForMonth(accountType);
         }
 
         if(!allTransactions.isEmpty())
