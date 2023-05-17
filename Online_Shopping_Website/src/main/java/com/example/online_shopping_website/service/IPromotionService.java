@@ -5,5 +5,9 @@ import com.example.online_shopping_website.util.JsonResult;
 
 public interface IPromotionService {
     JsonResult adminStartPromotion(Promotion p);
-    JsonResult getPromotions();
+    JsonResult getPromotions(int type);
+    JsonResult applyForPromotion(String username);
+    JsonResult adminGetAllApplication();
+    JsonResult adminCheckPromotionApplication(String username, int checkType);
+    JsonResult userGetPromotionApplicationResult(String username);
 }

@@ -136,4 +136,11 @@
     <select id="GetUidByShopName" resultType="int">
         SELECT uid FROM shops WHERE shopname = #{shopname};
     </select>
+
+    <select id="GetShopByUid" resultMap="ShopMap">
+        SELECT * FROM shops WHERE uid = #{uid};
+    </select>
+    <select id="GetGoodsCategoryByShopName" resultType="java.lang.String">
+        SELECT goodsCategory FROM goods WHERE shopname = #{shopName};
+    </select>
 </mapper>

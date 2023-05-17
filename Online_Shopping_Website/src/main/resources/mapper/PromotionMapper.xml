@@ -17,6 +17,16 @@
         <result column="monthlySaleIncomeLimit" property="monthlySaleIncomeLimit"/>
         <result column="monthlySalesLimit" property="monthlySalesLimit"/>
     </resultMap>
+    <resultMap id="PromotionApplicantMap" type="com.example.online_shopping_website.entity.PromotionApplicant">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="shopName" property="shopName"/>
+        <result column="isGoodsCategory" property="isGoodsCategory"/>
+        <result column="isCapital" property="isCapital"/>
+        <result column="isMonthlySale" property="isMonthlySale"/>
+        <result column="isMonthlyIncome" property="isMonthlyIncome"/>
+        <result column="status" property="status"/>
+    </resultMap>
 
     <insert id="InsertPromotion">
         INSERT INTO promotion (status, promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit)
@@ -24,9 +34,37 @@
         (1, #{promotionName} ,#{endTime}, #{goodsTypeInPromotion}, #{promotionFund}, #{promotionStartLine}, #{promotionPaymentReduce}, #{registrationCapitalLimit}, #{monthlySaleIncomeLimit}, #{monthlySalesLimit})
     </insert>
 
-    <select id="GetPromotions" resultMap="PromotionMap">
-        SELECT  promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit
+    <select id="GetCurrentPromotions" resultMap="PromotionMap">
+        SELECT  promotionId, promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit
                 FROM promotion WHERE status = 1;
     </select>
 
+    <select id="AdminGetAllPromotions" resultMap="PromotionMap">
+        SELECT  promotionId, promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit
+                FROM promotion;
+    </select>
+    <select id="GetPromotionForCheck" resultMap="PromotionMap">
+        SELECT * FROM promotion WHERE status = 1;
+    </select>
+    <insert id="InsertPromotionApplicant">
+        INSERT INTO promotionapplicant (username, shopName, isGoodsCategory, isCapital, isMonthlySale, isMonthlyIncome, status)
+            VALUES
+                (#{username}, #{shopName}, 1, 1, 1, 1, 0)
+    </insert>
+
+    <select id="GetAllPromotionApplicant" resultMap="PromotionApplicantMap">
+        SELECT * FROM promotionapplicant;
+    </select>
+
+    <update id="SetPromotionApplicationStatus">
+        UPDATE promotionapplicant SET status = #{status} WHERE username = #{username};
+    </update>
+
+    <select id="IsPromotionApplicantExist" resultType="int">
+        SELECT COUNT(*) FROM promotionapplicant WHERE username = #{username};
+    </select>
+
+    <select id="GetPromotionApplicationStatus" resultType="int">
+        SELECT status FROM promotionapplicant WHERE username =#{username};
+    </select>
 </mapper>

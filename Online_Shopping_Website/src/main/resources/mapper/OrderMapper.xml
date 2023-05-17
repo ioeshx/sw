@@ -98,4 +98,8 @@
     <select id="GetOrdersByShopNameAndStatus" resultMap="OrderMap">
         SELECT * FROM orders WHERE shopName = #{shopName} and status = #{status};
     </select>
+
+    <select id="GetMonthlySalesByShopName" resultType="int">
+        SELECT SUM(goodsNum) FROM orders WHERE shopName = #{shopName} AND status = 4;
+    </select>
 </mapper>
