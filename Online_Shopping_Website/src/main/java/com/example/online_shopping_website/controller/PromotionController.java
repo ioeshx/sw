@@ -37,4 +37,5 @@ public class PromotionController {
     public JsonResult adminGetAllApplication(@RequestBody Map<String,Object> map){
         return promotionService.adminGetAllApplication();
     }
+
 }

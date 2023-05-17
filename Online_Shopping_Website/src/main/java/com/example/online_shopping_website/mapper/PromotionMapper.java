@@ -8,4 +8,6 @@ public interface PromotionMapper {
     int InsertPromotion(Promotion p);
     List<Promotion> GetCurrentPromotions();
     List<Promotion> AdminGetAllPromotions();
+    Promotion GetPromotionForCheck();
+    void InsertPromotionApplicant(String username, String shopName);
 }

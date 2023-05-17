@@ -26,4 +26,5 @@ public interface OrderMapper {
     void SetOrderToRefunded(int orderId);
     List<Order> GetOrdersByShopName(String shopName);
     List<Order> GetOrdersByShopNameAndStatus(String shopName, int status);
+    int GetMonthlySalesByShopName(String shopName);
 }

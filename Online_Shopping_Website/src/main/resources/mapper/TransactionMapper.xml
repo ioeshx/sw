@@ -79,4 +79,7 @@
                 (outAccountType = #{accountType} OR inAccountType = #{accountType}) AND
                 (transactionDate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW());
     </select>
+    <select id="GetMonthlySalesIncomeByUsername" resultType="java.math.BigDecimal">
+        SELECT SUM(amount) FROM transaction WHERE inPart = #{username} AND inAccountType = 2 AND outAccountType = 3
+    </select>
 </mapper>

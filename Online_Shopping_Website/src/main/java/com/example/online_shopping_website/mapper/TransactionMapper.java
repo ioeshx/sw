@@ -23,4 +23,5 @@ public interface TransactionMapper {
     List<Transaction> GetTransactionsByUsernameForMonth(String username, int accountType);
     List<Transaction> GetAdminTransactionsForWeek(int accountType);
     List<Transaction> GetAdminTransactionsForMonth(int accountType);
+    BigDecimal GetMonthlySalesIncomeByUsername(String username);
 }

@@ -233,6 +233,10 @@
     <select id="GetUserByUid" resultMap="UserMap">
         SELECT * FROM users WHERE uid =#{uid};
     </select>
+
+    <select id="GetUidByUsername" resultType="int">
+        SELECT uid FROM users WHERE username = #{username};
+    </select>
 </mapper>
 
 

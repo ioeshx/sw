@@ -17,6 +17,16 @@
         <result column="monthlySaleIncomeLimit" property="monthlySaleIncomeLimit"/>
         <result column="monthlySalesLimit" property="monthlySalesLimit"/>
     </resultMap>
+    <resultMap id="PromotionApplicantMap" type="com.example.online_shopping_website.entity.PromotionApplicant">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="shopName" property="shopName"/>
+        <result column="isGoodsCategory" property="isGoodsCategory"/>
+        <result column="isCapital" property="isCapital"/>
+        <result column="isMonthlySale" property="isMonthlySale"/>
+        <result column="isMonthlyIncome" property="isMonthlyIncome"/>
+        <result column="status" property="status"/>
+    </resultMap>
 
     <insert id="InsertPromotion">
         INSERT INTO promotion (status, promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit)
@@ -33,4 +43,12 @@
         SELECT  promotionId, promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit
                 FROM promotion;
     </select>
+    <select id="GetPromotionForCheck" resultMap="PromotionMap">
+        SELECT * FROM promotion WHERE status = 1;
+    </select>
+    <insert id="InsertPromotionApplicant">
+        INSERT INTO promotionapplicant (username, shopName, isGoodsCategory, isCapital, isMonthlySale, isMonthlyIncome, status)
+            VALUES
+                (#{username}, #{shopName}, 1, 1, 1, 1, 0)
+    </insert>
 </mapper>
