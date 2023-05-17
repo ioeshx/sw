@@ -8,4 +8,6 @@ public interface IPromotionService {
     JsonResult getPromotions(int type);
     JsonResult applyForPromotion(String username);
     JsonResult adminGetAllApplication();
+    JsonResult adminCheckPromotionApplication(String username, int checkType);
+    JsonResult userGetPromotionApplicationResult(String username);
 }

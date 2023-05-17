@@ -1,6 +1,7 @@
 package com.example.online_shopping_website.service.impl;
 
 import com.example.online_shopping_website.entity.Promotion;
+import com.example.online_shopping_website.entity.PromotionApplicant;
 import com.example.online_shopping_website.entity.Shop;
 import com.example.online_shopping_website.mapper.*;
 import com.example.online_shopping_website.service.IPromotionService;
@@ -109,6 +110,35 @@ public class PromotionServiceImpl implements IPromotionService {
 
     @Override
     public JsonResult adminGetAllApplication(){
-        return new JsonResult<>(NO,"未找到活动记录");
+        List<PromotionApplicant> applicants = promotionMapper.GetAllPromotionApplicant();
+        if(applicants.isEmpty())
+            return new JsonResult<>(NO,"未找到申请记录");
+        else
+            return new JsonResult<>(YES,"成功",applicants);
+    }
+
+    @Override
+    public JsonResult adminCheckPromotionApplication(String username, int checkType){
+        if(checkType == AdminApprovePromotion){
+            promotionMapper.SetPromotionApplicationStatus(username, ApplicationApproved);
+            //修改相应的goods信息和shop信息
+
+        }else if(checkType == AdminRejectPromotion){
+            promotionMapper.SetPromotionApplicationStatus(username, ApplicationRejected);
+        }else {
+            return new JsonResult<>(NO,"checkType不符合要求");
+        }
+        return new JsonResult<>(YES,"批复成功");
+    }
+
+    @Override
+    public JsonResult userGetPromotionApplicationResult(String username){
+        int isExist = promotionMapper.IsPromotionApplicantExist(username);
+        if(isExist == 0)
+            return new JsonResult<>(NO, "未找到申请结果，可能你没有进行申请");
+        else {
+            int status = promotionMapper.GetPromotionApplicationStatus(username);
+            return new JsonResult<>(YES,"成功", status);
+        }
     }
 }

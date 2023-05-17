@@ -34,8 +34,20 @@ public class PromotionController {
     }
 
     @RequestMapping("/api/adminGetAllApplication")
-    public JsonResult adminGetAllApplication(@RequestBody Map<String,Object> map){
+    public JsonResult adminGetAllApplication(){
         return promotionService.adminGetAllApplication();
     }
 
+    @RequestMapping("/api/adminCheckPromotionApplication")
+    public JsonResult adminCheckPromotionApplication(@RequestBody Map<String,Object> map){
+        String username = (String)map.get("username");
+        int checkType = (int)map.get("checkType");
+        return promotionService.adminCheckPromotionApplication(username, checkType);
+    }
+
+    @RequestMapping("/api/userGetPromotionApplicationResult")
+    public JsonResult userGetPromotionApplicationResult(@RequestBody Map<String,Object> map){
+        String username = (String)map.get("username");
+        return promotionService.userGetPromotionApplicationResult(username);
+    }
 }

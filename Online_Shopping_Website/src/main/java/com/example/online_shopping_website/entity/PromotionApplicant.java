@@ -1,5 +1,12 @@
 package com.example.online_shopping_website.entity;
 
+import lombok.*;
+
+@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PromotionApplicant {
     private int id;
     private String username;

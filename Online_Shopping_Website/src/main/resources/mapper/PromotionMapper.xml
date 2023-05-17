@@ -51,4 +51,20 @@
             VALUES
                 (#{username}, #{shopName}, 1, 1, 1, 1, 0)
     </insert>
+
+    <select id="GetAllPromotionApplicant" resultMap="PromotionApplicantMap">
+        SELECT * FROM promotionapplicant;
+    </select>
+
+    <update id="SetPromotionApplicationStatus">
+        UPDATE promotionapplicant SET status = #{status} WHERE username = #{username};
+    </update>
+
+    <select id="IsPromotionApplicantExist" resultType="int">
+        SELECT COUNT(*) FROM promotionapplicant WHERE username = #{username};
+    </select>
+
+    <select id="GetPromotionApplicationStatus" resultType="int">
+        SELECT status FROM promotionapplicant WHERE username =#{username};
+    </select>
 </mapper>
