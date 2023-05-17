@@ -10,4 +10,5 @@ public interface IPromotionService {
     JsonResult adminGetAllApplication();
     JsonResult adminCheckPromotionApplication(String username, int checkType);
     JsonResult userGetPromotionApplicationResult(String username);
+    JsonResult adminCloseCurrentPromotion();
 }

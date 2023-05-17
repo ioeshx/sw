@@ -50,4 +50,8 @@ public class PromotionController {
         String username = (String)map.get("username");
         return promotionService.userGetPromotionApplicationResult(username);
     }
+    @RequestMapping("/api/adminCloseCurrentPromotion")
+    public JsonResult adminCloseCurrentPromotion(){
+        return promotionService.adminCloseCurrentPromotion();
+    }
 }

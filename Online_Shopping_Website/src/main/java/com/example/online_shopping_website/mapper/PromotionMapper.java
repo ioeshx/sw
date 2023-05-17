@@ -15,4 +15,6 @@ public interface PromotionMapper {
     void SetPromotionApplicationStatus(String username, int status);
     int GetPromotionApplicationStatus(String username);
     int IsPromotionApplicantExist(String username);
+    int IsPromotionOngingForNow();
+    void SetCurrentPromotionClosed();
 }

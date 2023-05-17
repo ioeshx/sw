@@ -121,7 +121,7 @@ public class PromotionServiceImpl implements IPromotionService {
     public JsonResult adminCheckPromotionApplication(String username, int checkType){
         if(checkType == AdminApprovePromotion){
             promotionMapper.SetPromotionApplicationStatus(username, ApplicationApproved);
-            //修改相应的goods信息和shop信息
+            //TODO 修改相应的goods信息和shop信息
 
         }else if(checkType == AdminRejectPromotion){
             promotionMapper.SetPromotionApplicationStatus(username, ApplicationRejected);
@@ -139,6 +139,21 @@ public class PromotionServiceImpl implements IPromotionService {
         else {
             int status = promotionMapper.GetPromotionApplicationStatus(username);
             return new JsonResult<>(YES,"成功", status);
+        }
+    }
+
+    @Override
+    public JsonResult adminCloseCurrentPromotion(){
+        int isPromotionExist = promotionMapper.IsPromotionOngingForNow();
+        if(isPromotionExist == 1){          //当前只有一个促销活动
+            promotionMapper.SetCurrentPromotionClosed();
+            //把商品和商店属性都设置一下
+
+            return new JsonResult<>(YES,"当前促销活动已结束");
+        }else if(isPromotionExist == 0){    //当前没有促销活动
+            return new JsonResult<>(NO,"当前没有促销活动正在进行，无法结束活动！");
+        }else{                              //当前有多于1个的促销活动
+            return new JsonResult<>(NO,"当前有多于1个的促销活动正在进行！");
         }
     }
 }
