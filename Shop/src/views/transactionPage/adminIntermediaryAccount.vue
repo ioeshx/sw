@@ -1,6 +1,10 @@
 <template>
   <div class="transaction-container">
     <h1>交易流水</h1>
+    <div class="btn-group">
+      <button class="btn" @click="filterTransactions7">近七天</button>
+      <button class="btn" @click="filterTransactions30">近三十天</button>
+    </div>
     <div class="transaction-card" v-for="transaction in transactions" :key="transaction.transactionId">
       <h2>交易ID：{{ transaction.transactionId }}</h2>
       <div class="transaction-detail">
@@ -43,6 +47,34 @@ export default {
         });
   },
   methods: {
+    filterTransactions7(){
+      axios.post('/getUserTransactionsByPeriod',{username : this.username, accountType : 3,periodType :0})
+          .then(response => {
+            if(response.data.state == 0) {
+              this.transactions = response.data.data;
+              this.$message.success("成功获取近七天流水")
+            }else{
+              console.error("未获取到流水")
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+    },
+    filterTransactions30(){
+      axios.post('/getUserTransactionsByPeriod',{username : this.username, accountType : 3,periodType :1})
+          .then(response => {
+            if(response.data.state == 0) {
+              this.transactions = response.data.data;
+              this.$message.success("成功获取近三十天流水")
+            }else{
+              console.error("未获取到流水")
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+    },
     getTransactionTypeName(type) {
       switch(type) {
         case 1:
@@ -77,8 +109,29 @@ export default {
 
 };
 </script>
-
 <style scoped>
+.btn-group {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.btn {
+  background-color: #81A18B;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #618c75;
+}
+
 .transaction-container {
   width: 80%;
   margin: auto;
@@ -117,5 +170,15 @@ h2 {
 p {
   color: #006400;
   font-size: 1rem;
+}
+.profit {
+  text-align: center;
+  color: #006400;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+}
+
+.profit h2 {
+  margin: 0;
 }
 </style>

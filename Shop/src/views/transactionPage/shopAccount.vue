@@ -23,6 +23,9 @@ import Nav from '../../components/Public/Nav/ShopkeeperNav.vue'
         </div>
       </div>
     </div>
+    <div class="profit" v-if="showProfit">
+      <h2>{{ profitTitle }}：{{ profit }}</h2>
+    </div>
   </div>
 </template>
 <script>
@@ -30,6 +33,9 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      showProfit: false,
+      profitTitle: '',
+      profit: 0,
       transactions: [],
       username :window.localStorage.getItem("username")
     };
@@ -53,9 +59,21 @@ export default {
           .then(response => {
             if(response.data.state == 0) {
               this.transactions = response.data.data;
+              this.$message.success("成功获取近七天流水")
             }else{
               console.error("未获取到流水")
             }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      axios.post('/getUserProfit', {username : this.username , periodType :0})
+          .then(response => {
+            this.profit = response.data.data;
+            // 处理结果
+            this.profitTitle = "近七天的利润";
+            this.showProfit = true;
+            console.log(this.showProfit)
           })
           .catch(error => {
             console.log(error);
@@ -66,9 +84,20 @@ export default {
           .then(response => {
             if(response.data.state == 0) {
               this.transactions = response.data.data;
+              this.$message.success("成功获取近三十天流水")
             }else{
               console.error("未获取到流水")
             }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      axios.post('/getUserProfit', {username : this.username , periodType :1})
+          .then(response => {
+            this.profit = response.data.data;
+            // 处理结果
+            this.profitTitle = "近三十天的利润";
+            this.showProfit = true;
           })
           .catch(error => {
             console.log(error);
@@ -170,5 +199,15 @@ h2 {
 p {
   color: #006400;
   font-size: 1rem;
+}
+.profit {
+  text-align: center;
+  color: #006400;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+}
+
+.profit h2 {
+  margin: 0;
 }
 </style>

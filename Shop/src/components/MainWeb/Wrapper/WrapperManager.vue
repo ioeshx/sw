@@ -7,6 +7,7 @@ import IntermediaryAccount from '../../../components/Dashboard/Manager/Intermedi
 import adminIntermediaryAccount from "../../../views/transactionPage/adminIntermediaryAccount.vue";
 import adminProfitAccount from "@/views/transactionPage/adminProfitAccount.vue";
 import activityPage from "@/components/Dashboard/Manager/activityPage.vue";
+import promotionShopApplication from "@/components/Dashboard/Manager/PromotionShopApplication.vue";
 </script>
 
 <template>
@@ -58,9 +59,13 @@ import activityPage from "@/components/Dashboard/Manager/activityPage.vue";
 
             </el-tab-pane>
           <el-tab-pane  label="开启活动">
-  <!--          <activityPage/>-->
+              <activityPage/>
+          </el-tab-pane>
+          <el-tab-pane  label="商店申请参与活动">
+            <promotionShopApplication/>
           </el-tab-pane>
         </el-tabs>
+
         
     </div>
 </template>
