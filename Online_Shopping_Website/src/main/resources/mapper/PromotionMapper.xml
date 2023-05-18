@@ -76,4 +76,7 @@
     <select id="GetShopNameByUsername" resultType="java.lang.String">
         SELECT shopName FROM promotionapplicant WHERE username = #{username};
     </select>
+    <delete id="DeleteAllApplicantForClosePromotion">
+        DELETE FROM promotionapplicant;
+    </delete>
 </mapper>

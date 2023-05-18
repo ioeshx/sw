@@ -47,4 +47,5 @@ public interface GoodMapper {
     String GetGoodsCategoryByID(int goodsId);
     void SetGoodsInPromotionByGoodsId(int goodsId);
     void SetGoodsNotInPromotion();
+    boolean IsGoodsInPromotion(Integer goodsId);
 }

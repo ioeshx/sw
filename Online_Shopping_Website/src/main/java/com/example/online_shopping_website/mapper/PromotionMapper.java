@@ -7,8 +7,18 @@ import java.util.List;
 
 public interface PromotionMapper {
     int InsertPromotion(Promotion p);
+
+    /**
+     * 获取当前进行中的促销活动
+     * @return 返回List<Promotion>,里面只有一个Promotion对象
+     */
     List<Promotion> GetCurrentPromotions();
     List<Promotion> AdminGetAllPromotions();
+
+    /**
+     * 获取当前进行中的促销活动，
+     * @return 返回Promotion类
+     */
     Promotion GetPromotionForCheck();
     void InsertPromotionApplicant(String username, String shopName);
     List<PromotionApplicant> GetAllPromotionApplicant();
@@ -18,4 +28,5 @@ public interface PromotionMapper {
     int IsPromotionOngingForNow();
     void SetCurrentPromotionClosed();
     String GetShopNameByUsername(String username);
+    void DeleteAllApplicantForClosePromotion();
 }

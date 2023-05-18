@@ -178,6 +178,8 @@ public class PromotionServiceImpl implements IPromotionService {
             //把商品和商店属性都设置成不再促销中
             shopMapper.SetShopNotInPromotion();
             goodMapper.SetGoodsNotInPromotion();
+            //删除promotionapplicant表的所有申请者信息
+            promotionMapper.DeleteAllApplicantForClosePromotion();
             return new JsonResult<>(YES,"当前促销活动已结束");
         }else if(isPromotionExist == 0){    //当前没有促销活动
             return new JsonResult<>(NO,"当前没有促销活动正在进行，无法结束活动！");

@@ -150,4 +150,10 @@
     <update id="SetGoodsNotInPromotion">
         UPDATE goods SET inPromotion = 0 WHERE inPromotion = 1;
     </update>
+    <select id="IsGoodsInPromotion" resultType="boolean">
+        SELECT COUNT(*) FROM goods WHERE goodsId = #{goodsId} AND inPromotion = 1 LIMIT 1;
+    </select>
+    <select id="GetGoodsPriceByGoodsId" resultType="java.math.BigDecimal">
+        SELECT goodsPrice FROM goods WHERE goodsId = #{goodsId};
+    </select>
 </mapper>
