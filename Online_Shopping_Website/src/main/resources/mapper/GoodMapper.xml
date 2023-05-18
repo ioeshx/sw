@@ -18,6 +18,7 @@
         <result column="shopname" property="shopname"></result>
         <result column="inPromotion" property="inPromotion"/>
     </resultMap>
+
     <insert id="insertGoodByUser" >
         INSERT INTO goods(introduction,goodsname,goodsPrice,goodsStock,goodsCategory,status,registerStatus,modifyStatus,shopname)
         VALUES
@@ -155,5 +156,8 @@
     </select>
     <select id="GetGoodsPriceByGoodsId" resultType="java.math.BigDecimal">
         SELECT goodsPrice FROM goods WHERE goodsId = #{goodsId};
+    </select>
+    <select id="GetAllGoodsInPromotion" resultMap="GoodMap">
+        SELECT * FROM goods WHERE inPromotion = 1;
     </select>
 </mapper>

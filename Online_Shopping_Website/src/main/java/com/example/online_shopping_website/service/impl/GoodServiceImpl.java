@@ -447,6 +447,12 @@ public class GoodServiceImpl implements IGoodService {
     public void goodsPicsCheck(int goodsId){
         List<pic> picList = picMapper.searchPicByGoodsId(goodsId);
         if(picList!=null) picMapper.picDelete(goodsId);
-
+    }
+    @Override
+    public JsonResult getAllGoodsInPromotion(){
+        List<Good> allGoodsInPromotion = goodMapper.GetAllGoodsInPromotion();
+        if(allGoodsInPromotion.isEmpty())
+            return new JsonResult<>(NO,"当前没有商品正在促销中");
+        else return new JsonResult<>(YES,"",allGoodsInPromotion);
     }
 }
