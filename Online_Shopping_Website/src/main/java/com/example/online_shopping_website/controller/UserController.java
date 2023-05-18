@@ -30,8 +30,7 @@ public class UserController {
     @RequestMapping("/api/userRegister")
     public JsonResult<User> register(@RequestBody User user){
         // 不用 try catch
-        JsonResult<User> registerResult = userService.register(user);
-        return registerResult;
+        return userService.register(user);
     }
 
     @RequestMapping("/api/userlogin")

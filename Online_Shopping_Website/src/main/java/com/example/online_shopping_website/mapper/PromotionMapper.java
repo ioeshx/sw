@@ -3,6 +3,7 @@ package com.example.online_shopping_website.mapper;
 import com.example.online_shopping_website.entity.Promotion;
 import com.example.online_shopping_website.entity.PromotionApplicant;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface PromotionMapper {
@@ -29,4 +30,5 @@ public interface PromotionMapper {
     void SetCurrentPromotionClosed();
     String GetShopNameByUsername(String username);
     void DeleteAllApplicantForClosePromotion();
+    void AddToPromotionFundUsed(BigDecimal reducedPayment);
 }

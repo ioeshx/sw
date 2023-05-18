@@ -174,6 +174,7 @@ public class PromotionServiceImpl implements IPromotionService {
     public JsonResult adminCloseCurrentPromotion(){
         int isPromotionExist = promotionMapper.IsPromotionOngingForNow();
         if(isPromotionExist == 1){          //当前只有一个促销活动
+            //关闭当前促销活动
             promotionMapper.SetCurrentPromotionClosed();
             //把商品和商店属性都设置成不再促销中
             shopMapper.SetShopNotInPromotion();

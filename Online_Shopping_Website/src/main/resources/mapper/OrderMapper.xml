@@ -17,14 +17,22 @@
         <result column="totalPrice" property="totalPrice"/>
         <result column="actualPayment" property="actualPayment"/>
         <result column="status" property="status"/>
+        <result column="isPromotionEffective" property="isPromotionEffective"/>
+        <result column="parentOrderId" property="parentOrderId"/>
     </resultMap>
-
+    <resultMap id="ParentOrderMap" type="com.example.online_shopping_website.entity.ParentOrder">
+        <result column="parentOrderId" property="parentOrderId"/>
+        <result column="totalPrice" property="totalPrice"/>
+        <result column="actualPayment" property="actualPayment"/>
+        <result column="reducedPayment" property="reducedPayment"/>
+        <result column="isPromotionEffective" property="isPromotionEffective"/>
+    </resultMap>
 
     <!--  用useGeneratedKeys和keyProperty把自动增长的orderId返回Order类  -->
     <insert id="creatOrder" parameterType="com.example.online_shopping_website.entity.Order" useGeneratedKeys="true" keyProperty="orderId">
-        insert into orders (username, shopName,orderTime, goodsId, goodsName, unitPrice, goodsNum, totalPrice, actualPayment,addressId, status)
+        insert into orders (username, shopName,orderTime, goodsId, goodsName, unitPrice, goodsNum, totalPrice, actualPayment,addressId, status, isPromotionEffective, parentOrderId)
             values
-        (#{username}, #{shopName}, #{orderTime}, #{goodsId}, #{goodsName}, #{unitPrice}, #{goodsNum},#{totalPrice}, #{actualPayment}, #{addressId}, #{status});
+        (#{username}, #{shopName}, #{orderTime}, #{goodsId}, #{goodsName}, #{unitPrice}, #{goodsNum},#{totalPrice}, #{actualPayment}, #{addressId}, #{status}, #{isPromotionEffective}, #{parentOrderId});
     </insert>
 
     <select id="getOrderByOrderId" resultMap="OrderMap">
@@ -101,5 +109,29 @@
 
     <select id="GetMonthlySalesByShopName" resultType="int">
         SELECT SUM(goodsNum) FROM orders WHERE shopName = #{shopName} AND status = 4;
+    </select>
+    <insert id="CreateParentOrder" useGeneratedKeys="true" keyProperty="parentOrderId">
+        INSERT INTO parentorder (totalPrice, actualPayment, reducedPayment, isPromotionEffective)
+            VALUES
+                (0, 0, 0, 0)
+    </insert>
+    <update id="UpdateParentOrder">
+        UPDATE parentorder SET totalPrice = #{totalPrice},
+                               actualPayment = #{actualPayment},
+                               reducedPayment = #{reducedPayment},
+                               isPromotionEffective = #{isPromotionEffective}
+                WHERE parentOrderId = #{parentOrderId};
+    </update>
+    <select id="GetActualPaymentBySubOrderId" resultType="java.math.BigDecimal">
+        SELECT parentOrderId FROM orders WHERE orderId = #{orderId};
+    </select>
+    <select id="IsOrderInPromotion" resultType="boolean">
+        SELECT COUNT(*) WHERE orderId =#{orderId} AND isPromotionEffective = 1;
+    </select>
+    <select id="GetParentOrderId" resultType="int">
+        SELECT parentOrderId FROM orders WHERE orderId = #{orderId}
+    </select>
+    <select id="GetParentOrderByParentOrderId(parentOrderId)" resultMap="ParentOrderMap">
+        SELECT * FROM parentorder WHERE parentOrderId = #{parentOrderId};
     </select>
 </mapper>
