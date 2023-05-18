@@ -16,6 +16,7 @@
         <result column="modifyStatus" property="modifyStatus"></result>
         <result column="goodsId" property="goodsId"></result>
         <result column="shopname" property="shopname"></result>
+        <result column="inPromotion" property="inPromotion"/>
     </resultMap>
     <insert id="insertGoodByUser" >
         INSERT INTO goods(introduction,goodsname,goodsPrice,goodsStock,goodsCategory,status,registerStatus,modifyStatus,shopname)
@@ -136,5 +137,17 @@
 
     <update id="AddToGoodsSales">
         UPDATE goods SET sales = sales + #{orderSales} WHERE goodsId = #{goodsId};
+    </update>
+    <select id="GetAllGoodsIDByShopName" resultType="java.lang.Integer">
+        SELECT goodsId FROM goods WHERE shopname = #{shopName};
+    </select>
+    <select id="GetGoodsCategoryByID" resultType="java.lang.String">
+        SELECT goodsCategory FROM goods WHERE goodsId = #{goodsId}
+    </select>
+    <update id="SetGoodsInPromotionByGoodsId">
+        UPDATE goods SET inPromotion = 1 WHERE goodsId = #{goodsId};
+    </update>
+    <update id="SetGoodsNotInPromotion">
+        UPDATE inPromotion SET inPromotion = 0 WHERE inPromotion = 1;
     </update>
 </mapper>

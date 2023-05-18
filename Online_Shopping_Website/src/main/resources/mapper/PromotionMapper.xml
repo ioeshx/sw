@@ -73,4 +73,7 @@
     <update id="SetCurrentPromotionClosed">
         UPDATE promotion SET status = 0 WHERE status = 1;
     </update>
+    <select id="GetShopNameByUsername" resultType="java.lang.String">
+        SELECT shopName FROM promotionapplicant WHERE username = #{username};
+    </select>
 </mapper>

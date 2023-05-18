@@ -16,6 +16,7 @@
         <result column="shopid" property="shopid"></result>
         <result column="is_admitted" property="is_admitted"></result>
         <result column="avatar" property="avatar"></result>
+        <result column="inPromotion" property="inPromotion"/>
     </resultMap>
 
     <update id="updateUserShopID">
@@ -143,4 +144,10 @@
     <select id="GetGoodsCategoryByShopName" resultType="java.lang.String">
         SELECT goodsCategory FROM goods WHERE shopname = #{shopName};
     </select>
+    <update id="SetShopInPromotion">
+        UPDATE shops SET inPromotion = 1 WHERE shopname = #{shopname};
+    </update>
+    <update id="SetShopNotInPromotion">
+        UPDATE shops SET inPromotion = 0 WHERE inPromotion = 1;
+    </update>
 </mapper>

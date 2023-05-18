@@ -17,4 +17,5 @@ public interface PromotionMapper {
     int IsPromotionApplicantExist(String username);
     int IsPromotionOngingForNow();
     void SetCurrentPromotionClosed();
+    String GetShopNameByUsername(String username);
 }

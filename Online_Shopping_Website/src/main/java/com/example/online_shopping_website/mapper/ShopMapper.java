@@ -90,4 +90,6 @@ public interface ShopMapper {
     int GetUidByShopName(String shopName);
     Shop GetShopByUid(int uid);
     List<String> GetGoodsCategoryByShopName(String shopName);
+    void SetShopInPromotion(String shopname);
+    void SetShopNotInPromotion();
 }

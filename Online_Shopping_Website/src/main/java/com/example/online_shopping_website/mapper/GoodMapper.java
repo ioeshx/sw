@@ -43,4 +43,8 @@ public interface GoodMapper {
     BigDecimal GetGoodsPriceByGoodsId(int goodsId);
     String GetGoodsNameByGoodsId(int goodsId);
     void AddToGoodsSales(int goodsId, int orderSales);
+    List<Integer> GetAllGoodsIDByShopName(String shopName);
+    String GetGoodsCategoryByID(int goodsId);
+    void SetGoodsInPromotionByGoodsId(int goodsId);
+    void SetGoodsNotInPromotion();
 }

@@ -196,7 +196,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public JsonResult makingDelivery(List<Integer> orderIdList){
         JsonResult result = new JsonResult(YES,"发货成功");
-        //TODO
+
         List<Integer> WrongOrderId = new ArrayList<>();
         for(Integer orderId : orderIdList){
             if(orderMapper.GetOrderStatusByOrderId(orderId) == pendingDelivery)

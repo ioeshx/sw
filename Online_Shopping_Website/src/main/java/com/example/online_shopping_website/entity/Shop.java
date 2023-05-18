@@ -1,8 +1,6 @@
 package com.example.online_shopping_website.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -10,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+@Getter
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Shop {
     int shopid;
@@ -24,6 +25,7 @@ public class Shop {
     private String date;
     private int is_admitted;
     private byte[] avatar;
+    private int inPromotion;
 
     public byte[] getAvatar() {
         return avatar;

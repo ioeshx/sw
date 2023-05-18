@@ -310,8 +310,7 @@ public class GoodServiceImpl implements IGoodService {
             Good good = goodMapper.SearchByGoodsId(goodsId);//good是样本
             goodsId = -good.getModifyStatus();//goodsId现在是原来真的数据的ID
             goodMapper.UpdateModifyStatus(goodsId,2);
-            /*
-             * TODO*/
+            //TODO
 
             return 0;
         }else {

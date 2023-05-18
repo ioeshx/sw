@@ -19,4 +19,5 @@ public class Good {
     String introduction;
     String shopname;
     int favorites;//收藏次数
+    int inPromotion;
 }
