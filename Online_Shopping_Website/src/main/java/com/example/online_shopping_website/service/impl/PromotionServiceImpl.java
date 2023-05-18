@@ -34,10 +34,13 @@ public class PromotionServiceImpl implements IPromotionService {
     @Override
     public JsonResult adminStartPromotion(Promotion p){
         int row = promotionMapper.InsertPromotion(p);
-        if(row == 1)
+        BigDecimal fund = p.getPromotionFund();
+        //TODO 从利润账户把补助资金转到中间账户
+        if( userMapper.isProfitAccountSufficient(fund)){
+            userMapper.TransferPromotionFundToIntermediaryAccount(fund);
             return new JsonResult<>(YES, "开启活动成功");
-        else
-            return new JsonResult<>(NO, "开启活动失败");
+        }else
+            return new JsonResult<>(NO, "利润账户的资金不足，无法开启促销活动");
     }
 
     @Override

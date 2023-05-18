@@ -148,6 +148,6 @@
         UPDATE goods SET inPromotion = 1 WHERE goodsId = #{goodsId};
     </update>
     <update id="SetGoodsNotInPromotion">
-        UPDATE inPromotion SET inPromotion = 0 WHERE inPromotion = 1;
+        UPDATE goods SET inPromotion = 0 WHERE inPromotion = 1;
     </update>
 </mapper>
