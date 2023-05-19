@@ -309,5 +309,8 @@ public class GoodController {
 
         return result;
     }
-
+    @RequestMapping("/api/getAllGoodsInPromotion")
+    public JsonResult getAllGoodsInPromotion(){
+        return goodService.getAllGoodsInPromotion();
+    }
 }

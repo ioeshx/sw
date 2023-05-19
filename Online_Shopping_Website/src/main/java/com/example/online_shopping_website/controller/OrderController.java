@@ -22,9 +22,7 @@ public class OrderController {
         List<Integer> allGoodsNum = (List<Integer>)map.get("numList");
         String username = (String)map.get("username");
         int addressId = (int)map.get("addressId");
-
-        JsonResult result = orderService.orderCreating(username, addressId, allGoodsId, allGoodsNum);
-        return result;
+        return orderService.orderCreating(username, addressId, allGoodsId, allGoodsNum);
     }
 
     @RequestMapping("/api/getOrderByOrderId")

@@ -68,4 +68,11 @@ public class CartController {
         JsonResult result = cartService.deleteGoodsListFromCart(username, goodsList);
         return result;
     }
+
+    @RequestMapping("/api/CalculateTotalPrice")
+    public JsonResult CalculateTotalPrice(@RequestBody Map<String,Object> map){
+        List<Integer> goodsIdList = (List<Integer>) map.get("goodsIdList");
+        List<Integer> numList = (List<Integer>) map.get("numList");
+        return cartService.CalculateTotalPrice(goodsIdList, numList);
+    }
 }

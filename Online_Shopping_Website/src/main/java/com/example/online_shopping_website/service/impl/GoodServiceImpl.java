@@ -310,8 +310,7 @@ public class GoodServiceImpl implements IGoodService {
             Good good = goodMapper.SearchByGoodsId(goodsId);//good是样本
             goodsId = -good.getModifyStatus();//goodsId现在是原来真的数据的ID
             goodMapper.UpdateModifyStatus(goodsId,2);
-            /*
-             * TODO*/
+            //TODO
 
             return 0;
         }else {
@@ -448,6 +447,12 @@ public class GoodServiceImpl implements IGoodService {
     public void goodsPicsCheck(int goodsId){
         List<pic> picList = picMapper.searchPicByGoodsId(goodsId);
         if(picList!=null) picMapper.picDelete(goodsId);
-
+    }
+    @Override
+    public JsonResult getAllGoodsInPromotion(){
+        List<Good> allGoodsInPromotion = goodMapper.GetAllGoodsInPromotion();
+        if(allGoodsInPromotion.isEmpty())
+            return new JsonResult<>(NO,"当前没有商品正在促销中");
+        else return new JsonResult<>(YES,"",allGoodsInPromotion);
     }
 }

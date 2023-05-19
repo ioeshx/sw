@@ -23,6 +23,8 @@ public class PromotionServiceImpl implements IPromotionService {
     @Autowired
     private ShopMapper shopMapper;
     @Autowired
+    private GoodMapper goodMapper;
+    @Autowired
     private OrderMapper orderMapper;
     @Autowired
     private TransactionMapper transactionMapper;
@@ -32,10 +34,13 @@ public class PromotionServiceImpl implements IPromotionService {
     @Override
     public JsonResult adminStartPromotion(Promotion p){
         int row = promotionMapper.InsertPromotion(p);
-        if(row == 1)
+        BigDecimal fund = p.getPromotionFund();
+        //TODO 从利润账户把补助资金转到中间账户
+        if( userMapper.isProfitAccountSufficient(fund)){
+            userMapper.TransferPromotionFundToIntermediaryAccount(fund);
             return new JsonResult<>(YES, "开启活动成功");
-        else
-            return new JsonResult<>(NO, "开启活动失败");
+        }else
+            return new JsonResult<>(NO, "利润账户的资金不足，无法开启促销活动");
     }
 
     @Override
@@ -117,11 +122,34 @@ public class PromotionServiceImpl implements IPromotionService {
             return new JsonResult<>(YES,"成功",applicants);
     }
 
+    void SetVerifiedGoodsInPromotion(String shopName){
+        Promotion p = promotionMapper.GetPromotionForCheck();
+        List<Integer> allGoodsIdOfShop = goodMapper.GetAllGoodsIDByShopName(shopName);
+        //促销活动对商品种类的要求
+        String goodsTypeInPromotion = p.getGoodsTypeInPromotion();
+        List<String> goodsTypeInPromotionList = List.of(goodsTypeInPromotion.split(";"));
+        for(int goodsId : allGoodsIdOfShop){
+            //每个商品的种类描述
+            String goodsCategory = goodMapper.GetGoodsCategoryByID(goodsId);
+            //如果商品的种类描述中含有
+            for(String j : goodsTypeInPromotionList)
+                if(goodsCategory.contains(j)){
+                    goodMapper.SetGoodsInPromotionByGoodsId(goodsId);
+                    break;
+                }
+        }
+        return;
+    }
+
     @Override
     public JsonResult adminCheckPromotionApplication(String username, int checkType){
         if(checkType == AdminApprovePromotion){
             promotionMapper.SetPromotionApplicationStatus(username, ApplicationApproved);
-            //修改相应的goods信息和shop信息
+            //1.设置商店InPromotion
+            String shopName = promotionMapper.GetShopNameByUsername(username);
+            shopMapper.SetShopInPromotion(shopName);
+            //2.设置商店中符合种类的商品InPromotion
+            SetVerifiedGoodsInPromotion(shopName);
 
         }else if(checkType == AdminRejectPromotion){
             promotionMapper.SetPromotionApplicationStatus(username, ApplicationRejected);
@@ -139,6 +167,25 @@ public class PromotionServiceImpl implements IPromotionService {
         else {
             int status = promotionMapper.GetPromotionApplicationStatus(username);
             return new JsonResult<>(YES,"成功", status);
+        }
+    }
+
+    @Override
+    public JsonResult adminCloseCurrentPromotion(){
+        int isPromotionExist = promotionMapper.IsPromotionOngingForNow();
+        if(isPromotionExist == 1){          //当前只有一个促销活动
+            //关闭当前促销活动
+            promotionMapper.SetCurrentPromotionClosed();
+            //把商品和商店属性都设置成不再促销中
+            shopMapper.SetShopNotInPromotion();
+            goodMapper.SetGoodsNotInPromotion();
+            //删除promotionapplicant表的所有申请者信息
+            promotionMapper.DeleteAllApplicantForClosePromotion();
+            return new JsonResult<>(YES,"当前促销活动已结束");
+        }else if(isPromotionExist == 0){    //当前没有促销活动
+            return new JsonResult<>(NO,"当前没有促销活动正在进行，无法结束活动！");
+        }else{                              //当前有多于1个的促销活动
+            return new JsonResult<>(NO,"当前有多于1个的促销活动正在进行！");
         }
     }
 }

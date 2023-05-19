@@ -110,7 +110,6 @@ public class ShopServiceImpl implements IShopService {
     public JsonResult shopUnregister(String shopname){
         JsonResult result = new JsonResult<>(YES, "提交成功，请等待管理员申请");
         //TODO:检查商店是否有未完成的订单 (Lab3不要求)
-
         shopMapper.UnregisterShopByShopname(shopname);
         return result;
     }

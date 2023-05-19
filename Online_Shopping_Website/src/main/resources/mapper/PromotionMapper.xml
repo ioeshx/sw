@@ -10,7 +10,8 @@
         <result column="promotionName" property="promotionName"/>
         <result column="endTime" property="endTime"/>
         <result column="goodsTypeInPromotion" property="goodsTypeInPromotion" />
-        <result column="promotionFund" property="promotionFundUsed"/>
+        <result column="promotionFund" property="promotionFund"/>
+        <result column="promotionFundUsed" property="promotionFundUsed"/>
         <result column="promotionStartLine" property="promotionStartLine"/>
         <result column="promotionPaymentReduce" property="promotionPaymentReduce"/>
         <result column="registrationCapitalLimit" property="registrationCapitalLimit"/>
@@ -67,4 +68,19 @@
     <select id="GetPromotionApplicationStatus" resultType="int">
         SELECT status FROM promotionapplicant WHERE username =#{username};
     </select>
+    <select id="IsPromotionOngingForNow" resultType="int">
+        SELECT COUNT(*) FROM promotion WHERE status = 1;
+    </select>
+    <update id="SetCurrentPromotionClosed">
+        UPDATE promotion SET status = 0 WHERE status = 1;
+    </update>
+    <select id="GetShopNameByUsername" resultType="java.lang.String">
+        SELECT shopName FROM promotionapplicant WHERE username = #{username};
+    </select>
+    <delete id="DeleteAllApplicantForClosePromotion">
+        DELETE FROM promotionapplicant;
+    </delete>
+    <update id="AddToPromotionFundUsed">
+        UPDATE promotion SET promotionFundUsed = promotionFundUsed + #{reducedPayment} WHERE status = 1;
+    </update>
 </mapper>
