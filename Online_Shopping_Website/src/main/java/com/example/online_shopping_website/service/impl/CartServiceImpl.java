@@ -237,8 +237,13 @@ public class CartServiceImpl implements ICartService {
             if( goodMapper.IsGoodsInPromotion(goodsIdList.get(i)) )
                 moneyForGoodsInPromotion = moneyForGoodsInPromotion.add(p);
         }
-        if( moneyForGoodsInPromotion.compareTo(promotion.getPromotionStartLine()) >= 0){    //购买促销商品的钱，超过起付线
-            totalPrice = totalPrice.subtract(promotion.getPromotionPaymentReduce());        //从总价格中减去金额
+        BigDecimal promotionStartingLine = promotion.getPromotionStartLine();
+        if( moneyForGoodsInPromotion.compareTo(promotionStartingLine) >= 0){    //购买促销商品的钱，超过起付线
+            //从总价格中减去金额
+            BigDecimal promotionReducedPayment = promotion.getPromotionPaymentReduce();
+            int times = moneyForGoodsInPromotion.divide(promotionStartingLine).intValue();
+            BigDecimal totalReducedPayment = promotionReducedPayment.multiply(BigDecimal.valueOf(times));
+            totalPrice = totalPrice.subtract(totalReducedPayment);
         }
         return new JsonResult<>(YES,"",totalPrice);
     }

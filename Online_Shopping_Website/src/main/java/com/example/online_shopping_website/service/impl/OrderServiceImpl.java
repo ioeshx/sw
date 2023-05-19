@@ -72,16 +72,21 @@ public class OrderServiceImpl implements IOrderService {
             if( goodMapper.IsGoodsInPromotion(allGoodsId.get(i)) )
                 moneyForGoodsInPromotion = moneyForGoodsInPromotion.add(p);
         }
-        if( moneyForGoodsInPromotion.compareTo(promotion.getPromotionStartLine()) >= 0){    //购买促销商品的钱，超过起付线
-            actualPayment = totalPrice.subtract(promotion.getPromotionPaymentReduce());     //从总价格中减去金额
-            reducedPayment = promotion.getPromotionPaymentReduce();
+        BigDecimal promotionStartingLine = promotion.getPromotionStartLine();
+        BigDecimal totalReducedPayment = new BigDecimal(0);
+        if( moneyForGoodsInPromotion.compareTo(promotionStartingLine) >= 0){    //购买促销商品的钱，超过起付线
+            //从总价格中减去金额
+            BigDecimal promotionReducedPayment = promotion.getPromotionPaymentReduce();
+            int times = moneyForGoodsInPromotion.divide(promotionStartingLine).intValue();
+            totalReducedPayment = promotionReducedPayment.multiply(BigDecimal.valueOf(times));
+            actualPayment = totalPrice.subtract(totalReducedPayment);
         } else
             actualPayment = totalPrice;
 
         List<BigDecimal> prices = new ArrayList<>();
         prices.add(totalPrice);
         prices.add(actualPayment);
-        prices.add(reducedPayment);
+        prices.add(totalReducedPayment);
         return prices;
     }
 
