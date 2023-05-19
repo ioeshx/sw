@@ -28,11 +28,12 @@ public interface OrderMapper {
     List<Order> GetOrdersByShopName(String shopName);
     List<Order> GetOrdersByShopNameAndStatus(String shopName, int status);
     int GetMonthlySalesByShopName(String shopName);
-    ParentOrder CreateParentOrder();
+    int CreateParentOrder(ParentOrder parentOrder);
     void UpdateParentOrder(int parentOrderId ,BigDecimal totalPrice,  BigDecimal actualPayment, BigDecimal reducedPayment, int isPromotionEffective);
 
     BigDecimal GetActualPaymentBySubOrderId(int orderId);
     boolean IsOrderInPromotion(int orderId);
     int GetParentOrderId(int orderId);
     ParentOrder GetParentOrderByParentOrderId(int parentOrderId);
+    BigDecimal GetActualPaymentByParentOrderId(int parentOrderId);
 }

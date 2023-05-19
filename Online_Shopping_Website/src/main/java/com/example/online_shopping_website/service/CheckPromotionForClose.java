@@ -22,7 +22,10 @@ public class CheckPromotionForClose {
     private PromotionMapper promotionMapper;
     @Scheduled(initialDelay = 0, fixedRate = 60000)
     public void check(){
+        System.out.println("周期性检查促销活动是否该关闭");
         Promotion p = promotionMapper.GetPromotionForCheck();
+        if( p == null)
+            return;
         Date promotionEndTime = p.getEndTime();
         BigDecimal fundUsed = p.getPromotionFundUsed();
         BigDecimal fundSet = p.getPromotionFund();

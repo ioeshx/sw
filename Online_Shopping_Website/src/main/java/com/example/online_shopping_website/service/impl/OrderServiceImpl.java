@@ -43,13 +43,15 @@ public class OrderServiceImpl implements IOrderService {
     boolean isPromotionEffectiveForParentOrder(List<Integer> allGoodsId, List<Integer> allGoodsNum){
         Promotion promotion = promotionMapper.GetPromotionForCheck();
         BigDecimal moneyForGoodsInPromotion = new BigDecimal(0);
-        for(int i = 0; i < allGoodsId.size(); i++)
-            if( goodMapper.IsGoodsInPromotion(allGoodsNum.get(i)) ){
-                BigDecimal unitPrice = goodMapper.GetGoodsPriceByGoodsId(allGoodsId.get(i));   //商品单价
+        for(int i = 0; i < allGoodsId.size(); i++){
+            Good good = goodMapper.getGoodsByGoodsId(allGoodsId.get(i));
+            if( good.getInPromotion() == 1 ) {
+                BigDecimal unitPrice = BigDecimal.valueOf(good.getGoodsPrice());   //商品单价
                 BigDecimal num = new BigDecimal(allGoodsNum.get(i));                                //商品数量
                 BigDecimal p = unitPrice.multiply(num);
                 moneyForGoodsInPromotion = moneyForGoodsInPromotion.add(p);
             }
+        }
         if( moneyForGoodsInPromotion.compareTo(promotion.getPromotionStartLine()) >= 0)    //购买促销商品的钱，超过起付线
             return true;
         else
@@ -101,12 +103,15 @@ public class OrderServiceImpl implements IOrderService {
             return result;
         }
         //TODO 创建父订单
-        ParentOrder parentOrder = orderMapper.CreateParentOrder();
+        ParentOrder parentOrder = new ParentOrder();
+        orderMapper.CreateParentOrder(parentOrder);
         int parentOrderId = parentOrder.getParentOrderId();
+
         Date orderTime = new Date();
         List<Integer> orderIdList = new ArrayList<>();
         //TODO 计算是否有优惠生效
         boolean isPromotionEffective = isPromotionEffectiveForParentOrder(allGoodsId, allGoodsNum);
+
         for(int i = 0; i < allGoodsId.size(); i++){
             Good good = goodMapper.getGoodsByGoodsId(allGoodsId.get(i));
             BigDecimal unitPrice = new BigDecimal(good.getGoodsPrice());
@@ -114,7 +119,7 @@ public class OrderServiceImpl implements IOrderService {
             BigDecimal actualPayment = totalPrice;
             //父订单的实付金额要另行计算，子订单就不变了
             int PromotionTakesEffect;
-            if(isPromotionEffective && goodMapper.IsGoodsInPromotion(allGoodsId.get(i)))
+            if(isPromotionEffective && good.getInPromotion() == 1)
                 PromotionTakesEffect = 1;
             else
                 PromotionTakesEffect = 0;
@@ -162,18 +167,17 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public JsonResult payment(List<Integer> orderIdList){
         JsonResult result = new JsonResult<>(YES,"订单支付成功");
-        //TODO 根据父订单的金额来付款
+        // 根据父订单的金额来付款
         String username = orderMapper.getUsernameByOrderId(orderIdList.get(0));
         BigDecimal privateAccount = userMapper.GetPrivateAccountByUsername(username);
-        BigDecimal actualPayment = orderMapper.GetActualPaymentBySubOrderId(orderIdList.get(0));
-//        for(int orderId : orderIdList)
-//            actualPayment = actualPayment.add(orderMapper.getActualPaymentByOrderId(orderId));
-
-        if(privateAccount.compareTo(actualPayment) < 0) {  //余额不足：个人账户余额小于订单费用
+        int parentOrderId = orderMapper.GetParentOrderId(orderIdList.get(0));
+        BigDecimal actualPayment = orderMapper.GetActualPaymentByParentOrderId(parentOrderId);
+        //余额不足：个人账户余额小于订单费用
+        if(privateAccount.compareTo(actualPayment) < 0) {
             result.setState(NO);
             String msg = "余额不足！账户余额是：" + privateAccount.toString() + " 应支付费用是：" + actualPayment.toString();
             result.setMessage(msg);
-        }else{                                           //余额充足，个人账户余额减去订单费用，并设置订单状态为“待发货”
+        }else{    //余额充足，个人账户余额减去订单费用，并设置订单状态为“待发货”
             privateAccount = privateAccount.subtract(actualPayment);
             userMapper.UpdatePrivateAccount(username, privateAccount);
             for(int orderId : orderIdList)
@@ -184,8 +188,7 @@ public class OrderServiceImpl implements IOrderService {
             transactionService.InsertTransaction(username, "管理员", AccountType.privateAccount, adminIntermediaryAccount,
                     paymentToIntermediaryAccount, actualPayment);
         }
-        //TODO 更新已经使用的促销资金
-        int parentOrderId = orderMapper.GetParentOrderId(orderIdList.get(0));
+        //更新已经使用的促销资金
         BigDecimal reducedPayment = orderMapper.GetParentOrderByParentOrderId(parentOrderId).getReducedPayment();
         promotionMapper.AddToPromotionFundUsed(reducedPayment);
         return result;
@@ -361,7 +364,7 @@ public class OrderServiceImpl implements IOrderService {
         if( !WrongOrderIdList.isEmpty()){
             result.setState(NO);
             result.setMessage("");
-            for(Integer orderId : orderIdList){
+            for(Integer orderId : WrongOrderIdList){
                 String msg = "订单编号" + orderId.toString() + "无法同意退款!";
                 result.addMessage(msg);
             }

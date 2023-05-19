@@ -110,11 +110,13 @@
     <select id="GetMonthlySalesByShopName" resultType="int">
         SELECT SUM(goodsNum) FROM orders WHERE shopName = #{shopName} AND status = 4;
     </select>
-    <insert id="CreateParentOrder" useGeneratedKeys="true" keyProperty="parentOrderId">
+
+    <insert id="CreateParentOrder" parameterType="com.example.online_shopping_website.entity.ParentOrder" useGeneratedKeys="true" keyProperty="parentOrderId">
         INSERT INTO parentorder (totalPrice, actualPayment, reducedPayment, isPromotionEffective)
             VALUES
                 (0, 0, 0, 0)
     </insert>
+
     <update id="UpdateParentOrder">
         UPDATE parentorder SET totalPrice = #{totalPrice},
                                actualPayment = #{actualPayment},
@@ -122,16 +124,20 @@
                                isPromotionEffective = #{isPromotionEffective}
                 WHERE parentOrderId = #{parentOrderId};
     </update>
+
     <select id="GetActualPaymentBySubOrderId" resultType="java.math.BigDecimal">
         SELECT parentOrderId FROM orders WHERE orderId = #{orderId};
     </select>
     <select id="IsOrderInPromotion" resultType="boolean">
-        SELECT COUNT(*) WHERE orderId =#{orderId} AND isPromotionEffective = 1;
+        SELECT COUNT(*) FROM orders WHERE orderId =#{orderId} AND isPromotionEffective = 1;
     </select>
     <select id="GetParentOrderId" resultType="int">
         SELECT parentOrderId FROM orders WHERE orderId = #{orderId}
     </select>
-    <select id="GetParentOrderByParentOrderId(parentOrderId)" resultMap="ParentOrderMap">
+    <select id="GetParentOrderByParentOrderId" resultMap="ParentOrderMap">
         SELECT * FROM parentorder WHERE parentOrderId = #{parentOrderId};
+    </select>
+    <select id="GetActualPaymentByParentOrderId" resultType="java.math.BigDecimal">
+        SELECT actualPayment FROM parentorder WHERE parentOrderId = #{parentOrderId};
     </select>
 </mapper>
