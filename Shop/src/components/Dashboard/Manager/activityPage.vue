@@ -132,6 +132,15 @@ export default {
   methods: {
     endThePromotion(){
       this.status = 0;
+      axios.post('/adminCloseCurrentPromotion')
+          .then((response) => {
+            // handle success
+            this.$message.success("关闭活动成功！");
+          })
+          .catch((error) => {
+            // handle error
+            console.error(error);
+          });
     },
     startPromotion() {
       this.request.endTime = this.value2;

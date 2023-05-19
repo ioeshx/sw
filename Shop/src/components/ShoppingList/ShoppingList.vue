@@ -12,7 +12,7 @@ import InvalidGoodsInSL from '../ShoppingList/InvalidGoodsInSL.vue'
                 <p>已选择{{ selectedCount }}件商品</p>
                 <p>共计：{{ totalPrice }}元</p>
 
-                <p>优惠后：{{ totalPriceAfter }}元</p>
+                <p>优惠后：{{ DototalPriceAfter }}元</p>
               <el-button class="tBtn" @click="handleSettlement">结算</el-button>
                 <el-button class="tBtn" @click="isDelete=1">管理</el-button>
             </div>
@@ -127,7 +127,8 @@ export default {
             shop2:{
                 shopname: "shopname2",
                 goodReturnList: []
-            }
+            },
+          totalPriceAfter : 0
         }
     },
     created (){
@@ -146,28 +147,9 @@ export default {
             }
             return total
         },
-        totalPriceAfter() {
-        let total = 0;
-        let goodsIdList =[];
-        let numList = [];
-        for (let shop of this.validCart) {
-          for (let goods of shop.goodReturnList) {
-            if (goods.isChecked) {
-              goodsIdList.push(goods.goodsId);
-              numList.push(goods.num);
-            }
-          }
-        }
-        this.$axios.post("/getPriceWithPromotion", {
-          goodsIdList:goodsIdList,numList:numList
-          }).then(res => {
-            if(res.data.state==0){
-              total = res.data.data;
-            } else{
-              console.log("获取优惠金额失败");
-            }
-              });
-          return total;
+        DototalPriceAfter() {
+          this.calculateTotalPriceAfter();
+        return this.totalPriceAfter;
         },
         selectedCount() {
             let total = 0;
@@ -196,6 +178,30 @@ export default {
         }
     },
     methods: {
+      async calculateTotalPriceAfter() {
+        let total = 0;
+        let goodsIdList =[];
+        let numList = [];
+        for (let shop of this.validCart) {
+          for (let goods of shop.goodReturnList) {
+            if (goods.isChecked) {
+              goodsIdList.push(goods.goodsId);
+              numList.push(goods.num);
+            }
+          }
+        }
+        await this.$axios.post("/CalculateTotalPrice", {
+          goodsIdList:goodsIdList,numList:numList
+        }).then(res => {
+          if(res.data.state==0){
+            total = res.data.data;
+            console.log(res.data.data);
+          } else{
+            console.log("获取优惠金额失败");
+          }
+        });
+        this.totalPriceAfter = total;
+      },
       handleSettlement() {
         const selectedGoods = [];
         this.validCart.forEach((shop) => {

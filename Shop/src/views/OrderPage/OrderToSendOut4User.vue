@@ -19,7 +19,6 @@
       <p>商品单价：{{ order.unitPrice }}</p>
       <p>商品数量：{{ order.goodsNum }}</p>
       <p>总价：{{ order.totalPrice }}</p>
-      <p>实际支付金额：{{ order.actualPayment }}</p>
       <div class="button-group">
         <el-button type="danger" size="large" @click="refund(order.orderId)">申请退款</el-button>
       </div>

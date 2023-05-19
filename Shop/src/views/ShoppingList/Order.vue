@@ -86,6 +86,10 @@ export default {
           goodsIdList: goodsIdList,
           numList: numList})
           .then((response) => {
+            console.log(window.localStorage.getItem("username"));
+            console.log(this.selectedAddressId);
+            console.log(goodsIdList);
+            console.log(numList);
             if (!response.data.success) {
               this.orderIds = response.data.data;
               window.localStorage.setItem("orderIds",this.orderIds);

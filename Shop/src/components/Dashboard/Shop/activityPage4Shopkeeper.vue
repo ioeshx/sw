@@ -24,10 +24,10 @@
         </div>
       </div>
     </div>
-    <div v-if="status === 2">
+    <div v-if="status === 1">
       <h1>您的活动申请已通过！</h1>
     </div>
-    <div v-if="status === 1">
+    <div v-if="status === 2">
       <h1>您的活动申请未通过，请重新申请！</h1>
       <div class="promotion-container">
         <h1>正在进行的活动</h1>

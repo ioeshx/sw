@@ -42,7 +42,7 @@ export default {
           });
     },
     approveMerchant(username) {
-      axios.post('/adminCheckPromotionApplication', { username: username, checkType :2 })
+      axios.post('/adminCheckPromotionApplication', { username: username, checkType :1})
           .then(response => {
             if(response.data.state === 0) {
               alert("批准成功！");
@@ -56,7 +56,7 @@ export default {
           });
     },
     refuseMerchant(username) {
-      axios.post('/adminCheckPromotionApplication', { username: username, checkType :1})
+      axios.post('/adminCheckPromotionApplication', { username: username, checkType :2})
           .then(response => {
             if(response.data.state === 0) {
               alert("拒绝成功！");
