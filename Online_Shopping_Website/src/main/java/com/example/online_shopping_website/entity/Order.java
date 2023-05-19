@@ -23,8 +23,10 @@ public class Order {
     private BigDecimal totalPrice;
     private BigDecimal actualPayment;
     private int status;
+    private int isPromotionEffective;
+    private int parentOrderId;
 
-    public Order(String username, int addressId, String shopName, Date orderTime, int goodsId, String goodsName, BigDecimal unitPrice, int goodsNum, BigDecimal totalPrice, BigDecimal actualPayment, int status) {
+    public Order(String username, int addressId, String shopName, Date orderTime, int goodsId, String goodsName, BigDecimal unitPrice, int goodsNum, BigDecimal totalPrice, BigDecimal actualPayment, int status, int isPromotionEffective, int parentOrderId) {
         this.username = username;
         this.addressId = addressId;
         this.shopName = shopName;
@@ -36,5 +38,7 @@ public class Order {
         this.totalPrice = totalPrice;
         this.actualPayment = actualPayment;
         this.status = status;
+        this.isPromotionEffective = isPromotionEffective;
+        this.parentOrderId = parentOrderId;
     }
 }

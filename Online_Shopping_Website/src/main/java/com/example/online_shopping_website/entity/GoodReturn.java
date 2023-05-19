@@ -21,4 +21,5 @@ public class GoodReturn {
     String shopname;
     List<String> goodsAvatar;
     int favorites;
+    int inPromotion;
 }

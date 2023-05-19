@@ -1,9 +1,17 @@
 <template>
-  <div>
-    <h2>已完成订单</h2>
-    <div v-for="order in orders" :key="order.orderId">
+  <div class="orders-container">
+    <h2 class="title">已完成</h2>
+    <div v-for="order in orders" :key="order.orderId" class="order-card">
       <p>用户名：{{ order.username }}</p>
-      <p>收货人：{{ order.addressDetail.receiverName }} - 手机：{{ order.addressDetail.phone }} - 省：{{ order.addressDetail.province }} - 市：{{ order.addressDetail.municipality }} - 县：{{ order.addressDetail.county }} - 镇：{{ order.addressDetail.township }} - 详细地址：{{ order.addressDetail.detailAddress }}</p>
+      <p>
+        收货人：{{ order.addressDetail.receiverName }} -
+        手机：{{ order.addressDetail.phone }} -
+        {{ order.addressDetail.province }} -
+        {{ order.addressDetail.municipality }} -
+        <span v-if="order.addressDetail.county">{{ order.addressDetail.county }} - </span>
+        <span v-if="order.addressDetail.township">{{ order.addressDetail.township }} - </span>
+        详细地址：{{ order.addressDetail.detailAddress }}
+      </p>
 
       <p>店铺名称：{{ order.shopName }}</p>
       <p>下单时间：{{ order.orderTime }}</p>
@@ -11,8 +19,9 @@
       <p>商品单价：{{ order.unitPrice }}</p>
       <p>商品数量：{{ order.goodsNum }}</p>
       <p>总价：{{ order.totalPrice }}</p>
-      <p>实际支付金额：{{ order.actualPayment }}</p>
-      <el-button type="danger" @click="deleteOrder(order.orderId)">删除订单</el-button>
+      <div class="button-group">
+        <el-button type="danger" size="large" @click="deleteOrder(order.orderId)">删除订单</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -39,6 +48,7 @@ export default {
                     if (res.data.state === 0) {
                       // 将获取到的地址详情添加到订单对象中
                       order.addressDetail = res.data.data;
+
                     }else {
                       console.error('获取地址详情失败');
                     }
@@ -74,3 +84,34 @@ export default {
   }
 }
 </script>
+<style scoped>
+.orders-container {
+  width: 80%;
+  margin: auto;
+}
+
+.title {
+  color: #4CAF50; /* 主题绿色 */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.order-card {
+  background-color: #f0f0f0; /* 背景色 */
+  border: 2px solid #4CAF50; /* 主题绿色 */
+  border-radius: 10px; /* 圆角 */
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.order-card p {
+  margin: 5px 0;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+</style>

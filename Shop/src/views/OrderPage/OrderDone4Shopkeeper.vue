@@ -11,7 +11,6 @@
       <p>商品单价：{{ order.unitPrice }}</p>
       <p>商品数量：{{ order.goodsNum }}</p>
       <p>总价：{{ order.totalPrice }}</p>
-      <p>实际支付金额：{{ order.actualPayment }}</p>
     </div>
   </div>
 </template>

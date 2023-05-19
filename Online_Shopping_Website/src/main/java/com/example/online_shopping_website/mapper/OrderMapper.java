@@ -2,6 +2,7 @@ package com.example.online_shopping_website.mapper;
 
 import com.example.online_shopping_website.entity.Order;
 import com.example.online_shopping_website.entity.OrderItem;
+import com.example.online_shopping_website.entity.ParentOrder;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,4 +27,13 @@ public interface OrderMapper {
     void SetOrderToRefunded(int orderId);
     List<Order> GetOrdersByShopName(String shopName);
     List<Order> GetOrdersByShopNameAndStatus(String shopName, int status);
+    int GetMonthlySalesByShopName(String shopName);
+    int CreateParentOrder(ParentOrder parentOrder);
+    void UpdateParentOrder(int parentOrderId ,BigDecimal totalPrice,  BigDecimal actualPayment, BigDecimal reducedPayment, int isPromotionEffective);
+
+    BigDecimal GetActualPaymentBySubOrderId(int orderId);
+    boolean IsOrderInPromotion(int orderId);
+    int GetParentOrderId(int orderId);
+    ParentOrder GetParentOrderByParentOrderId(int parentOrderId);
+    BigDecimal GetActualPaymentByParentOrderId(int parentOrderId);
 }

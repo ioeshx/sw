@@ -37,7 +37,6 @@ public interface IUserService {
     String GetAvatar(String username);
     JsonResult recharge(String username, BigDecimal credit,int accountType);
 
-    JsonResult getUserTransactions(String username);
 
     JsonResult getShopAccount(String username);
 
@@ -45,28 +44,7 @@ public interface IUserService {
 
     JsonResult getIntermediaryAccount();
     void deleteUserAvatar(String username);
-    JsonResult getAllReceiverAddress(String username);
-    JsonResult addReceiverAddress(ReceiverAddress newAddress);
-    JsonResult deleteReceiverAddress(int addressId);
-    JsonResult modifyReceiverAddress(ReceiverAddress modifiedAddress);
-    JsonResult setDefaultReceiverAddress(String username, int addressId);
-    JsonResult getDefaultReceiverAddress(String username);
-    JsonResult getReceiverAddressByAddressId(int addressId);
 
-    //JsonResult purchaseInGoodsPage(String username, int goodsId, int goodsNum, int addressId);
-    //JsonResult purchaseInCart(String username, List<Integer> allGoodsId);
 
-    JsonResult orderCreating(String username, int addressId, List<Integer> allGoodsId, List<Integer> allGoodsNum);
-    JsonResult getOrderByOrderId(int orderId);
-    JsonResult getAllOrders(String username);
-    JsonResult payment(List<Integer> orderIdList);
-    JsonResult cancelOrder(List<Integer> orderIdList);
-    JsonResult confirmReceipt(List<Integer> orderIdList);
-    JsonResult makingDelivery(List<Integer> orderIdList);
-    JsonResult getOrdersByStatus(String username, int status);
-    JsonResult deleteOrder(List<Integer> orderIdList);
-    JsonResult refundOrder(List<Integer> orderIdList);
-    JsonResult agreeToRefund(List<Integer> orderIdList);
-    JsonResult getAllOrdersOfShop(String shopName);
-    JsonResult getOrdersOfShopByStatus(String shopName, int status);
+
 }

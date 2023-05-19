@@ -1,18 +1,13 @@
 package com.example.online_shopping_website.service.impl;
 
-import com.example.online_shopping_website.entity.Good;
-import com.example.online_shopping_website.entity.GoodReturn;
-import com.example.online_shopping_website.entity.GoodSortByShop;
-import com.example.online_shopping_website.entity.pic;
-import com.example.online_shopping_website.mapper.CartMapper;
-import com.example.online_shopping_website.mapper.GoodMapper;
-import com.example.online_shopping_website.mapper.PicMapper;
-import com.example.online_shopping_website.mapper.ShopMapper;
+import com.example.online_shopping_website.entity.*;
+import com.example.online_shopping_website.mapper.*;
 import com.example.online_shopping_website.service.ICartService;
 import com.example.online_shopping_website.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -35,6 +30,8 @@ public class CartServiceImpl implements ICartService {
 
     @Autowired
     private PicMapper picMapper;
+    @Autowired
+    private PromotionMapper promotionMapper;
     @Override
     public JsonResult setCartGoodsNum(String username, int goodsId, int num){
         JsonResult result =new JsonResult<>(YES);
@@ -226,5 +223,23 @@ public class CartServiceImpl implements ICartService {
         }
         JsonResult result = new JsonResult<>(YES);
         return result;
+    }
+    @Override
+    public JsonResult CalculateTotalPrice(List<Integer> goodsIdList, List<Integer> numList){
+        Promotion promotion = promotionMapper.GetPromotionForCheck();
+        BigDecimal totalPrice = new BigDecimal(0);
+        BigDecimal moneyForGoodsInPromotion = new BigDecimal(0);
+        for(int i = 0; i < goodsIdList.size(); i++){
+            BigDecimal unitPrice = goodMapper.GetGoodsPriceByGoodsId(goodsIdList.get(i));   //商品单价
+            BigDecimal num = new BigDecimal(numList.get(i));                                //商品数量
+            BigDecimal p = unitPrice.multiply(num);
+            totalPrice  = totalPrice.add(p);
+            if( goodMapper.IsGoodsInPromotion(goodsIdList.get(i)) )
+                moneyForGoodsInPromotion = moneyForGoodsInPromotion.add(p);
+        }
+        if( moneyForGoodsInPromotion.compareTo(promotion.getPromotionStartLine()) >= 0){    //购买促销商品的钱，超过起付线
+            totalPrice = totalPrice.subtract(promotion.getPromotionPaymentReduce());        //从总价格中减去金额
+        }
+        return new JsonResult<>(YES,"",totalPrice);
     }
 }

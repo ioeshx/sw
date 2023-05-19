@@ -17,8 +17,16 @@ import ShowAllAddress from "@/components/Dashboard/User/ShowAllAddress.vue";
             <div class="main">
                 <div class="infoShow">
                     <InfoShow></InfoShow>
-                    <el-button class="change" @click="this.state=1">修改个人信息</el-button>
-                    <el-button class="change" @click="orderPage">订单管理</el-button>
+                  <div class="buttonContainer">
+                    <div class="buttonRow">
+                      <el-button class="change" @click="this.state=1">个人信息修改</el-button>
+                      <el-button class="change" @click="orderPage">订单管理</el-button>
+                    </div>
+                    <div class="buttonRow">
+                      <el-button class="change" @click="shop">商店流水</el-button>
+                      <el-button class="change" @click="privateAccount">个人流水</el-button>
+                    </div>
+                  </div>
                 </div>
             </div>
         </div>
@@ -59,7 +67,13 @@ export default{
     },methods:{
       orderPage(){
           this.$router.push({ name: "OrderPageForShopkeeper" });
-      }
+      },
+      shop(){
+        this.$router.push({ name: "shopAccount" });
+    },
+    privateAccount(){
+      this.$router.push({ name: "privateAccount" });
+    }
   }
 }
 </script>
@@ -92,12 +106,24 @@ export default{
     border: 2px solid #ebeef5;
     box-shadow: 2px 2px 12px 2px (0 0 0 / 10%);
 }
-
-.change{
-    display: block;
-    width: 80%; /* 设置宽度 */
-    margin: 0 auto 20px auto; /* 居中 */
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 }
+
+.buttonRow {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.change {
+  width: 60%; /* 调整宽度 */
+  margin: 10px;
+}
+
 
 .titleChange{
   text-align: center;

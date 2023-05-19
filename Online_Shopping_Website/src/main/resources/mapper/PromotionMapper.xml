@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.online_shopping_website.mapper.PromotionMapper">
+    <resultMap id="PromotionMap" type="com.example.online_shopping_website.entity.Promotion">
+        <result column="promotionId" property="promotionId"/>
+        <result column="status" property="status"/>
+        <result column="promotionName" property="promotionName"/>
+        <result column="endTime" property="endTime"/>
+        <result column="goodsTypeInPromotion" property="goodsTypeInPromotion" />
+        <result column="promotionFund" property="promotionFund"/>
+        <result column="promotionFundUsed" property="promotionFundUsed"/>
+        <result column="promotionStartLine" property="promotionStartLine"/>
+        <result column="promotionPaymentReduce" property="promotionPaymentReduce"/>
+        <result column="registrationCapitalLimit" property="registrationCapitalLimit"/>
+        <result column="monthlySaleIncomeLimit" property="monthlySaleIncomeLimit"/>
+        <result column="monthlySalesLimit" property="monthlySalesLimit"/>
+    </resultMap>
+    <resultMap id="PromotionApplicantMap" type="com.example.online_shopping_website.entity.PromotionApplicant">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="shopName" property="shopName"/>
+        <result column="isGoodsCategory" property="isGoodsCategory"/>
+        <result column="isCapital" property="isCapital"/>
+        <result column="isMonthlySale" property="isMonthlySale"/>
+        <result column="isMonthlyIncome" property="isMonthlyIncome"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <insert id="InsertPromotion">
+        INSERT INTO promotion (status, promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit)
+            VALUES
+        (1, #{promotionName} ,#{endTime}, #{goodsTypeInPromotion}, #{promotionFund}, #{promotionStartLine}, #{promotionPaymentReduce}, #{registrationCapitalLimit}, #{monthlySaleIncomeLimit}, #{monthlySalesLimit})
+    </insert>
+
+    <select id="GetCurrentPromotions" resultMap="PromotionMap">
+        SELECT  promotionId, promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit
+                FROM promotion WHERE status = 1;
+    </select>
+
+    <select id="AdminGetAllPromotions" resultMap="PromotionMap">
+        SELECT  promotionId, promotionName, endTime, goodsTypeInPromotion, promotionFund, promotionStartLine, promotionPaymentReduce, registrationCapitalLimit, monthlySaleIncomeLimit, monthlySalesLimit
+                FROM promotion;
+    </select>
+    <select id="GetPromotionForCheck" resultMap="PromotionMap">
+        SELECT * FROM promotion WHERE status = 1;
+    </select>
+    <insert id="InsertPromotionApplicant">
+        INSERT INTO promotionapplicant (username, shopName, isGoodsCategory, isCapital, isMonthlySale, isMonthlyIncome, status)
+            VALUES
+                (#{username}, #{shopName}, 1, 1, 1, 1, 0)
+    </insert>
+
+    <select id="GetAllPromotionApplicant" resultMap="PromotionApplicantMap">
+        SELECT * FROM promotionapplicant;
+    </select>
+
+    <update id="SetPromotionApplicationStatus">
+        UPDATE promotionapplicant SET status = #{status} WHERE username = #{username};
+    </update>
+
+    <select id="IsPromotionApplicantExist" resultType="int">
+        SELECT COUNT(*) FROM promotionapplicant WHERE username = #{username};
+    </select>
+
+    <select id="GetPromotionApplicationStatus" resultType="int">
+        SELECT status FROM promotionapplicant WHERE username =#{username};
+    </select>
+    <select id="IsPromotionOngingForNow" resultType="int">
+        SELECT COUNT(*) FROM promotion WHERE status = 1;
+    </select>
+    <update id="SetCurrentPromotionClosed">
+        UPDATE promotion SET status = 0 WHERE status = 1;
+    </update>
+    <select id="GetShopNameByUsername" resultType="java.lang.String">
+        SELECT shopName FROM promotionapplicant WHERE username = #{username};
+    </select>
+    <delete id="DeleteAllApplicantForClosePromotion">
+        DELETE FROM promotionapplicant;
+    </delete>
+    <update id="AddToPromotionFundUsed">
+        UPDATE promotion SET promotionFundUsed = promotionFundUsed + #{reducedPayment} WHERE status = 1;
+    </update>
+</mapper>

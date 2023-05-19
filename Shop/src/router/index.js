@@ -119,7 +119,27 @@ const router = createRouter({
       path: '/addAddress',
       name: 'addAddress',
       component: ()=> import('../views/ShoppingList/addAddress.vue'),
-    }
+    },
+    {
+      path: '/adminIntermediaryAccount',
+      name: 'adminIntermediaryAccount',
+      component: ()=> import('../views/transactionPage/adminIntermediaryAccount.vue'),
+    },
+    {
+      path: '/adminProfitAccount',
+      name: 'adminProfitAccount',
+      component: ()=> import('../views/transactionPage/adminProfitAccount.vue'),
+    },
+    {
+      path: '/privateAccount',
+      name: 'privateAccount',
+      component: ()=> import('../views/transactionPage/privateAccount.vue'),
+    },
+    {
+      path: '/shopAccount',
+      name: 'shopAccount',
+      component: ()=> import('../views/transactionPage/shopAccount.vue'),
+    },
     // 下述页面是为了调试方便的组件路径，最终需要封装到views中，因此不需要额外添加拦截器
     // 提交项目前保证无组件路径
     

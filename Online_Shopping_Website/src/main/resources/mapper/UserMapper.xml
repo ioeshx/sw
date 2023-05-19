@@ -233,6 +233,21 @@
     <select id="GetUserByUid" resultMap="UserMap">
         SELECT * FROM users WHERE uid =#{uid};
     </select>
+
+    <select id="GetUidByUsername" resultType="int">
+        SELECT uid FROM users WHERE username = #{username};
+    </select>
+
+    <select id="isProfitAccountSufficient" parameterType="java.math.BigDecimal" resultType="boolean">
+        SELECT COUNT(*) FROM users WHERE usertype = 0 AND profitAccount > #{fund};
+    </select>
+
+    <update id="TransferPromotionFundToIntermediaryAccount" parameterType="java.math.BigDecimal">
+        UPDATE users
+        SET profitAccount = profitAccount - #{fund},
+            intermediaryAccount = intermediaryAccount + #{fund}
+        WHERE usertype = 0;
+    </update>
 </mapper>
 
 

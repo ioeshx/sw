@@ -10,7 +10,6 @@ import Nav from '../../components/Public/Nav/UserNav.vue'
       <div class="order-item" v-for="order in orders" :key="order.orderId">
         <div class="order-item-info">
           <h2>订单ID：{{ order.orderId }}</h2>
-          <p>收货地址ID: {{ order.addressId }}</p>
           <p>用户名: {{ order.username }}</p>
           <p>创建时间: {{ order.createTime }}</p>
           <p>商品ID: {{ order.goodsId }}</p>
@@ -79,6 +78,7 @@ export default {
             if (response.data.state == 0) {
               // 支付成功，可以进行相关操作，例如显示成功消息，清空localStorage中的orderIdList等
               console.log("支付成功");
+              this.$message.success("支付成功")
               localStorage.removeItem('orderIds');
               localStorage.removeItem('orderIdListTest');
               this.$router.push({ name: "OrderPage" });
