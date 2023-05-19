@@ -140,4 +140,7 @@
     <select id="GetActualPaymentByParentOrderId" resultType="java.math.BigDecimal">
         SELECT actualPayment FROM parentorder WHERE parentOrderId = #{parentOrderId};
     </select>
+    <update id="SetAllSubOrderOfParentOrderPaid">
+        UPDATE orders SET status = 1 WHERE parentOrderId =#{parentOrderId};
+    </update>
 </mapper>

@@ -36,4 +36,5 @@ public interface OrderMapper {
     int GetParentOrderId(int orderId);
     ParentOrder GetParentOrderByParentOrderId(int parentOrderId);
     BigDecimal GetActualPaymentByParentOrderId(int parentOrderId);
+    void SetAllSubOrderOfParentOrderPaid(int parentOrderId);
 }

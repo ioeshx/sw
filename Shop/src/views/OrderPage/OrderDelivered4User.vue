@@ -69,7 +69,7 @@ export default {
       this.$axios
           .post("/refundOrder", { orderIdList: orderIdList })
           .then((response) => {
-            if (!response.data.success) {
+            if (response.data.state ==0) {
               this.$message.success("退款受理中");
               this.$router.push({ name: "userSelfCenter" });
             } else {

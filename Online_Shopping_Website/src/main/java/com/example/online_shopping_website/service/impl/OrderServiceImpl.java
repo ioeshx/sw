@@ -185,8 +185,8 @@ public class OrderServiceImpl implements IOrderService {
         }else{    //余额充足，个人账户余额减去订单费用，并设置订单状态为“待发货”
             privateAccount = privateAccount.subtract(actualPayment);
             userMapper.UpdatePrivateAccount(username, privateAccount);
-            for(int orderId : orderIdList)
-                orderMapper.SetOrderToPendingDeliveryByOrderId(orderId);
+            //把在同一个父订单的子订单全部设置成已支付
+            orderMapper.SetAllSubOrderOfParentOrderPaid(parentOrderId);
             //金额转入商城中间账户
             userMapper.TransferTotalPaymentToIntermediaryAccount(actualPayment);
             //插入流水记录

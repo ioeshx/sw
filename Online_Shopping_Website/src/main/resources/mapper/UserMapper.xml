@@ -164,7 +164,7 @@
     </update>
 
     <select id="GetAllReceiverAddress" resultMap="ReceiverAddressMap">
-        SELECT * FROM receiveraddress WHERE username = #{username};
+        SELECT * FROM receiveraddress WHERE username = #{username} AND state != -1;
     </select>
 
     <insert id="AddReceiverAddress" >

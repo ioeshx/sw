@@ -77,7 +77,7 @@ export default {
         this.$message.error("请先选择一个收货地址");
         return;
       }
-      const goodsIdList = this.selectedGoods.map((goods) => goods.goodsId);
+      const goodsIdList = this.selectedGoods.map((goods) => parseInt(goods.goodsId));
       const numList = this.selectedGoods.map((goods) => goods.num);
       this.$axios
           .post("/orderCreating", {
