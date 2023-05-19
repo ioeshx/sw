@@ -2,55 +2,60 @@
 </script>
 <template>
   <div class="container">
-    <form @submit.prevent="startPromotion">
-      <div class="demo-date-picker">
-        <div class="block">
-          <span class="demonstration">选择结束的时间</span>
-          <el-date-picker
-              v-model="value2"
-              type="date"
-              placeholder="Pick a day"
-              :disabled-date="disabledDate"
-              :shortcuts="shortcuts"
-              :size="size"
-          />
+    <div v-if="status == 0">
+      <form @submit.prevent="startPromotion">
+        <div class="demo-date-picker">
+          <div class="block">
+            <span class="demonstration">选择结束的时间</span>
+            <el-date-picker
+                v-model="value2"
+                type="date"
+                placeholder="Pick a day"
+                :disabled-date="disabledDate"
+                :shortcuts="shortcuts"
+                :size="size"
+            />
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label>促销的商品类型</label>
-        <input type="text" v-model="request.goodsTypeInPromotion" required>
-      </div>
-      <div class="form-group">
-        <label>月销售收入限制</label>
-        <input type="text" v-model="request.monthlySaleIncomeLimit" required>
-      </div>
-      <div class="form-group">
-        <label>月销售额收入限制</label>
-        <input type="text" v-model="request.monthlySalesLimit" required>
-      </div>
-      <div class="form-group">
-        <label>活动资金</label>
-        <input type="text" v-model="request.promotionFund" required>
-      </div>
-      <div class="form-group">
-        <label>活动名</label>
-        <input type="text" v-model="request.promotionName" required>
-      </div>
-      <div class="form-group">
-        <label>满：</label>
-        <input type="text" v-model="request.promotionStartLine" required>
-      </div>
-      <div class="form-group">
-        <label>减：</label>
-        <input type="text" v-model="request.promotionPaymentReduce" required>
-      </div>
-      <div class="form-group">
-        <label>注册资金限制</label>
-        <input type="text" v-model="request.registrationCapitalLimit" required>
-      </div>
-      <!-- 其他字段类似 -->
-      <button class="btn" @click="1">开启活动！</button>
-    </form>
+        <div class="form-group">
+          <label>促销的商品类型</label>
+          <input type="text" v-model="request.goodsTypeInPromotion" required>
+        </div>
+        <div class="form-group">
+          <label>月销售收入限制</label>
+          <input type="text" v-model="request.monthlySaleIncomeLimit" required>
+        </div>
+        <div class="form-group">
+          <label>月销售额收入限制</label>
+          <input type="text" v-model="request.monthlySalesLimit" required>
+        </div>
+        <div class="form-group">
+          <label>活动资金</label>
+          <input type="text" v-model="request.promotionFund" required>
+        </div>
+        <div class="form-group">
+          <label>活动名</label>
+          <input type="text" v-model="request.promotionName" required>
+        </div>
+        <div class="form-group">
+          <label>满：</label>
+          <input type="text" v-model="request.promotionStartLine" required>
+        </div>
+        <div class="form-group">
+          <label>减：</label>
+          <input type="text" v-model="request.promotionPaymentReduce" required>
+        </div>
+        <div class="form-group">
+          <label>注册资金限制</label>
+          <input type="text" v-model="request.registrationCapitalLimit" required>
+        </div>
+        <!-- 其他字段类似 -->
+        <button class="btn" @click="1">开启活动！</button>
+      </form>
+    </div>
+    <div v-if="status == 1">
+      <button class="btn" @click="endThePromotion">关闭活动！</button>
+    </div>
   </div>
 </template>
 
@@ -96,6 +101,17 @@ export default {
       disabledDate,
     };
   },
+  mounted() {
+    axios.post('/getPromotions', {type :1})
+        .then((response) => {
+          // handle success
+          if(response.data.data!=null) this.status = 1;
+        })
+        .catch((error) => {
+          // handle error
+          console.error(error);
+        });
+  },
   data() {
     return {
       request: {
@@ -110,9 +126,13 @@ export default {
         registrationCapitalLimit: '',
       },
       date : null,
+      status : 0
     };
   },
   methods: {
+    endThePromotion(){
+      this.status = 0;
+    },
     startPromotion() {
       this.request.endTime = this.value2;
       console.log(this.value2);
@@ -127,6 +147,7 @@ export default {
             // handle success
             console.log(response);
             this.$message.success("成功开启活动！");
+            this.status = 1;
           })
           .catch((error) => {
             // handle error

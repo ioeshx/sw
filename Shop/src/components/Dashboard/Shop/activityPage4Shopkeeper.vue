@@ -1,27 +1,58 @@
 <template>
   <div class="wrap">
-    <div class="promotion-container">
-      <h1>正在进行的活动</h1>
-      <div class="promotion-card" v-for="promotion in promotions" :key="promotion.promotionId">
-        <h2>{{ promotion.promotionName }}</h2>
-        <div class="promotion-info">
-          <div class="info-row">
-            <p>结束时间: {{ promotion.endTime }}</p>
-            <p>促销的商品类型: {{ promotion.goodsTypeInPromotion }}</p>
-            <p><strong>注册资金限制:</strong> {{ promotion.registrationCapitalLimit }}</p>
+    <div v-if="status === 0">
+      <div class="promotion-container">
+        <h1>正在进行的活动</h1>
+        <div class="promotion-card" v-for="promotion in promotions" :key="promotion.promotionId">
+          <h2>{{ promotion.promotionName }}</h2>
+          <div class="promotion-info">
+            <div class="info-row">
+              <p>结束时间: {{ promotion.endTime }}</p>
+              <p>促销的商品类型: {{ promotion.goodsTypeInPromotion }}</p>
+              <p><strong>注册资金限制:</strong> {{ promotion.registrationCapitalLimit }}</p>
+            </div>
+            <div class="info-row">
+              <p>活动资金: {{ promotion.promotionFundUsed }}</p>
+              <p>满： {{ promotion.promotionStartLine }} 减: {{ promotion.promotionPaymentReduce }}</p>
+              <p><strong>月销售额收入限制:</strong> {{ promotion.monthlySalesLimit }}</p>
+            </div>
           </div>
-          <div class="info-row">
-            <p>活动资金: {{ promotion.promotionFundUsed }}</p>
-            <p>满： {{ promotion.promotionStartLine }} 减: {{ promotion.promotionPaymentReduce }}</p>
-            <p><strong>月销售额收入限制:</strong> {{ promotion.monthlySalesLimit }}</p>
+          <p><strong>月销售收入限制:</strong> {{ promotion.monthlySaleIncomeLimit }}</p>
+          <div class="apply-button">
+            <button class="btn" @click="applyForPromotion">申请</button>
           </div>
-        </div>
-        <p><strong>月销售收入限制:</strong> {{ promotion.monthlySaleIncomeLimit }}</p>
-        <div class="apply-button">
-          <button class="btn" @click="applyForPromotion()">申请</button>
         </div>
       </div>
     </div>
+    <div v-if="status === 2">
+      <h1>您的活动申请已通过！</h1>
+    </div>
+    <div v-if="status === 1">
+      <h1>您的活动申请未通过，请重新申请！</h1>
+      <div class="promotion-container">
+        <h1>正在进行的活动</h1>
+        <div class="promotion-card" v-for="promotion in promotions" :key="promotion.promotionId">
+          <h2>{{ promotion.promotionName }}</h2>
+          <div class="promotion-info">
+            <div class="info-row">
+              <p>结束时间: {{ promotion.endTime }}</p>
+              <p>促销的商品类型: {{ promotion.goodsTypeInPromotion }}</p>
+              <p><strong>注册资金限制:</strong> {{ promotion.registrationCapitalLimit }}</p>
+            </div>
+            <div class="info-row">
+              <p>活动资金: {{ promotion.promotionFundUsed }}</p>
+              <p>满： {{ promotion.promotionStartLine }} 减: {{ promotion.promotionPaymentReduce }}</p>
+              <p><strong>月销售额收入限制:</strong> {{ promotion.monthlySalesLimit }}</p>
+            </div>
+          </div>
+          <p><strong>月销售收入限制:</strong> {{ promotion.monthlySaleIncomeLimit }}</p>
+          <div class="apply-button">
+            <button class="btn" @click="applyForPromotion">申请</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -32,10 +63,21 @@ export default {
   data() {
     return {
       promotions: [],
+      username : window.localStorage.getItem("username"),
+      status : 0
     };
   },
   mounted() {
     this.getPromotions();
+    axios.post('/userGetPromotionApplicationResult',{username : window.localStorage.getItem("username")})
+        .then(response => {
+          if(response.data.state === 0) {
+            this.status = response.data.data;
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
   },
   methods: {
     getPromotions() {
@@ -50,9 +92,9 @@ export default {
           });
     },
     applyForPromotion() {
-      axios.post('/applyForPromotion')
+      axios.post('/applyForPromotion',{username : this.username})
           .then(response => {
-            if(response.data.state === 0) {
+            if(response.data.state == 0) {
               this.$message.success("申请已送达，请耐心等待管理员审核")
             } else {
               alert("申请失败，请稍后再试！");

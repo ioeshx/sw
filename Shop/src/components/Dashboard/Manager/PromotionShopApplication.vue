@@ -2,14 +2,16 @@
   <div class="wrap">
     <div class="merchant-container">
       <h1>商家申请列表</h1>
-      <div class="merchant-card" v-for="merchant in merchants" :key="merchant.id">
-        <h2>{{ merchant.name }}</h2>
-        <p>地址: {{ merchant.address }}</p>
-        <p>联系方式: {{ merchant.contact }}</p>
-        <!-- 展示更多商家信息... -->
-        <div class="approve-button">
-          <button @click="approveMerchant(merchant.id)">批准</button>
+      <div class="merchant-card" v-for="merchant in merchants" :key="merchant.id" >
+        <div v-if="merchant.status === 0">
+          <h2>{{ merchant.shopName }}</h2>
+          <p>店铺名: {{ merchant.username }}</p>
+          <div class="approve-button">
+            <button @click="approveMerchant(merchant.username)">批准</button>
+            <button @click="refuseMerchant(merchant.username)">拒绝</button>
+          </div>
         </div>
+        <!-- 展示更多商家信息... -->
       </div>
     </div>
   </div>
@@ -29,7 +31,7 @@ export default {
   },
   methods: {
     getAllApplications() {
-      axios.get('http://localhost:9090/api/adminGetAllApplication')
+      axios.get('/adminGetAllApplication')
           .then(response => {
             if(response.data.state === 0) {
               this.merchants = response.data.data;
@@ -39,14 +41,28 @@ export default {
             console.error(error);
           });
     },
-    approveMerchant(id) {
-      axios.post('/confirm', { id: id })
+    approveMerchant(username) {
+      axios.post('/adminCheckPromotionApplication', { username: username, checkType :2 })
           .then(response => {
             if(response.data.state === 0) {
               alert("批准成功！");
               this.getAllApplications(); // 批准后重新获取列表
             } else {
               alert("批准失败，请稍后再试！");
+            }
+          })
+          .catch(error => {
+            console.error(error);
+          });
+    },
+    refuseMerchant(username) {
+      axios.post('/adminCheckPromotionApplication', { username: username, checkType :1})
+          .then(response => {
+            if(response.data.state === 0) {
+              alert("拒绝成功！");
+              this.getAllApplications(); // 批准后重新获取列表
+            } else {
+              alert("拒绝失败，请稍后再试！");
             }
           })
           .catch(error => {
