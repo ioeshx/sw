@@ -2,10 +2,12 @@ package com.example.online_shopping_website.mapper;
 
 import com.example.online_shopping_website.entity.Good;
 import com.example.online_shopping_website.entity.pic;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Mapper
 public interface GoodMapper {
     Integer insertGoodByUser(String introduction,String goodsname,float goodsPrice,int goodsStock,String goodsCategory,int status,int registerStatus,int modifyStatus,String shopname);
     int setGood(Good good);

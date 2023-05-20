@@ -2,10 +2,12 @@ package com.example.online_shopping_website.mapper;
 
 import com.example.online_shopping_website.entity.Promotion;
 import com.example.online_shopping_website.entity.PromotionApplicant;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Mapper
 public interface PromotionMapper {
     int InsertPromotion(Promotion p);
 

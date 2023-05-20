@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * 其实这个才应该是Order类
+ * 现在的Order类应该是ParenOrder类
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

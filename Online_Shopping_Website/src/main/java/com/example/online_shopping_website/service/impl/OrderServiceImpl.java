@@ -40,7 +40,7 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private PromotionMapper promotionMapper;
 
-    boolean isPromotionEffectiveForParentOrder(List<Integer> allGoodsId, List<Integer> allGoodsNum){
+    public boolean isPromotionEffectiveForParentOrder(List<Integer> allGoodsId, List<Integer> allGoodsNum){
         Promotion promotion = promotionMapper.GetPromotionForCheck();
         BigDecimal moneyForGoodsInPromotion = new BigDecimal(0);
         for(int i = 0; i < allGoodsId.size(); i++){
@@ -58,7 +58,7 @@ public class OrderServiceImpl implements IOrderService {
             return false;
     }
 
-    List<BigDecimal> CalculatePrices(List<Integer> allGoodsId, List<Integer> allGoodsNum){
+    public List<BigDecimal> CalculatePrices(List<Integer> allGoodsId, List<Integer> allGoodsNum){
         Promotion promotion = promotionMapper.GetPromotionForCheck();
         BigDecimal totalPrice = new BigDecimal(0);
         BigDecimal actualPayment = new BigDecimal(0);

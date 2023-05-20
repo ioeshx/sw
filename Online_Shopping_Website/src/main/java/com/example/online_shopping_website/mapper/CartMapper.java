@@ -1,10 +1,11 @@
 package com.example.online_shopping_website.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-
+@Mapper
 public interface CartMapper {
     Boolean IsGoodsInCart(String username, int goodsId);
 
