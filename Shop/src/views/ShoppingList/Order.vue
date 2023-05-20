@@ -8,7 +8,7 @@ import ShoppingList from '../../components/ShoppingList/ShoppingList.vue'
   <div class="container">
     <h1 class="title"><span class="title-inner">下单页面</span></h1>
     <div class="order-item" v-for="goods in selectedGoods" :key="goods.goodsId">
-      <img :src="'data:image/jpeg;base64,' + goods.goodsAvatar[0]" />
+      <div v-if="goods.goodsAvatar!=undefined"><img :src="'data:image/jpeg;base64,' + goods.goodsAvatar[0]" /></div>
       <div class="order-item-info">
         <h2>{{ goods.goodsname }}</h2>
         <p>价格：{{ goods.goodsPrice }}</p>

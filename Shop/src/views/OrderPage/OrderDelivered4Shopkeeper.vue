@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <h2>已发货的订单</h2>
-    <div v-for="order in orders" :key="order.orderId">
-      <p>用户名：{{ order.username }}</p>
-      <p>收货人：{{ order.addressDetail.receiverName }} - 手机：{{ order.addressDetail.phone }} - 省：{{ order.addressDetail.province }} - 市：{{ order.addressDetail.municipality }} - 县：{{ order.addressDetail.county }} - 镇：{{ order.addressDetail.township }} - 详细地址：{{ order.addressDetail.detailAddress }}</p>
-
+  <div class="order-container">
+    <h1>已发货的订单</h1>
+    <div class="order-card" v-for="order in orders" :key="order.orderId">
+      <h2>用户名：{{ order.username }}</h2>
+      <p>收货人：{{ order.addressDetail.receiverName }} - 手机：{{ order.addressDetail.phone }}</p>
+      <p>地址：{{ order.addressDetail.province }} - {{ order.addressDetail.municipality }} - {{ order.addressDetail.county }} - {{ order.addressDetail.township }} - {{ order.addressDetail.detailAddress }}</p>
       <p>店铺名称：{{ order.shopName }}</p>
       <p>下单时间：{{ order.orderTime }}</p>
       <p>商品名称：{{ order.goodsName }}</p>
@@ -56,3 +56,34 @@ export default {
   }
 }
 </script>
+<style scoped>
+.order-container {
+  width: 80%;
+  margin: auto;
+}
+
+.order-card {
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  background-color: #fff;
+}
+
+h1 {
+  text-align: center;
+  margin: 30px 0;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin: 10px 0;
+  color: #333;
+}
+
+p {
+  font-size: 1.2em;
+  margin: 5px 0;
+  color: #666;
+}
+</style>

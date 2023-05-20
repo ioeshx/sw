@@ -1,17 +1,17 @@
 <template>
-  <div>
-    <h2>待发货的商品</h2>
-    <div v-for="order in orders" :key="order.orderId">
-      <p>用户名：{{ order.username }}</p>
-      <p>收货人：{{ order.addressDetail.receiverName }} - 手机：{{ order.addressDetail.phone }} - 省：{{ order.addressDetail.province }} - 市：{{ order.addressDetail.municipality }} - 县：{{ order.addressDetail.county }} - 镇：{{ order.addressDetail.township }} - 详细地址：{{ order.addressDetail.detailAddress }}</p>
-
+  <div class="order-container">
+    <h1>待发货的商品</h1>
+    <div class="order-card" v-for="order in orders" :key="order.orderId">
+      <h2>用户名：{{ order.username }}</h2>
+      <p>收货人：{{ order.addressDetail.receiverName }} - 手机：{{ order.addressDetail.phone }}</p>
+      <p>地址：{{ order.addressDetail.province }} - {{ order.addressDetail.municipality }} - {{ order.addressDetail.county }} - {{ order.addressDetail.township }} - {{ order.addressDetail.detailAddress }}</p>
       <p>店铺名称：{{ order.shopName }}</p>
       <p>下单时间：{{ order.orderTime }}</p>
       <p>商品名称：{{ order.goodsName }}</p>
       <p>商品单价：{{ order.unitPrice }}</p>
       <p>商品数量：{{ order.goodsNum }}</p>
       <p>总价：{{ order.totalPrice }}</p>
-      <el-button type="danger" @click="SendOut(order.orderId)">发货</el-button>
+      <el-button class="send-button" type="danger" @click="SendOut(order.orderId)">发货</el-button>
     </div>
   </div>
 </template>
@@ -72,3 +72,42 @@ export default {
   }
 }
 </script>
+<style scoped>
+.order-container {
+  width: 80%;
+  margin: auto;
+}
+
+.order-card {
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+h1 {
+  text-align: center;
+  margin: 30px 0;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin: 10px 0;
+  color: #333;
+}
+
+p {
+  font-size: 1.2em;
+  margin: 5px 0;
+  color: #666;
+}
+
+.send-button {
+  align-self: center;
+  margin-top: 20px;
+}
+</style>
