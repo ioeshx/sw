@@ -234,7 +234,7 @@ public class OrderServiceImpl implements IOrderService {
                 orderMapper.SetOrderToFinishedByOrderId(orderId);
                 //把订单费用转给商户
                 BigDecimal actualPayment = orderMapper.getActualPaymentByOrderId(orderId);
-                BigDecimal commission = actualPayment.multiply(new BigDecimal(0.05));   //佣金
+                BigDecimal commission = actualPayment.multiply(new BigDecimal("0.05"));   //佣金
                 BigDecimal ShopGain = actualPayment.subtract(commission);                   //商店收入
                 String shopName = orderMapper.GetShopNameByOrderId(orderId);
                 int uid = shopMapper.GetUidByShopName(shopName);
