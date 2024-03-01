@@ -10,12 +10,13 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>Online_Shopping_Website</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>Online_Shopping_Website</name>
+    <version>1.0</version>
+    <name>OSW</name>
     <description>Online_Shopping_Website</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>11</java.version>
         <kotlin.version>1.8.20-Beta</kotlin.version>
+        <skipTests>True</skipTests>
     </properties>
     <dependencies>
         <dependency>
@@ -67,10 +68,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
             <version>1.18.26</version>
         </dependency>
         <dependency>
@@ -81,6 +78,7 @@
     </dependencies>
 
     <build>
+        <finalName>OSW</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

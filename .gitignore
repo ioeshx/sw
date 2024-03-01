@@ -1,6 +1,6 @@
 
 /.idea
-
+/.vscode
 /design.md
 /test.md
 .DS_Store
